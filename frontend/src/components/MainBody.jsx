@@ -1,10 +1,11 @@
 
 import { Outlet } from "react-router-dom";
 import SideMenu from "./SideMenu";
+import Footer from "./Footer";
 
 function MainBody() {
   return (
-    <div className="flex flex-row p-6 shadow-md rounded-lg flex-1 gap-4">  
+    <div className="flex flex-row p-6 rounded-lg flex-1 gap-4 items-start">  
       
       {/*Side Menu*/}
       {/* <div className="w-80 bg-white shadow-md rounded-lg p-4">
@@ -19,6 +20,8 @@ function MainBody() {
             <Outlet/>
             </div>
             {/* Main Content - scrollable  ends*/}
+
+           
     </div>
   );
 }

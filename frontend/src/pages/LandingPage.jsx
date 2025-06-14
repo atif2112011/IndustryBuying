@@ -15,6 +15,16 @@ import price4 from '../assets/images/landingpage/price4.png';
 import CardDisplay from '../components/CardDisplay';
 import BrandCarousel from '../components/BrandCarousel';
 
+import { Swiper, SwiperSlide } from 'swiper/react';
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+
+// import required modules for Swiper
+import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+import TestimonialCarousel from '../components/Testimonials';
+
 
 const dummydata2 = [
   {
@@ -81,17 +91,25 @@ const dummydata1 = [
     brand: "Duracell",
     price: 179,
     rating:3.5,
+    discountedPrice: 149,
+    discountPercentage: 16.00,
     image: "https://m.media-amazon.com/images/I/81o1qXrjRLL._SX679_.jpg",
   },
   {
     title: "WD-40 Multipurpose Spray 420ml",
     brand: "WD-40",
     price: 353,
+    rating: 4.0,
+    discountedPrice: 299,
+    discountPercentage: 15.30,
     image: "https://m.media-amazon.com/images/I/61v51tdU2RL._SX679_.jpg",
   },
   {
     title: "Box Index Files (Pack of 8)",
     brand: "IB BASICS",
+    discountedPrice: 399,
+    discountPercentage: 9.10,
+    rating: 4.2,
     price: 439,
     image: "https://m.media-amazon.com/images/I/81My9owuZuL._SX679_.jpg",
   },
@@ -112,20 +130,25 @@ const dummydata1 = [
 function LandingPage() {
   return (
     <div className='flex flex-col items-center'>
-     <Carousel>
-                <div>
-                    <img src={img1} />
-                    {/* <p className="legend">Legend 1</p> */}
-                </div>
-                <div>
-                    <img src={img2}  />
-                    {/* <p className="legend">Legend 2</p> */}
-                </div>
-                <div>
-                    <img src={img3}  />
-                    {/* <p className="legend">Legend 3</p> */}
-                </div>
-            </Carousel>
+      <Swiper
+        spaceBetween={30}
+        centeredSlides={true}
+        autoplay={{
+          delay: 4000,
+          disableOnInteraction: false,
+        }}
+        pagination={{
+          clickable: true,
+        }}
+        navigation={true}
+        modules={[Autoplay, Pagination, Navigation]}
+        className="mySwiper w-full mb-4"
+      >
+        <SwiperSlide><img src={img1} /></SwiperSlide>
+        <SwiperSlide><img src={img2} /></SwiperSlide>
+        <SwiperSlide><img src={img3} /></SwiperSlide>
+        <SwiperSlide><img src={img1} /></SwiperSlide>
+      </Swiper>      
       {/* {Ads} */}
       <div className='flex flex-row items-center justify-between w-full p-0 '>
         <img src={img4} alt="img4" className='rounded-md w-1/2 ' />
@@ -149,6 +172,8 @@ function LandingPage() {
       {/* {Popular Picks} */}
       <CardDisplay title="POPULAR PICKS" data={dummydata2}/>
       {/* {Popular Picks end} */}
+
+      
 
        {/* {Pocket Friendly Price Display} */}
 
@@ -177,6 +202,11 @@ function LandingPage() {
 
       <BrandCarousel/>
       {/* {Trusted Brands end} */}
+
+      {/* {Testimonials} */}
+      <TestimonialCarousel/>
+      {/* {Testimonials ends} */}
+
     </div>
 
   );

@@ -6,9 +6,13 @@ import img2 from '../assets/icons/survey-line.svg';
 import img3 from '../assets/icons/customer-service-2-line.svg';
 import img4 from '../assets/icons/shopping-cart-2-line.svg';
 import MainBody from './MainBody';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
+import Footer from './Footer';
+import { use } from 'react';
 
 function NavBar() {
+
+  const navigate=useNavigate();
   return (
     <div className="flex flex-col bg-neutral-100 h-screen ">
 
@@ -20,7 +24,7 @@ function NavBar() {
         
         <div className='flex items-center gap-2'>
         <img src={logo} alt="Logo" height={28} width={28}/>
-        <h3 className='poppins-semibold'>Industry Buying</h3>
+        <h3 className='poppins-semibold cursor-pointer' onClick={() => navigate('/')}>Industry Buying</h3>
         </div>
         <SearchBar/>
        </div>
@@ -30,18 +34,18 @@ function NavBar() {
         <div className='flex flex-row items-center gap-8'>
             <button className='flex items-center gap-2'>
        <img src={img1} alt="Request for Quote" height={22} width={22 }/>
-        <p>Request for Quote</p>
+        <p className='!text-sm'>Request for Quote</p>
         </button>
         
         <button className='flex items-center gap-2'>
             <img src={img2} alt="GST Benefit" height={22} width={22}/>
-        <p>GST Benefit</p>
+        <p className='!text-sm'>GST Benefit</p>
         </button>
         
         <button className='flex items-center gap-2'>
 
         <img src={img3} alt="Help Center" height={22} width={22}/>
-        <p>Help Center</p>
+        <p className='!text-sm'>Help Center</p>
         </button>
         <Button variant='contained' className='h-8 items-center'>Login</Button>
         <button><img src={img4} alt="Cart" height={22} width={22}/></button>
@@ -57,7 +61,7 @@ function NavBar() {
     {/* <MainBody/> */} 
     <Outlet/>
     {/* Main Body Component Ends*/}
-
+     <Footer/>
 
     </div>
   );
