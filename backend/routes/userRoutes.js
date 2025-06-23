@@ -10,7 +10,7 @@ router.post('/register', registerUser);
 // @route POST /login
 router.post('/login', loginUser);
 
-router.get('/profile',getUserProfile);
+router.get('/profile/:id',getUserProfile);
 
 router.get('/verify-auth',verifyAuthToken);
 
