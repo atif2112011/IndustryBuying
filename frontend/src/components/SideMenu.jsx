@@ -132,6 +132,7 @@ function SideMenu() {
 const location=useLocation();
   const isSubcategoryPage = /^\/categories\/[^\/]+\/[^\/]+$/.test(location.pathname);
   const isProductPage = /^\/categories\/[^\/]+\/[^\/]+\/\d+$/.test(location.pathname);
+  
   const [priceRange, setPriceRange] = useState({ min: "0", max: "50000" });
   const [discounts, setDiscounts] = useState([]);
   const [brands, setBrands] = useState([]);
@@ -152,7 +153,7 @@ const location=useLocation();
       {/* Accordion for Category Hiding on Products Tab */}
       {isSubcategoryPage ?  <FiltersnCategory priceRange={priceRange} discounts={discounts} brands={brands}setBrands={setBrands} setDiscounts={setDiscounts} setPriceRange={setPriceRange} discountOptions={discountOptions} brandOptions={brandOptions}/>:
      <div className="w-80 bg-white shadow-md rounded-lg p-4">
-  {categoryMenuOptions.map((option, index) => (
+    {categoryMenuOptions.map((option, index) => (
     <div key={index} className="relative group">
       {/* Wrap NavLink and Submenu together */}
       <div className="flex items-center gap-2 p-2 group-hover:bg-blue-100 rounded-md cursor-pointer">
@@ -197,6 +198,7 @@ const location=useLocation();
    </>
   );
 }
+
 
 export default SideMenu;
 

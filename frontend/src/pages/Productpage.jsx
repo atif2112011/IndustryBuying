@@ -361,7 +361,7 @@ const handleIncrement = () => {
               </div>
 
             <div className="flex flex-row border border-gray-300 p-1 rounded-sm justify-between w-full">
-              <input className="text-gray-500 !text-sm border-none w-full p-2" type="text" placeholder="Enter Pincode">
+              <input className="text-gray-500 !text-sm border-none w-full p-2 outline-none" type="text" placeholder="Enter Pincode">
               </input>
               <button className="bg-orange-600 !text-sm text-white py-2 px-4 rounded-sm" onClick={()=>setcheckPin({...checkPin,visible:true})}>Check</button>
             </div>

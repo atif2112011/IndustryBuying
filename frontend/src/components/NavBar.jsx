@@ -26,29 +26,31 @@ function NavBar() {
         <img src={logo} alt="Logo" height={28} width={28}/>
         <h3 className='poppins-semibold cursor-pointer' onClick={() => navigate('/')}>Industry Buying</h3>
         </div>
-        <SearchBar/>
+        <div className='flex w-120'>
+        <SearchBar placeholder={"Search by SKU , Brand Name, Product etc"}/>
+        </div>
        </div>
        {/* Logo and Search Bar */}
         
         {/* Login and other buttons */}
-        <div className='flex flex-row items-center gap-8'>
-            <button className='flex items-center gap-2'>
+        <div className='flex flex-row items-center gap-8 cursor-pointer' >
+            <button className='flex items-center gap-2' onClick={()=>navigate('/cert')}>
        <img src={img1} alt="Request for Quote" height={22} width={22 }/>
-        <p className='!text-sm'>Request for Quote</p>
+        <p className='!text-sm'>Certifications</p>
         </button>
         
-        <button className='flex items-center gap-2'>
+        <button className='flex items-center gap-2' onClick={()=>navigate('/gst')}>
             <img src={img2} alt="GST Benefit" height={22} width={22}/>
         <p className='!text-sm'>GST Benefit</p>
         </button>
         
-        <button className='flex items-center gap-2'>
+        <button className='flex items-center gap-2' onClick={()=>navigate('/help')}>
 
         <img src={img3} alt="Help Center" height={22} width={22}/>
         <p className='!text-sm'>Help Center</p>
         </button>
-        <Button variant='contained' className='h-8 items-center'>Login</Button>
-        <button><img src={img4} alt="Cart" height={22} width={22}/></button>
+        <button className='bg-blue-700 !text-sm text-white px-8 py-2 rounded-sm shadow-lg items-center hover:bg-blue-800' onClick={()=>{navigate("/user/login")}}>Login</button>
+        <button><img src={img4} alt="Cart" height={22} width={22} onClick={()=>{navigate("/order/cart")}}/></button>
         </div>
         {/* Login and other buttons */}
         

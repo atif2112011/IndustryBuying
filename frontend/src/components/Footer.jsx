@@ -1,4 +1,7 @@
-const Footer = () => {
+import {useNavigate} from 'react-router-dom'
+function Footer(){
+
+  const navigate=useNavigate();
   return (
     <>
     <div className=" py-6 px-4 md:px-12">
@@ -100,8 +103,8 @@ const Footer = () => {
     <div>
       <h2 className="text-lg font-semibold text-blue-900 mb-4">COMPANY</h2>
       <ul className="space-y-2 text-sm">
-        <li><a href="#" className="hover:underline">• About Us</a></li>
-        <li><a href="#" className="hover:underline">• Contact Us</a></li>
+        <li><a href="/aboutus" className="hover:underline" >• About Us</a></li>
+        <li><a href="/contactus" className="hover:underline" >• Contact Us</a></li>
         <li><a href="#" className="hover:underline">• Careers</a></li>
         <li><a href="#" className="hover:underline">• Become a seller</a></li>
         <li><a href="#" className="hover:underline">• Special Offers</a></li>

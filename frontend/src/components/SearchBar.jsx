@@ -1,10 +1,10 @@
 import SearchLogo from "../assets/icons/search-line.svg"
-function SearchBar({ searchTerm, setSearchTerm }) {
+function SearchBar({ searchTerm, setSearchTerm,placeholder }) {
   return (
-    <div className="p-2  flex flex-row items-center justify-between border-2 border-gray-300 rounded-sm">
-      <input className="text-sm text-gray-700 w-100 align-center border-none outline-none"
+    <div className="p-2  flex flex-row items-center justify-between border-2 border-gray-300 rounded-sm bg-white flex-1">
+      <input className="text-sm text-gray-700 flex-1 align-center border-none outline-none "
         type="text"
-        placeholder="Search products by title, sku, category, or brand"
+        placeholder={placeholder}
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
