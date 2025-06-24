@@ -10,7 +10,7 @@ function SearchBar({ searchTerm, setSearchTerm,placeholder }) {
       />
       <button>
         <img src={SearchLogo} alt="searchBtn" height={16} width={16}/>
-        </button>
+      </button>
     </div>
   );
 }
