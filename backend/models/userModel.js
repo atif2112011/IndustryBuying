@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema({
   phone: {
     type: String,
     default: '',
+    unique:true
   },
 
   password: {
@@ -46,7 +47,7 @@ const userSchema = new mongoose.Schema({
   company: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Company', // Must create a separate Company model
-    default: null,
+    default: '',
   },
 
  
