@@ -16,6 +16,8 @@ const otpSchema = new mongoose.Schema({
   isOtpVerified:{type:Boolean,default:false}
   
 },{timestamps:true});
+// TTL index to delete document 24 hours after creation
+otpSchema.index({ createdAt: 1 }, { expireAfterSeconds: 24 * 60 * 60 });
 
 const OTP = mongoose.model("OTP",otpSchema)
 module.exports = OTP

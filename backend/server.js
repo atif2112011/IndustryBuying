@@ -3,7 +3,10 @@ require("dotenv").config();
 const cors = require("cors");
 const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
 const {connectDB } = require("./config/db");
+const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
+
+const cookieParser = require("cookie-parser");
 
 
 const app = express();
@@ -11,6 +14,7 @@ const PORT = process.env.PORT || 5000;
 
 //Middlewares
 app.use(express.json());
+app.use(cookieParser());
 app.use(
   cors({
     origin: "*", // Allow all origins
@@ -22,7 +26,8 @@ app.use(
 
 
 // routes
-app.use("/auth",userRoutes);
+app.use("/auth",authRoutes);
+app.use("/user",userRoutes);
 app.get("/", async (req, res) => {
     try {
         res.send("Server is running");

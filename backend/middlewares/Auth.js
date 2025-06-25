@@ -1,27 +1,27 @@
-//Verify Auth Token
-const verifyAuthToken = async (req, res, next) => {
-  //TODO : verify the JWT token, if valid, send a success response, if not valid, send an error response.
-  // You can use a library like jsonwebtoken to verify the token.
+const jwt = require("jsonwebtoken");
+
+// Middleware to protect routes
+const authMiddleware = (req, res, next) => {
   try {
-    const token = req.headers.authorization?.split(" ")[1]; // Assuming Bearer token format
+    const token = req.cookies.Token;
 
-    if (!token) throw new Error("Token Not Found.");
+    if (!token) {
+      throw new Error("Access Denied: No Token Provided");
+    }
 
-    // verify
-    const data = jwt.verify(token, process.env.JWT_SECRET);
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    if (!data) throw new Error(" User Not Logged In. ");
+    // Attach user data to request
+    req.user = {
+      userId: decoded.userId,
+      role: decoded.role
+    };
 
-    req.user = data;
-
-    res
-      .json({ message: "Token Verified Successfully", success: true })
-      .status(200);
-
-    next();
-  } catch (error) {
-    next(error);
+    next(); // Continue to the route handler
+  } catch (err) {
+    next(err)
   }
 };
 
-module.exports = verifyAuthToken
+module.exports = authMiddleware;
