@@ -1,23 +1,23 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser, loginUser, check, sendOTP, verifyOTP } = require('../controllers/authController');
-const  verifyAuthToken  = require('../middlewares/Auth');
-const { getUserProfile } = require('../controllers/authController');
 
-// @route POST /register
-router.post('/register',registerUser);
+const authMiddleware = require('../middlewares/Auth');
+const {getUserProfile,updateUserProfile,addUserAddress,updateUserAddress,deleteUser,blockUser,unBlockUser} = require('../controllers/userController');
 
-// @route POST /login
-router.post('/login', loginUser);
 
-router.get('/profile/:id',verifyAuthToken,getUserProfile);
 
-router.get('/verify-auth',verifyAuthToken);
+router.get('/:id',authMiddleware,getUserProfile);
+router.put("/:id",updateUserProfile);
 
-router.post('/check',check)
+// add address
+router.post("/address/:id",addUserAddress)
+// update Address
+router.put("/address/:id",updateUserAddress);
 
-router.post("/sendOTP", sendOTP);
+// delete user
+router.delete("/:id",deleteUser)
 
-router.post("/verifyOTP", verifyOTP);
-
+// to block user
+router.put("/:id/block", blockUser);
+router.put("/:id/unblock", unBlockUser);
 module.exports = router;

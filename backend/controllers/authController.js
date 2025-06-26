@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const validator = require("validator");
 const otpGenerator = require("otp-generator");
 const OTP = require("../models/otpSchema");
+// const { Error } = require("mongoose");
 
 //Register a new user
 const registerUser = async (req, res, next) => {
@@ -11,9 +12,11 @@ const registerUser = async (req, res, next) => {
   try {
     const { name, email, password, phone } = req.body;
     if (!name || !email || !password || !phone)
-      throw new Error(" fill all details ");
+      throw new Error(
+        " Check if all fields are present:Name, Email, Password and Phone "
+      );
 
-    if (!validator.isEmail(email)) throw new Error("Invalid Credentials");
+    if (!validator.isEmail(email)) throw new Error("Invalid Email");
 
     const existingUser = await User.findOne({ email: email });
 
@@ -25,7 +28,7 @@ const registerUser = async (req, res, next) => {
 
     const otpInfo = await OTP.findOne({ phone });
 
-    if (!otpInfo?.isOtpVerified) throw new Error("User Not Verified");
+    if (!otpInfo?.isOtpVerified) throw new Error("OTP verification Not Found");
 
     const savedUser = await User.create({
       name,
@@ -34,6 +37,7 @@ const registerUser = async (req, res, next) => {
       phone,
       isVerified: true,
     });
+    await OTP.deleteMany({ phone }); // optional if not tracking verified OTPs
 
     return res.status(200).json({
       message: "User Registered Successfully.",
@@ -55,7 +59,7 @@ const loginUser = async (req, res, next) => {
 
     if (!email || !password) throw new Error(" fill all details ");
 
-    if (!validator.isEmail(email)) throw new Error("Invalid Credentials");
+    if (!validator.isEmail(email)) throw new Error("Invalid Email Format");
 
     const isExist = await User.findOne({ email });
 
@@ -75,14 +79,12 @@ const loginUser = async (req, res, next) => {
     );
 
     if (!token)
-      return res
-        .status(400)
-        .json({ msg: "Error in Token Generation", success: false });
+      throw new Error("Error in Token Generation");
 
     return res
       .cookie("Token", token, {
         httpOnly: true,
-        secure: true,
+        secure: process.env.NODE_ENV == "production"?true:false, // Set to true in production
         sameSite: "strict",
         maxAge: 24 * 60 * 60 * 1000,
       })
@@ -90,35 +92,13 @@ const loginUser = async (req, res, next) => {
       .json({
         message: "User Logged In Successfully ",
         success: true,
-        token: token,
       });
   } catch (error) {
     next(error);
   }
 };
 
-//Get User Profile
-const getUserProfile = async (req, res, next) => {
-  //TODO : get the user profile based on the user ID from the request, and send the user profile back to the client.
-  // If user does not exist, send an error response.
-  try {
-    const userId = req.params; // Assuming user ID is stored in req.user after authentication
 
-    if (!userId) throw new Error(" Error in Fetchin ID ");
-
-    const existingUser = await User.findById({ _id: userId });
-
-    if (!existingUser) throw new Error(" User Not Found. ");
-
-    return res.status(200).json({
-      message: "User Details ",
-      success: true,
-      userDetails: existingUser,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
 
 // /auth/check
 const check = async (req, res, next) => {
@@ -129,13 +109,16 @@ const check = async (req, res, next) => {
 
     const phoneRegex = /^[6-9]\d{9}$/;
     if (!phoneRegex.test(phone)) {
-      throw new Error("Enter a valid 10-digit Indian phone number (no +91)");
+      throw new Error(
+        "Enter a valid 10-digit Indian phone number (excluding +91)"
+      );
     }
 
-    if (!validator.isEmail(email)) throw new Error("Invalid Credentials");
+    if (!validator.isEmail(email)) throw new Error("Invalid Email");
 
     const user = await User.findOne({ $or: [{ email }, { phone }] });
 
+    if (user) throw new Error("User Already Exist with this Email or Phone");
     if (user) throw new Error("User Already Exist with this Email OR Phone");
 
     return res
@@ -164,12 +147,12 @@ const sendOTP = async (req, res, next) => {
       specialChars: false,
     });
 
-    console.log("otp :", otp);
+    console.log(`otp generated for number ${phone} : `, otp);
     const hashedOtp = await bcrypt.hash(otp, 10);
 
     // saved OTP in DB
     const newExpiry = Date.now() + 5 * 60 * 1000;
-    
+
     const otpInfo = await OTP.create({
       phone,
       otp: hashedOtp,
@@ -182,9 +165,7 @@ const sendOTP = async (req, res, next) => {
     //   throw error;
     // }
 
-    res
-      .status(200)
-      .json({ message: "OTP send Successfully", success: true, otp: otpInfo });
+    res.status(200).json({ message: "OTP send Successfully", success: true });
   } catch (error) {
     next(error);
   }
@@ -192,18 +173,19 @@ const sendOTP = async (req, res, next) => {
 
 const verifyOTP = async (req, res, next) => {
   try {
-    const { otp,phone } = req.body;
+    const { otp, phone } = req.body;
 
-    if (!otp || !phone) throw new Error("OTP not send from client ");
+    if (!otp || !phone) throw new Error("OTP or Phone is missing");
 
-    const savedOTP = await OTP.findOne({phone});
+    const savedOTP = await OTP.findOne({ phone, isOtpVerified: false }).sort({
+      createdAt: -1,
+    });
 
     if (!savedOTP) throw new Error("Invalid OTP");
-
-     console.log("savedOTP",savedOTP)
+    console.log(savedOTP);
 
     // compare OTP
-    const isMatchOtp =  bcrypt.compare(savedOTP?.otp, otp);
+    const isMatchOtp = await bcrypt.compare(otp, savedOTP?.otp);
 
     if (!isMatchOtp) throw new Error("Wrong OTP");
 
@@ -216,16 +198,38 @@ const verifyOTP = async (req, res, next) => {
 
     return res
       .status(200)
-      .json({ message: "OTP Verified", success: true, savedOTP });
+      .json({ message: "OTP Verified", success: true});
   } catch (error) {
     next(error);
   }
 };
+
+const verifyAuth = (req, res, next) => {
+  try {
+    
+    const token = req.cookies.Token;
+
+    if (!token) {
+      throw new Error("No token found in cookies");
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    return res.status(200).json({
+      success: true,
+      userId: decoded.userId,
+      role: decoded.role
+    });
+  } catch (err) {
+   next(err);
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
-  getUserProfile,
   check,
   sendOTP,
   verifyOTP,
+  verifyAuth
 };
