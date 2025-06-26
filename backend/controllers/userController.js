@@ -1,4 +1,5 @@
 const User = require("../models/userModel");
+const mongoose = require("mongoose")
 
 //Get User Profile
 const getUserProfile = async (req, res, next) => {
@@ -61,7 +62,7 @@ const updateUserProfile = async (req, res, next) => {
 // Add new address to user's address list
 const addUserAddress = async (req, res,next) => {
   try {
-    const userId = req.params.id;
+    const {id} = req.params
     const {
       name,
       email,
@@ -78,7 +79,7 @@ const addUserAddress = async (req, res,next) => {
       GSTIN,
     } = req.body;
 
-    const user = await User.findById(userId);
+    const user = await User.findById(id);
     if (!user)throw new Error( "User not found")
 
     const newAddress = {
@@ -104,13 +105,13 @@ const addUserAddress = async (req, res,next) => {
     return res
       .status(200)
       .json({ message: "Address added successfully", address: newAddress });
-  } catch (err) {
+  } catch (error) {
     next(error)
-};
+   }
 }
 
 
-const updateUserAddress = async (req, res) => {
+const updateUserAddress = async (req, res,next) => {
   try {
     const userId = req.params.id;
     const { updatedData } = req.body;
@@ -139,7 +140,7 @@ const updateUserAddress = async (req, res) => {
       message: "Address updated successfully",
       address: addressToUpdate,
     });
-  } catch (err) {
+  } catch (error) {
     next(error)
   }
 };
