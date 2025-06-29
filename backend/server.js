@@ -27,7 +27,7 @@ app.use(
 
 // routes
 app.use("/auth",authRoutes);
-app.use("/user",userRoutes);
+app.use("/api/user",userRoutes);
 app.get("/", async (req, res) => {
     try {
         res.send("Server is running");
