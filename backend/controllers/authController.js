@@ -118,7 +118,6 @@ const check = async (req, res, next) => {
 
     const user = await User.findOne({ $or: [{ email }, { phone }] });
 
-    if (user) throw new Error("User Already Exist with this Email or Phone");
     if (user) throw new Error("User Already Exist with this Email OR Phone");
 
     return res

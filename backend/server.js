@@ -5,6 +5,7 @@ const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
 const {connectDB } = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
+const productRoutes = require("./routes/productRoutes")
 
 const cookieParser = require("cookie-parser");
 
@@ -28,6 +29,8 @@ app.use(
 // routes
 app.use("/auth",authRoutes);
 app.use("/api/user",userRoutes);
+app.use("/api/products",productRoutes)
+
 app.get("/", async (req, res) => {
     try {
         res.send("Server is running");
