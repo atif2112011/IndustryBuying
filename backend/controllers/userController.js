@@ -104,7 +104,7 @@ const addUserAddress = async (req, res,next) => {
 
     return res
       .status(200)
-      .json({ message: "Address added successfully", address: newAddress });
+      .json({ success:true,message: "Address added successfully", address: newAddress });
   } catch (error) {
     next(error)
    }
@@ -115,7 +115,7 @@ const updateUserAddress = async (req, res,next) => {
   try {
     const userId = req.params.id;
     const { updatedData } = req.body;
-
+    
     if (!updatedData || !updatedData._id) 
       throw new Error("updatedData with a valid _id is required");
 
@@ -137,6 +137,7 @@ const updateUserAddress = async (req, res,next) => {
     await user.save();
 
     return res.status(200).json({
+      success:true,
       message: "Address updated successfully",
       address: addressToUpdate,
     });
@@ -154,7 +155,8 @@ const deleteUser = async (req, res,next) => {
     if (!deletedUser) 
       throw new Error ("User not Found ")
 
-    return res.status(200).json({ message: "User deleted successfully" });
+    return res.status(200).json({ success:true,
+      message: "User deleted successfully" });
   } catch (error) {
      next(error)
   }
@@ -170,7 +172,8 @@ const blockUser = async(req,res,next)=>{
 
      return res
        .status(200)
-       .json({ message: "User Blocked", user: user, success: true });
+       .json({ success:true,
+        message: "User Blocked", user: user, success: true });
 
   }catch (error) {
     next(error)

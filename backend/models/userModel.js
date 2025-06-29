@@ -50,7 +50,8 @@ const userSchema = new mongoose.Schema(
     },
     GSTIN: {
       type: String,
-      unique: true,
+      required:false,
+      unique:false,
       validate: {
         validator: function (v) {
           return v.length === 15;
@@ -116,7 +117,8 @@ const userSchema = new mongoose.Schema(
         },
         GSTIN: {
           type: String,
-          unique: true,
+          required:false,
+          unique:false,
           validate: {
             validator: function (v) {
               return v.length === 15;

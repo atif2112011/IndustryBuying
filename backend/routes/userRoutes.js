@@ -9,7 +9,7 @@ const {getUserProfile,updateUserProfile,addUserAddress,updateUserAddress,deleteU
 router.get('/:id',authMiddleware,getUserProfile);
 router.put("/:id",updateUserProfile);
 
-// add address
+// add address  
 router.post("/address/:id",addUserAddress)
 // update Address
 router.put("/address/:id",updateUserAddress);
