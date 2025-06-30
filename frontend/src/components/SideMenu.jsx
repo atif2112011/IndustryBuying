@@ -128,8 +128,9 @@ const categoryMenuOptions = [
     ]
   }
 ];
-function SideMenu() {
+function SideMenu({showSideMenu,setShowSideMenu}) {
 const location=useLocation();
+const navigate=useNavigate();
   const isSubcategoryPage = /^\/categories\/[^\/]+\/[^\/]+$/.test(location.pathname);
   const isProductPage = /^\/categories\/[^\/]+\/[^\/]+\/\d+$/.test(location.pathname);
   
@@ -148,48 +149,64 @@ const location=useLocation();
 
   return (
     <>
-   {!isProductPage && <div className="flex flex-col gap-4 p-4 bg-none h-full">
-
+   {!isProductPage && <div
+    className={`
+      absolute top-0 left-0 z-30 w-3/4 max-h-9/10 
+      transform transition-transform duration-300 ease-in-out
+      ${showSideMenu ? 'translate-x-0' : '-translate-x-full'}
+      md:relative md:translate-x-0 md:flex md:w-fit md:h-full md:top-auto md:left-auto
+      flex flex-col gap-4 p-4
+    `}
+  >
       {/* Accordion for Category Hiding on Products Tab */}
       {isSubcategoryPage ?  <FiltersnCategory priceRange={priceRange} discounts={discounts} brands={brands}setBrands={setBrands} setDiscounts={setDiscounts} setPriceRange={setPriceRange} discountOptions={discountOptions} brandOptions={brandOptions}/>:
-     <div className="w-80 bg-white shadow-md rounded-lg p-4">
+     <div className="md:w-80 bg-white shadow-md rounded-lg p-4 overflow-y-auto md:overflow-y-visible h-full">
     {categoryMenuOptions.map((option, index) => (
-    <div key={index} className="relative group">
-      {/* Wrap NavLink and Submenu together */}
-      <div className="flex items-center gap-2 p-2 group-hover:bg-blue-100 rounded-md cursor-pointer">
-        <img src={icon1} alt={option.name} height={22} width={22} />
-        <span className="!text-sm">{option.name}</span>
-      </div>
-
-      {/* Submenu visible on group hover */}
-      <div className="hidden group-hover:block absolute left-full top-0 w-80 bg-white shadow-md rounded-lg p-4 z-10">
-        {option.subcategories.map((subcategory, subIndex) => (
-          <NavLink
-            key={subIndex}
-            to={subcategory.link}
-            className="block p-2 hover:bg-blue-100 rounded-md text-sm"
+        <div key={index} className="relative group">
+          {/* Main clickable menu item */}
+          <div
+            onClick={() => {
+              navigate(option.link);
+              setShowSideMenu(false);
+            }}
+            className="flex items-center gap-2 p-2 group-hover:bg-blue-100 rounded-md cursor-pointer relative z-10"
           >
-            <span className="!text-sm !text-gray-800">{subcategory.name}</span>
-          </NavLink>
-        ))}
-      </div>
+            <img
+              src={icon1}
+              alt={option.name}
+              className="md:h-[22px] md:w-[22px] h-[18px] w-[18px]"
+            />
+            <span className="!text-xs md:!text-sm">{option.name}</span>
+          </div>
 
-      {/* Transparent overlay on top to keep NavLink clickable */}
-      <NavLink
-        to={option.link}
-        className="absolute inset-0 z-0"
-      />
-    </div>
-  ))}
+          {/* Submenu on hover */}
+          <div className="hidden group-hover:block absolute left-full top-0 w-80 bg-white shadow-md rounded-lg p-4 z-20">
+            {option.subcategories.map((subcategory, subIndex) => (
+              <div
+                key={subIndex}
+                onClick={() => {
+                  navigate(subcategory.link);
+                  setShowSideMenu(false);
+                }}
+                className="block p-2 hover:bg-blue-100 rounded-md text-sm cursor-pointer"
+              >
+                <span className="!text-xs md:!text-sm !text-gray-800">
+                  {subcategory.name}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
 
-  <NavLink
+  {/* <NavLink
     to="/categories"
     className="flex items-center gap-2 p-2 pr-0 hover:bg-orange-400 rounded-md"
   >
     <p className="!text-md poppins-semibold !text-orange-500 hover:!text-white w-full">
       See all Categories
     </p>
-  </NavLink>
+  </NavLink> */}
 </div>}
 
 

@@ -1,9 +1,9 @@
 // TestimonialCarousel.jsx
 import threem from '../assets/images/brands/3m.png';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/pagination';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination } from "swiper/modules";
+import "swiper/css/pagination";
+import "swiper/css";
 
 const testimonials = [
   {
@@ -37,24 +37,25 @@ const testimonials = [
 ];
 
 const TestimonialCarousel = () => {
-  return (
-    <>
-    <div className='w-full justify-center items-center flex flex-col pt-2'>
-        <h2 className='poppins bold text-center !text-blue-950'>TESTIMONIALS</h2>
-        <p className='text-center'>What our clients say about us</p>
-        </div>
-    <div className="w-full py-4 px-4  flex flex-row">
+    return (
+    <div className="w-full py-6">
+      <div className="text-center mb-4">
+        <h2 className="!text-blue-950 !text-md md:!text-lg !font-semibold">TESTIMONIALS</h2>
+        <p className="!text-sm !text-gray-600">What our clients say about us</p>
+      </div>
+
       <Swiper
+        modules={[Pagination, Autoplay]}
         spaceBetween={30}
-        slidesPerView={3}
+        loop={true}
+        autoplay={{ delay: 2000, disableOnInteraction: false }}
         pagination={{ clickable: true }}
-        modules={[Pagination]}
         breakpoints={{
           320: { slidesPerView: 1 },
           768: { slidesPerView: 2 },
           1024: { slidesPerView: 3 },
         }}
-        className=''
+        className="w-full px-4"
       >
         {testimonials.map((testimonial, index) => (
           <SwiperSlide key={index}>
@@ -62,17 +63,16 @@ const TestimonialCarousel = () => {
               <div className="flex items-center space-x-4 mb-4">
                 <img src={threem} alt={testimonial.company} className="w-12 h-12 object-contain" />
                 <div>
-                  <h3 className="!text-lg !poppins-semibold">{testimonial.name}</h3>
+                  <h3 className="!text-lg !font-semibold">{testimonial.name}</h3>
                   <p className="!text-sm !text-gray-500">{testimonial.designation}</p>
                 </div>
               </div>
-              <p className="!text-sm !text-gray-800 leading-relaxed">{testimonial.text}</p>
+              <p className="!text-xs md:!text-sm !text-gray-800 !leading-relaxed">{testimonial.text}</p>
             </div>
           </SwiperSlide>
         ))}
       </Swiper>
     </div>
-    </>
   );
 };
 
