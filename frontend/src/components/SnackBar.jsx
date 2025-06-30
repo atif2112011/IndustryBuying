@@ -1,6 +1,6 @@
 import { Snackbar } from "@mui/material";
 
-function SnackBar({openSnackBar,setopenSnackBar,message})
+function SnackBar({openSnackBar,setopenSnackBar,message,setMessage})
 {
      const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -8,6 +8,7 @@ function SnackBar({openSnackBar,setopenSnackBar,message})
     }
 
     setopenSnackBar(false);
+    setMessage("");
   };
     return(
         <>

@@ -7,9 +7,11 @@
 /* Global Styles */
 html, body {
   font-family: 'Poppins', sans-serif;
-  background-color: #f5f5f5; /* MUI background default */
-  color: #212121;            /* MUI primary text */
+  background-color: #f5f5f5;
+  color: #212121;          
   scroll-behavior: smooth;
+  background-image: url('white-texture.jpg');
+  background-size:  contain;
   min-height: 100vh;
   line-height: 1.5;
 }
@@ -177,7 +179,7 @@ button:hover {
 
 .MuiSnackbarContent-message{
 background-color: #f5f5f5;
-color: green;
+color:#172554;
 font-family: 'Poppins';
 
 }
@@ -185,4 +187,6 @@ font-family: 'Poppins';
   color: #f5f5f5 !important;
   background-color: #f5f5f5 !important;
   padding: 0px;
+  
+  
 }

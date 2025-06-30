@@ -22,9 +22,19 @@ const userSchema = new mongoose.Schema(
       unique: true,
     },
 
+    isGoogleLogin: {
+      type: Boolean,
+      default: false,
+    },
+
+    googleId: {
+      type: String,
+      default: "",
+    },
+
     password: {
       type: String,
-      required: true,
+      required: false,
       minlength: 6,
     },
 
