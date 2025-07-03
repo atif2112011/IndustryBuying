@@ -73,28 +73,28 @@ function Addresspage() {
     });
   }, [addresses]);
   return (
-    <div className="flex flex-row p-6 gap-2 h-screen ">
+    <div className="flex flex-col md:flex-row p-2 mt-2 md:m-0 md:p-6 gap-2 md:h-screen ">
       {/* Left Div */}
-      <div className=" flex flex-col gap-4 p-2 w-3/4 overflow-y-auto hide-scroll">
+      <div className=" flex flex-col gap-4 p-2 md:w-3/4 md:overflow-y-auto hide-scroll">
         {/* Billing Address select */}
         <div className="flex flex-col gap-4 mb-6">
           <p className=" !text-sm font-semibold !text-gray-800 mb-1">
             Select a Billing Address
           </p>
-          <div className="flex flex-row flex-wrap gap-4">
+          <div className="flex flex-col md:flex-row flex-wrap gap-4">
             {addresses
               .filter((address) => !address.isShipping)
               .map((address) => {
                 return (
-                  <div className="bg-white p-4 px-8 rounded shadow-md w-2/5 border border-gray-200">
+                  <div className="bg-white p-3 md:p-4 md:px-8 rounded shadow-md md:w-2/5 border border-gray-200">
                     <div className="flex items-center justify-between mb-2">
                       {selectedBilling && address.id == selectedBilling.id ? (
-                        <span className="bg-green-600 !text-white !text-xs px-2 py-1 rounded font-medium">
+                        <span className="bg-green-600 !text-white !text-[10px] md:!text-xs px-2 py-1 rounded font-medium">
                           Billing at this address
                         </span>
                       ) : (
                         <button
-                          className="bg-white !text-green-600 border border-green-600 !text-xs px-2 py-1 rounded font-medium cursor-pointer"
+                          className="bg-white !text-green-600 border border-green-600 !text-[10px] md:!text-xs px-2 py-1 rounded font-medium cursor-pointer"
                           onClick={() => {
                             setselectedBilling(address);
                           }}
@@ -105,28 +105,28 @@ function Addresspage() {
                     </div>
 
                     <div className="flex flex-col gap-1 text-sm text-gray-800 leading-relaxed w-full">
-                      <p className="!text-sm font-semibold">
+                      <p className="!text-xs md:!text-sm font-semibold">
                         {address.name} - [{address.type}]
                       </p>
-                      <p className="!text-sm">
-                        <span className="!text-sm font-medium">Mobile :</span>{" "}
+                      <p className="!text-xs md:!text-sm">
+                        <span className="!text-xs md:!text-sm font-medium">Mobile :</span>{" "}
                         {address.mobile}
                       </p>
-                      <p className="!text-sm">
-                        <span className="!text-sm font-medium">
+                      <p className="!text-xs md:!text-sm">
+                        <span className="!text-xs md:!text-sm font-medium">
                           Alternate Mobile :
                         </span>{" "}
                         {address.alternateMobile}
                       </p>
-                      <p className="!text-sm w-full">
-                        <span className="!text-sm font-medium">Address :</span>{" "}
+                      <p className="!text-xs md:!text-sm w-full">
+                        <span className="!text-xs md:!text-sm font-medium">Address :</span>{" "}
                         {`${address.flat}, ${
                           address.landmark ? address.landmark : ""
                         }, ${address.area}, ${address.city}, `}
                         {address.state}- {address.pincode}
                       </p>
-                      <p className="!text-sm">
-                        <span className="!text-sm font-medium">GSTIN: </span>
+                      <p className="!text-xs md:!text-sm">
+                        <span className="!text-xs md:!text-sm font-medium">GSTIN: </span>
                         {address.gstin}
                       </p>
                     </div>
@@ -147,15 +147,15 @@ function Addresspage() {
               .filter((address) => address.isShipping)
               .map((address) => {
                 return (
-                  <div className="bg-white p-4 px-8 rounded shadow-md w-2/5 border border-gray-200">
+                  <div className="bg-white p-3 md:p-4 md:px-8 rounded shadow-md md:w-2/5 border border-gray-200">
                     <div className="flex items-center justify-between mb-2">
                       {selectedShipping && address.id == selectedShipping.id ? (
-                        <span className="bg-green-600 !text-white !text-xs px-2 py-1 rounded font-medium">
+                        <span className="bg-green-600 !text-white !text-[10px] md:!text-xs px-2 py-1 rounded font-medium">
                           Shipping at this address
                         </span>
                       ) : (
                         <button
-                          className="bg-white !text-green-600 border border-green-600 !text-xs px-2 py-1 rounded font-medium cursor-pointer"
+                          className="bg-white !text-green-600 border border-green-600 !text-[ 10px] md:!text-xs px-2 py-1 rounded font-medium cursor-pointer"
                           onClick={() => {
                             setselectedShipping(address);
                           }}
@@ -166,28 +166,28 @@ function Addresspage() {
                     </div>
 
                     <div className="flex flex-col gap-1 text-sm text-gray-800 leading-relaxed w-full">
-                      <p className="!text-sm font-semibold">
+                      <p className="!text-xs md:!text-sm font-semibold">
                         {address.name} - [{address.type}]
                       </p>
-                      <p className="!text-sm">
-                        <span className="!text-sm font-medium">Mobile :</span>{" "}
+                      <p className="!text-xs md:!text-sm">
+                        <span className="!text-xs md:!text-sm font-medium">Mobile :</span>{" "}
                         {address.mobile}
                       </p>
-                      <p className="!text-sm">
-                        <span className="!text-sm font-medium">
+                      <p className="!text-xs md:!text-sm">
+                        <span className="!text-xs md:!text-sm font-medium">
                           Alternate Mobile :
                         </span>{" "}
                         {address.alternateMobile}
                       </p>
-                      <p className="!text-sm w-full">
-                        <span className="!text-sm font-medium">Address :</span>{" "}
+                      <p className="!text-xs md:!text-sm w-full">
+                        <span className="!text-xs md:!text-sm font-medium">Address :</span>{" "}
                         {`${address.flat}, ${
                           address.landmark ? address.landmark : ""
                         }, ${address.area}, ${address.city}, `}
                         {address.state}- {address.pincode}
                       </p>
-                      <p className="!text-sm">
-                        <span className="!text-sm font-medium">GSTIN: </span>
+                      <p className="!text-xs md:!text-sm">
+                        <span className="!text-xs md:!text-sm font-medium">GSTIN: </span>
                         {address.gstin}
                       </p>
                     </div>
@@ -201,7 +201,7 @@ function Addresspage() {
       {/* Left Div end*/}
 
       {/* Right Div */}
-      <div className="w-80 rounded-md h-screen flex flex-col gap-4 p-2 ">
+      <div className="md:w-80 rounded-md md:h-screen flex flex-col gap-4 p-2 ">
         {/* Payment Summary */}
           <div className="bg-white p-4 max-w-sm rounded-sm shadow-md">
         <p className="!font-semibold !text-sm mb-2">

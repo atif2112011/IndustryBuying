@@ -102,12 +102,13 @@ export default function EditAddressModal({ isOpen, onClose, initialData, onSave 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-    <div className="p-4 w-1/2 bg-white rounded shadow">
+    <div className="p-4 md:px-7 w-9/10 h-8/10 md:max-h-8/10 md:w-1/2 overflow-y-auto bg-white rounded shadow">
+      <p className='!text-md md:!text-lg !font-semibold !text-blue-950 my-3'>Edit Address</p>
       <div className="grid grid-cols-2 gap-4">
         <div className="col-span-2 flex items-center gap-2">
              
         <div className='flex flex-col gap-1'>
-            <label className='!text-sm text-gray-800 !font-medium'>Add GSTIN and click verify to claim input tax credit on this purchase.</label>
+            <label className='!text-xs md:!text-sm text-gray-800 !font-medium'>Add GSTIN and click verify to claim input tax credit.</label>
             <div className='flex flex-row gap-4'>
           <input
             type="text"
@@ -115,9 +116,9 @@ export default function EditAddressModal({ isOpen, onClose, initialData, onSave 
             
             value={form.gstin}
             onChange={handleChange}
-            className="flex-1 border border-gray-500 outline-none px-3 py-2 rounded text-sm"
+            className="flex-1 border border-gray-500 outline-none px-3 py-2 rounded !text-xs md:text-sm"
           />
-          <button className="bg-green-100 text-green-800 px-4 py-2 rounded text-sm font-semibold">
+          <button className="bg-green-100 text-green-800 px-4 py-2 rounded !text-[10px] md:text-sm font-semibold">
             Verify
           </button>
             </div>
@@ -126,138 +127,138 @@ export default function EditAddressModal({ isOpen, onClose, initialData, onSave 
         </div>
 
         <div>
-             <label className='!text-sm text-gray-800 !font-medium'>Name</label>
+             <label className='!text-xs md:!text-sm text-gray-800 !font-medium'>Name</label>
           <input
             name="name"
             required
             value={form.name}
             onChange={handleChange}
-            className="w-full border border-gray-500 outline-none px-3 py-2 rounded text-sm"
+            className="w-full border border-gray-500 outline-none px-3 py-2 rounded !text-xs md:text-sm"
           />
-          {errors.name && <p className="!text-red-500 !text-xs">{errors.name}</p>}
+          {errors.name && <p className="!text-red-500 !text-[10px] md:!text-xs">{errors.name}</p>}
         </div>
 
         <div>
-             <label className='!text-sm text-gray-800 !font-medium'>Email</label>
+             <label className='!text-xs md:!text-sm text-gray-800 !font-medium'>Email</label>
           <input
             name="email"
             required
             value={form.email}
             onChange={handleChange}
-            className="w-full border border-gray-500 outline-none px-3 py-2 rounded text-sm"
+            className="w-full border border-gray-500 outline-none px-3 py-2 rounded !text-xs md:text-sm"
           />
-          {errors.email && <p className="!text-red-500 !text-xs">{errors.email}</p>}
+          {errors.email && <p className="!text-red-500 !text-[10px] md:!text-xs">{errors.email}</p>}
         </div>
 
         <div>
-            <label className='!text-sm text-gray-800 !font-medium'>Alternate Number</label>
+            <label className='!text-xs md:!text-sm text-gray-800 !font-medium'>Alternate Number</label>
           <input
             name="alternateMobile"
             
             value={form.alternateMobile}
             onChange={handleChange}
-            className="w-full border border-gray-500 outline-none px-3 py-2 rounded text-sm"
+            className="w-full border border-gray-500 outline-none px-3 py-2 rounded !text-xs md:text-sm"
           />
         </div>
 
         <div>
-            <label className='!text-sm text-gray-800 !font-medium'>Mobile</label>
-          <div className='flex flex-row gap-2'>
+            <label className='!text-xs md:!text-sm text-gray-800 !font-medium'>Mobile</label>
+          <div className='flex flex-row gap-2 flex-wrap'>
           <input
           type="tel"
             name="mobile"
             required
             value={form.mobile}
             onChange={handleChange}
-            className="flex-1 border border-gray-500 outline-none px-3 py-2 rounded text-sm"
+            className="flex-1 border border-gray-500 outline-none px-3 py-2 rounded !text-xs md:text-sm"
           />
-          <button className="bg-gray-200 px-4 rounded text-sm">Send OTP</button>
+          <button className="bg-gray-200 px-4 py-2 rounded !text-[10px] md:text-sm">Send OTP</button>
         </div>
-        {errors.mobile && <p className="!text-red-500 !text-xs col-span-2">{errors.mobile}</p>}
+        {errors.mobile && <p className="!text-red-500 !text-[10px] md:!text-xs col-span-2">{errors.mobile}</p>}
         </div>
 
         <div>
-            <label className='!text-sm text-gray-800 !font-medium'>Flat, House no., Building, Company, Apartment</label>
+            <label className='!text-xs md:!text-sm text-gray-800 !font-medium'>Flat, House no., Building, Company, Apartment</label>
             
           <input
             name="flat"
             required
             value={form.flat}
             onChange={handleChange}
-            className="w-full border border-gray-500 outline-none px-3 py-2 rounded text-sm"
+            className="w-full border border-gray-500 outline-none px-3 py-2 rounded !text-xs md:text-sm"
           />
-          {errors.flat && <p className="!text-red-500 !text-xs">{errors.flat}</p>}
+          {errors.flat && <p className="!text-red-500 !text-[10px] md:!text-xs">{errors.flat}</p>}
         </div>
 
         <div>
-            <label className='!text-sm text-gray-800 !font-medium'>Area, Street, Sector, Village</label>
+            <label className='!text-xs md:!text-sm text-gray-800 !font-medium'>Area, Street, Sector, Village</label>
           <input
             name="area"
             required
             value={form.area}
             onChange={handleChange}
-            className="w-full border border-gray-500 outline-none px-3 py-2 rounded text-sm"
+            className="w-full border border-gray-500 outline-none px-3 py-2 rounded !text-xs md:text-sm"
           />
         </div>
 
         <div>
-            <label className='!text-sm text-gray-800 !font-medium'>Landmark</label>
+            <label className='!text-xs md:!text-sm text-gray-800 !font-medium'>Landmark</label>
           <input
             name="landmark"
             
             value={form.landmark}
             onChange={handleChange}
-            className="w-full border border-gray-500 outline-none px-3 py-2 rounded text-sm"
+            className="w-full border border-gray-500 outline-none px-3 py-2 rounded !text-xs md:text-sm"
           />
           <p className="!text-xs !text-gray-400">Landmark will ensure faster delivery</p>
         </div>
 
         <div>
-            <label className='!text-sm text-gray-800 !font-medium'>Pincode</label>
+            <label className='!text-xs md:!text-sm text-gray-800 !font-medium'>Pincode</label>
           <input
             name="pincode"
             required
             value={form.pincode}
             onChange={handleChange}
-            className="w-full border border-gray-500 outline-none px-3 py-2 rounded text-sm"
+            className="w-full border border-gray-500 outline-none px-3 py-2 rounded !text-xs md:text-sm"
           />
-          {errors.pincode && <p className="!text-red-500 !text-xs">{errors.pincode}</p>}
+          {errors.pincode && <p className="!text-red-500 !text-[10px] md:!text-xs">{errors.pincode}</p>}
         </div>
 
         <div>
-            <label className='!text-sm text-gray-800 !font-medium'>City</label>
+            <label className='!text-xs md:!text-sm text-gray-800 !font-medium'>City</label>
           <input
             name="city"
             required
             value={form.city}
             onChange={handleChange}
-            className="w-full border border-gray-500 outline-none px-3 py-2 rounded text-sm"
+            className="w-full border border-gray-500 outline-none px-3 py-2 rounded !text-xs md:text-sm"
           />
-          {errors.city && <p className="!text-red-500 !text-xs">{errors.city}</p>}
+          {errors.city && <p className="!text-red-500 !text-[10px] md:!text-xs">{errors.city}</p>}
         </div>
 
         <div>
-            <label className='!text-sm text-gray-800 !font-medium'>State</label>
+            <label className='!text-xs md:!text-sm text-gray-800 !font-medium'>State</label>
           <input
             name="state"
             required
             value={form.state}
             onChange={handleChange}
-            className="w-full border border-gray-500 outline-none px-3 py-2 rounded text-sm"
+            className="w-full border border-gray-500 outline-none px-3 py-2 rounded !text-xs md:text-sm"
           />
-          {errors.state && <p className="!text-red-500 !text-xs">{errors.state}</p>}
+          {errors.state && <p className="!text-red-500 !text-[10px] md:!text-xs">{errors.state}</p>}
         </div>
       </div>
 
       {/* Checkboxes & Address Type */}
       <div className="flex items-center gap-6 mt-4">
-        <label className="flex items-center gap-2 text-sm">
+        <label className="flex items-center gap-2 !text-xs md:text-sm">
           <input type="checkbox" name="isPrimary" className='h-4 w-4' checked={form.isPrimary} onChange={handleChange} disabled/>
-          <span className="!text-sm font-semibold">Make as Primary Address</span>
+          <span className="!text-xs md:!text-sm font-semibold">Make as Primary Address</span>
         </label>
-        <label className="flex items-center gap-2 text-sm">
+        <label className="flex items-center gap-2 !text-xs md:text-sm">
           <input type="checkbox" name="isShipping" className='h-4 w-4' checked={form.isShipping} onChange={handleChange} />
-          <span className="!text-sm font-semibold">Make this Shipping address</span>
+          <span className="!text-xs md:!text-sm font-semibold">Make this Shipping address</span>
         </label>
       </div>
 
@@ -267,7 +268,7 @@ export default function EditAddressModal({ isOpen, onClose, initialData, onSave 
           <button
             key={type}
             type="button"
-            className={`border border-gray-400 px-4 py-1 rounded text-sm ${
+            className={`border border-gray-400 px-4 py-1 rounded !text-xs md:text-sm ${
               form.type.toLowerCase() === type.toLowerCase() ? 'bg-orange-500 text-white' : 'bg-white text-black'
             }`}
             onClick={() => setForm(prev => ({ ...prev, type: type.toLowerCase() }))}
@@ -277,7 +278,7 @@ export default function EditAddressModal({ isOpen, onClose, initialData, onSave 
         ))}
       </div>
 
-      <div className="flex justify-end gap-3 pt-4">
+      <div className="flex justify-end gap-3 mt-8 md:mt-4">
         <button
               type="button"
               onClick={onClose}

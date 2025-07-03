@@ -78,31 +78,31 @@ export default function DescriptionTabs() {
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="Specifications" {...a11yProps(0)} />
-          <Tab label="Description" {...a11yProps(1)} />
+          <Tab label="Specifications" {...a11yProps(0)} className='!text-xs md:!text-sm' />
+          <Tab label="Description" {...a11yProps(1)} className='!text-xs md:!text-sm'/>
         </Tabs>
       </Box>
-      <CustomTabPanel value={value} index={0}>
+      <CustomTabPanel value={value} index={0} className="pt-4">
   
 
   {/* Feature List */}
-  <div className="  p-4 text-sm space-y-3 text-gray-800 bg-gray-100 m-2">
+  <div className=" p-2 py-3  md:p-4 text-sm space-y-3 text-gray-800 bg-gray-100 md:m-2 rounded-sm">
     {productData.specifications.map((item,index)=>(
 <div className="flex flex-row justify-between">
-      <span className="!text-sm text-gray-700 w-1/2">{item.label}</span>
-      <span className="!text-sm font-medium w-1/2">{item.value}</span>
+      <span className="!text-xs md:!text-sm text-gray-700 w-1/2">{item.label}</span>
+      <span className="!text-xs md:!text-sm font-medium w-1/2">{item.value}</span>
     </div>
     ))}
     
   
 </div>
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
+      <CustomTabPanel value={value} index={1} className="pt-4">
         {/* Feature List */}
-  <div className="  p-4 text-sm space-y-3 text-gray-800 bg-gray-100 m-2">
+  <div className="p-2 py-3  md:p-4 text-sm space-y-3 text-gray-800 bg-gray-100 md:m-2 rounded-sm">
     {productData.description.split('\n').map((line)=>(
         
-        <p className="!text-sm text-gray-700">{line}</p>
+        <p className="!text-xs md:!text-sm text-gray-700">{line}</p>
     ))}
     </div>
       </CustomTabPanel>

@@ -75,7 +75,7 @@ let categoryName=(categories.map((category)=>{
         pagination={{
           clickable: true,
         }}
-        navigation={true}
+        navigation={false}
         modules={[Autoplay, Pagination, Navigation]}
         className="mySwiper w-full mb-4"
       >
@@ -83,7 +83,7 @@ let categoryName=(categories.map((category)=>{
         <SwiperSlide><img src={category2} /></SwiperSlide>
 
       </Swiper>
-      <h3 className="mt-4">{categoryName}</h3>
+      <h3 className="mt-4 !text-md md:!text-lg !font-semibold ">{categoryName.toUpperCase()}</h3>
 
      {/* {<CategoryShowcase/>} */}
       <CategoryShowcase/>

@@ -150,21 +150,21 @@ const CategoryShowcase = () => {
   return (
     <div className='py-4'>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
   {electricalCategory.subcategories.map((item) => (
-    <div key={item.name} className="bg-white rounded-lg p-4 shadow-sm max-w-64">
+    <div key={item.name} className="bg-white rounded-lg p-2 md:p-4 shadow-sm max-w-64">
       <img
         src={sampleproduct}
         alt={item.name}
-        className="w-full h-32 object-contain mb-4 cursor-pointer"
+        className="h-[80px] md:h-32 w-full object-contain cursor-pointer"
         onClick={() => navigate(item.link)}
       />
 
-      <p className="!text-md mb-2 !font-semibold">
+      <p className="my-2 !font-semibold !text-[0.75rem] md:!text-sm">
         {item.name}
       </p>
 
-      <ul className="!text-xs text-blue-900 space-y-1 cursor-pointer font-semibold">
+      <ul className="text-[0.5rem] md:!text-xs text-blue-900 space-y-1 cursor-pointer font-semibold ">
         <li className="hover:text-blue-500" onClick={() => navigate("/categories/electrical/circuit-breakers/molded-case-circuit-breakers")}>● Molded Case Circuit Breakers (MCCB)</li>
         <li className="hover:text-blue-500" onClick={() => navigate("/categories/electrical/circuit-breakers/miniature-circuit-breakers")}>● Miniature Circuit Breakers (MCB)</li>
         <li className="hover:text-blue-500" onClick={() => navigate("/categories/electrical/circuit-breakers/electrical-spare-accessories")}>● Electrical Spare & Accessories</li>
@@ -172,7 +172,7 @@ const CategoryShowcase = () => {
 
       <a
         href="#"
-        className="!text-sm text-red-500 font-semibold mt-3 inline-block hover:scale-105 transition-transform duration-200"
+        className="!text-[0.65rem] md:!text-sm text-red-500 font-semibold mt-3 inline-block hover:scale-105 transition-transform duration-200"
       >
         See all
       </a>

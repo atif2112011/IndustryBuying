@@ -16,6 +16,8 @@ function NavBar() {
    const { setShowSnackBar, setMessage } = useAlert();
    const {setLoading}=useLoader();
    const { user, setUser }=useAuth();
+ 
+
 
   useEffect(()=>{
     //Check user is logged in or not
@@ -133,7 +135,7 @@ function NavBar() {
           </button>}
           {user && <button
             className="bg-blue-700 !text-sm text-white px-6 py-2 rounded-sm shadow hover:bg-blue-800"
-            onClick={() => navigate("/user")}
+            onClick={() => {navigate("/user") ,setMobileMenuOpen(false)}}
           >
             Profile
           </button>}

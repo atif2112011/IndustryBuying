@@ -53,7 +53,7 @@ export default function EditUserModal({ isOpen, onClose, userData, onSave }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded-lg w-1/3  p-8 shadow-lg">
+      <div className="bg-white rounded-lg w-8/10 md:w-1/3  p-8 shadow-lg">
         <h3 className="font-semibold mb-4">Edit Personal Information</h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className='flex flex-col gap-2'>

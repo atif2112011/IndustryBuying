@@ -98,6 +98,7 @@ const loginUser = async (req, res, next) => {
   // If password is incorrect, send an error response.
   try {
     const { email, password } = req.body;
+    // console.log("req.body", req.body);
 
     if (!email || !password) throw new Error(" fill all details ");
 
@@ -107,6 +108,7 @@ const loginUser = async (req, res, next) => {
 
     //TODO : check if user exists, if yes, compare password with hashed password, and send a response back to the client.
     if (!isExist) throw new Error("User Not Signed Up ");
+    if(isExist.isGoogleLogin) throw new Error("Google Account Found! Log In Using Google");
 
     // Password compare
     const isPassword = await bcrypt.compare(password, isExist.password);
