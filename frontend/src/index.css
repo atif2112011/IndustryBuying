@@ -7,10 +7,10 @@
 /* Global Styles */
 html, body {
   font-family: 'Poppins', sans-serif;
-  background-color: #f5f5f5;
+  /* background-color: #f5f5f5; */
   color: #212121;          
   scroll-behavior: smooth;
-  background-image: url('white-texture.jpg');
+  background-image: url('https://res.cloudinary.com/dufl26uv9/image/upload/f_auto,q_auto/v1/MedicalShoppe/white-texture_ftdxan')!important;
   background-size:  contain;
   min-height: 100vh;
   line-height: 1.5;
