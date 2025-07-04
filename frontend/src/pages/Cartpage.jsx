@@ -164,7 +164,7 @@ function Cartpage() {
   return (
     <div className="flex flex-col md:flex-row p-2 mt-2 md:m-0 md:p-6 gap-2 md:h-screen">
       {/* Left Div */}
-      <div className=" flex flex-col gap-4 p-2 w-full md:w-3/4 md:overflow-y-auto hide-scroll">
+      <div className=" flex flex-col gap-4 p-2 w-full md:mb-8 md:w-3/4 md:overflow-y-auto hide-scroll">
         <p className="!text-sm !text-gray-500 font-semibold">
           My Cart(2 items)
         </p>

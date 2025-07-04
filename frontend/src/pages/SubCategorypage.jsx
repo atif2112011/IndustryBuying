@@ -3,12 +3,15 @@ import DynamicBreadcrumbs from "../components/DynamicBread";
 import { useState } from "react";
 
 import ProductShowcase from "../components/ProductShowcase";
+import { useEffect } from "react";
+import { getProductsBySubCategory } from "../apis/category";
 
 function SubCategoryPage() {
 
     
 const { subcategoryId,categoryId } = useParams();
 const [selectedSort, setSelectedSort] = useState("Recommended");
+const [products, setProducts] = useState([]);
 
   const sortOptions = [
     "New",
@@ -20,6 +23,22 @@ let categories = subcategoryId.split('-');
 let categoryName = (categories.map((category) => {
     return category.charAt(0).toUpperCase() + category.slice(1);
 })).join(' ');
+
+useEffect(()=>{
+const fetchProducts=async()=>{
+  const response=await getProductsBySubCategory(subcategoryId);
+  if(response.success)
+  {
+    setProducts(response.products);
+  }
+  else
+  {
+    console.log('error',response.message);
+  }
+}
+fetchProducts();
+
+},[])
 
   return (
     <div className="flex flex-col">
@@ -51,7 +70,7 @@ let categoryName = (categories.map((category) => {
         </div>
         {/* Sort By ends */}
       {/* Product Showcase */}
-      <ProductShowcase/>
+      <ProductShowcase products={products}/>
       {/* Product Showcase end */}
 
 
