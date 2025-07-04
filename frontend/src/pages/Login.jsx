@@ -15,7 +15,8 @@ function Login() {
   const {setUser}=useAuth();
 
   const handleGoogleAuth = async () => {
-    window.location.href = "http://localhost:5000/auth/google";
+    window.location.href = import.meta.env.VITE_PRODUCTION=='true'?'/auth/google':'http://localhost:5000/auth/google'
+      // "http://localhost:5000";
   };
 
   const handleLogin=async()=>{
