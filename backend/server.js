@@ -14,6 +14,7 @@ const Category = require("./models/categoryModel");
 const Subcategory = require("./models/subcategoryModel");
 const Product = require("./models/productModel");
 const slugify = require("slugify");
+const path = require("path");
 
 
 const app = express();
@@ -34,13 +35,15 @@ app.use(
 
 
 // routes
+// Serve static files from frontend build
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
 app.use("/api/auth",authRoutes);
 app.use("/api/user",userRoutes);
 app.use("/api/products",productRoutes)
 app.use("/api/categories",categoryRoutes)
 
 app.use("/",Auth2Routes);
-app.get("/", async (req, res) => {
+app.get("/server", async (req, res) => {
     try {
         res.send("Server is running");
     } catch (error) {
