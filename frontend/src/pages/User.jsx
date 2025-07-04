@@ -13,6 +13,16 @@ function User() {
     email: "ratradelinks2020@gmail.com",
     phone: "1234567890",
     gstin: "",
+    emailVerified: true,
+  });
+
+  const [company, setCompany] = useState({
+    name: "company name",
+    gstin: "09ABBFR6844F1OZ",
+    pan: "ABBCD1234F",
+    businessType: "manufacturer",
+    gstVerified: true,
+    panVerified: false,
   });
 
   const [addresses,setAddresses]=useState([
@@ -121,64 +131,61 @@ const handleChangePrimary = (isShipping, Changedaddress) => {
   return (
     <div className="flex flex-col gap-4">
       {/* Personal Information */}
-      <div className="bg-white p-6 rounded-lg shadow-md w-full">
-        <h3 className="font-semibold text-gray-800 mb-4">
+      <div className="bg-white p-3 md:p-6 rounded-lg shadow-md w-full">
+        <h3 className="!text-sm md:!text-md font-semibold text-gray-800 mb-4">
           Personal Information
         </h3>
 
         {/* Name */}
         <div className="flex items-center gap-4 mb-4">
-          <div className="flex bg-gray-100 p-2 rounded-full h-10 w-10 items-center justify-center">
-            <i class="ri-user-line text-lg !text-blue-900"></i>
+          <div className="flex bg-gray-100 p-2 rounded-full h-8 w-8 md:h-10 md:w-10 items-center justify-center">
+            <i class="ri-user-line text-md md:text-lg !text-blue-900"></i>
           </div>
           <div>
-            <p className="font-semibold !text-sm">Name</p>
-            <p className="text-gray-700 !text-sm">{user.name}</p>
+            <p className="font-semibold !text-xs md:!text-sm">Name</p>
+            <p className="text-gray-700 !text-xs md:!text-sm">{user.name}</p>
           </div>
         </div>
 
         {/* Email */}
-        <div className="flex items-center gap-4 mb-4">
-          <div className="flex bg-gray-100 p-2 rounded-full h-10 w-10 items-center justify-center">
-            <i class="ri-mail-line text-lg !text-blue-900"></i>
+        <div className="flex items-center gap-4 mb-4 flex-wrap">
+          <div className="flex bg-gray-100 p-2 rounded-full h-8 w-8 md:h-10 md:w-10 items-center justify-center">
+            <i class="ri-mail-line text-md md:text-lg !text-blue-900"></i>
           </div>
-          <div className="flex flex-col">
-            <p className="font-semibold !text-sm">Email</p>
-            <p className="text-gray-700 !text-sm break-words">
+          <div className="flex flex-col ">
+            <p className="font-semibold !text-xs md:!text-sm">Email</p>
+            <p className="text-gray-700 !text-xs md:!text-sm break-words">
               {user.email}
             </p>
           </div>
-          <span className="!text-green-700 !text-xs ml-4 border rounded-4xl border-green-700 py-1 px-2">
-            Verified{" "}
-            <i class="ri-verified-badge-line text-sm text-green-700"></i>
-          </span>
+          <VerifiedBtn/>
         </div>
 
         {/* Phone */}
         <div className="flex items-center gap-4 mb-4">
-          <div className="flex bg-gray-100 p-2 rounded-full h-10 w-10 items-center justify-center">
-            <i class="ri-phone-line  text-lg !text-blue-900"></i>
+          <div className="flex bg-gray-100 p-2 rounded-full h-8 w-8 md:h-10 md:w-10 items-center justify-center">
+            <i class="ri-phone-line  text-md md:text-lg !text-blue-900"></i>
           </div>
           <div>
-            <p className="font-semibold !text-sm">Phone</p>
-            <p className="text-gray-700 !text-sm">{user.phone}</p>
+            <p className="font-semibold !text-xs md:!text-sm">Phone</p>
+            <p className="text-gray-700 !text-xs md:!text-sm">{user.phone}</p>
           </div>
         </div>
 
         {/* GSTIN */}
         <div className="flex items-center gap-4 mb-6">
-          <div className="flex bg-gray-100 p-2 rounded-full h-10 w-10 items-center justify-center">
-            <i class="ri-hashtag text-lg !text-blue-900"></i>
+          <div className="flex bg-gray-100 p-2 rounded-full h-8 w-8 md:h-10 md:w-10 items-center justify-center">
+            <i class="ri-hashtag text-md md:text-lg !text-blue-900"></i>
           </div>
           <div>
-            <p className="font-semibold !text-sm ">GSTIN</p>
-            <p className="text-gray-700 !text-sm">{user.gstin}</p>
+            <p className="font-semibold !text-xs md:!text-sm ">GSTIN</p>
+            <p className="text-gray-700 !text-xs md:!text-sm">{user.gstin}</p>
           </div>
         </div>
 
         {/* Edit Button */}
         <button
-          className="border border-orange-500 text-orange-500 px-4 py-1 rounded-sm text-sm hover:bg-orange-50"
+          className="border border-orange-500 text-orange-500 p-1 px-4 md:px-4 md:py-1 rounded-sm !text-xs md:!text-sm hover:bg-orange-50"
           onClick={() => {
             setIsModalOpen(true);
           }}
@@ -191,59 +198,53 @@ const handleChangePrimary = (isShipping, Changedaddress) => {
 
       {/* Company Profile */}
       <div className="bg-white p-6 rounded-lg shadow-md w-full">
-        <h3 className="font-semibold text-gray-800 mb-4">Company Profile</h3>
+        <h3 className="font-semibold !text-sm md:!text-md text-gray-800 mb-4">Company Profile</h3>
 
         {/* Name */}
         <div className="flex items-center gap-4 mb-4">
-          <div className="flex bg-gray-100 p-2 rounded-full h-10 w-10 items-center justify-center">
-            <i class="ri-user-line text-lg !text-blue-900"></i>
+          <div className="flex bg-gray-100 p-2 rounded-full h-8 w-8 md:h-10 md:w-10 items-center justify-center">
+            <i class="ri-user-line text-md md:text-lg !text-blue-900"></i>
           </div>
           <div>
-            <p className="font-semibold !text-sm">Company Name</p>
-            <p className="text-gray-700 !text-sm">XYZ Traders</p>
+            <p className="font-semibold !text-xs md:!text-sm">Company Name</p>
+            <p className="text-gray-700 !text-xs md:!text-sm">{company.name}</p>
           </div>
         </div>
 
         {/* GSTIN */}
         <div className="flex items-center gap-4 mb-4">
-          <div className="flex bg-gray-100 p-2 rounded-full h-10 w-10 items-center justify-center">
-            <i class="ri-hashtag text-lg !text-blue-900"></i>
+          <div className="flex bg-gray-100 p-2 rounded-full h-8 w-8 md:h-10 md:w-10 items-center justify-center">
+            <i class="ri-hashtag text-md md:text-lg !text-blue-900"></i>
           </div>
           <div className="flex flex-col">
-            <p className="font-semibold !text-sm">GSTIN</p>
-            <p className="text-gray-700 !text-sm break-words">
-              1312df5351234cc1
+            <p className="font-semibold !text-xs md:!text-sm">GSTIN</p>
+            <p className="text-gray-700 !text-xs md:!text-sm break-words">
+              {company.gstin}
             </p>
           </div>
-          <span className="!text-green-700 !text-xs ml-4 border rounded-4xl border-green-700 py-1 px-2">
-            Verified{" "}
-            <i class="ri-verified-badge-line text-sm text-green-700"></i>
-          </span>
+          <VerifiedBtn IsVerified={company.gstVerified} />
         </div>
 
         {/* Pan */}
         <div className="flex items-center gap-4 mb-4">
-          <div className="flex bg-gray-100 p-2 rounded-full h-10 w-10 items-center justify-center">
-            <i class="ri-hashtag text-lg !text-blue-900"></i>
+          <div className="flex bg-gray-100 p-2 rounded-full h-8 w-8 md:h-10 md:w-10 items-center justify-center">
+            <i class="ri-hashtag text-md md:text-lg !text-blue-900"></i>
           </div>
           <div className="flex flex-col">
-            <p className="font-semibold !text-sm">PAN</p>
-            <p className="text-gray-700 !text-sm break-words">1312df53c1</p>
+            <p className="font-semibold !text-xs md:!text-sm">PAN</p>
+            <p className="text-gray-700 !text-xs md:!text-sm break-words">{company.pan}</p>
           </div>
-          <span className="!text-green-700 !text-xs ml-4 border rounded-4xl border-green-700 py-1 px-2">
-            Verified{" "}
-            <i class="ri-verified-badge-line text-sm text-green-700"></i>
-          </span>
+          <VerifiedBtn IsVerified={company.panVerified} />
         </div>
 
         {/* Business Type */}
         <div className="flex items-center gap-4 mb-4">
-          <div className="flex bg-gray-100 p-2 rounded-full h-10 w-10 items-center justify-center">
-            <i class="ri-shake-hands-line text-lg !text-blue-900"></i>
+          <div className="flex bg-gray-100 p-2 rounded-full h-8 w-8 md:h-10 md:w-10 items-center justify-center">
+            <i class="ri-shake-hands-line text-md md:text-lg !text-blue-900"></i>
           </div>
           <div>
-            <p className="font-semibold !text-sm">Business Type</p>
-            <p className="text-gray-700 !text-sm">Private Ltd</p>
+            <p className="font-semibold !text-xs md:!text-sm">Business Type</p>
+            <p className="text-gray-700 !text-xs md:!text-sm">{company.businessType}</p>
           </div>
         </div>
       </div>
@@ -280,7 +281,7 @@ const handleChangePrimary = (isShipping, Changedaddress) => {
 
       {/* Addresses */}
       <div className="flex flex-col bg-white p-6 rounded-lg shadow-md w-full">
-        <h3 className="font-semibold text-gray-800 mb-4">Address Book</h3>
+        <h3 className="!text-sm md:!text-md font-semibold text-gray-800 mb-4">Address Book</h3>
 
         {/* Billing Address */}
 
@@ -288,24 +289,24 @@ const handleChangePrimary = (isShipping, Changedaddress) => {
           <p className=" !text-sm font-semibold !text-gray-800 mb-1">
             Billing Addresses
           </p>
-          <div className="flex flex-row flex-wrap gap-4">
+          <div className="flex flex-col md:flex-row flex-wrap gap-4">
             
             {addresses
               .filter((address) => !address.isShipping)
               .map((address) => {
                 return (
-                  <div className="bg-white p-4 px-8 rounded shadow-md w-2/5 border border-gray-200">
+                  <div className="bg-white p-3 md:p-4 md:px-8 rounded shadow-md md:w-2/5 border border-gray-200">
 
                    
                    
                    
                     <div className="flex items-center justify-between mb-2">
                       {address.isPrimary ? (
-                        <span className="bg-green-600 !text-white !text-xs px-2 py-1 rounded font-medium">
+                        <span className="bg-green-600 !text-white !text-[10px] md:!text-xs px-2 py-1 rounded font-medium">
                           Primary Address
                         </span>
                       ) : (
-                        <button className="bg-white !text-green-600 border border-green-600 !text-xs px-2 py-1 rounded font-medium cursor-pointer" onClick={()=>{handleChangePrimary(false,address)}}>Make Primary</button>
+                        <button className="bg-white !text-green-600 border border-green-600 !text-[10px] md:!text-xs px-2 py-1 rounded font-medium cursor-pointer" onClick={()=>{handleChangePrimary(false,address)}}>Make Primary</button>
                       )}
                       <div className="flex items-center gap-2">
                         <button className="text-red-500 hover:text-red-700">
@@ -324,26 +325,26 @@ const handleChangePrimary = (isShipping, Changedaddress) => {
                             />
                           </svg>
                         </button>
-                        <button className="border border-orange-500 text-orange-500 !text-xs px-3 py-1 rounded hover:bg-orange-50 font-medium" onClick={()=>{seteditingAddress(address); setIsModalOpenAddress(true)}}>
+                        <button className="border border-orange-500 text-orange-500 !text-[10px] md:!text-xs px-3 py-1 rounded hover:bg-orange-50 font-medium" onClick={()=>{seteditingAddress(address); setIsModalOpenAddress(true)}}>
                           Edit
                         </button>
                       </div>
                     </div>
 
                     <div className="flex flex-col gap-1 text-sm text-gray-800 leading-relaxed w-full">
-                      <p className="!text-sm font-semibold">{address.name} - [{address.type}]</p>
-                      <p className="!text-sm">
-                        <span className="!text-sm font-medium">Mobile :</span>{" "}
+                      <p className="!text-xs md:!text-sm font-semibold">{address.name} - [{address.type}]</p>
+                      <p className="!text-xs md:!text-sm">
+                        <span className="!text-xs md:!text-sm font-medium">Mobile :</span>{" "}
                         {address.mobile}
                       </p>
-                      <p className="!text-sm">
-                        <span className="!text-sm font-medium">
+                      <p className="!text-xs md:!text-sm">
+                        <span className="!text-xs md:!text-sm font-medium">
                           Alternate Mobile :
                         </span>{" "}
                         {address.alternateMobile}
                       </p>
-                      <p className="!text-sm w-full">
-                        <span className="!text-sm font-medium">
+                      <p className="!text-xs md:!text-sm w-full">
+                        <span className="!text-xs md:!text-sm font-medium">
                           Address :
                         </span>{" "}
                         
@@ -351,8 +352,8 @@ const handleChangePrimary = (isShipping, Changedaddress) => {
                         {`${address.flat}, ${address.landmark?address.landmark:""}, ${address.area}, ${address.city}, `}
                         {address.state}- {address.pincode}
                       </p>
-                      <p className="!text-sm">
-                        <span className="!text-sm font-medium">GSTIN: </span>
+                      <p className="!text-xs md:!text-sm">
+                        <span className="!text-xs md:!text-sm font-medium">GSTIN: </span>
                         {address.gstin}
                       </p>
                     </div>
@@ -387,12 +388,12 @@ const handleChangePrimary = (isShipping, Changedaddress) => {
           <p className=" !text-sm font-semibold !text-gray-800 mb-4">
             Shipping Addresses
           </p>
-          <div className="flex flex-row flex-wrap gap-4">
+          <div className="flex flex-col md:flex-row flex-wrap gap-4">
             {addresses
               .filter((address) => address.isShipping)
               .map((address) => {
                 return (
-                  <div className="bg-white p-4 px-8 rounded shadow-md w-2/5 border border-gray-200">
+                  <div className="bg-white p-3 md:p-4 md:px-8 rounded shadow-md md:w-2/5 border border-gray-200">
                     
                     
                     
@@ -431,27 +432,27 @@ const handleChangePrimary = (isShipping, Changedaddress) => {
                     </div>
 
                     <div className="flex flex-col gap-1 text-sm text-gray-800 leading-relaxed w-full">
-                      <p className="!text-sm font-semibold">{address.name} - [{address.type}]</p>
-                      <p className="!text-sm">
-                        <span className="!text-sm font-medium">Mobile :</span>{" "}
+                      <p className="!text-xs md:!text-sm font-semibold">{address.name} - [{address.type}]</p>
+                      <p className="!text-xs md:!text-sm">
+                        <span className="!text-xs md:!text-sm font-medium">Mobile :</span>{" "}
                         {address.mobile}
                       </p>
-                      <p className="!text-sm">
-                        <span className="!text-sm font-medium">
+                      <p className="!text-xs md:!text-sm">
+                        <span className="!text-xs md:!text-sm font-medium">
                           Alternate Mobile :
                         </span>{" "}
                         {address.alternateMobile}
                       </p>
-                      <p className="!text-sm w-full">
-                        <span className="!text-sm font-medium">
+                      <p className="!text-xs md:!text-sm w-full">
+                        <span className="!text-xs md:!text-sm font-medium">
                           Address :
                         </span>{" "}
                         
                         {`${address.flat}, ${address.landmark?address.landmark:""}, ${address.area}, ${address.city}, `}
                         {address.state}- {address.pincode}
                       </p>
-                      <p className="!text-sm">
-                        <span className="!text-sm font-medium">GSTIN: </span>
+                      <p className="!text-xs md:!text-sm">
+                        <span className="!text-xs md:!text-sm font-medium">GSTIN: </span>
                         {address.gstin}
                       </p>
                     </div>
@@ -489,3 +490,9 @@ const handleChangePrimary = (isShipping, Changedaddress) => {
 
 export default User;
 
+function VerifiedBtn({IsVerified,handleVerify}){
+return <div className="flex flex-row gap-1 md:gap-2 flex-nowrap items-center !text-green-700 !text-green-700 bg-green-2- !text-[10px] md:!text-xs md:ml-4 border rounded-4xl border-green-700 md:py-1 md:px-2 px-2 py-1">
+            <span className="!text-green-700 !text-[10px] md:!text-xs !text-semibold">{IsVerified?"Verified":"Verify Now"}</span>
+            {IsVerified && <i class="ri-verified-badge-line text-xs md:text-sm text-green-700"></i>}
+          </div>
+}

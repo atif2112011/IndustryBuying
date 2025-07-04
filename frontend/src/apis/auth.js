@@ -3,7 +3,7 @@ import axios from "axios";
 
 // Base URL can point to your backend server
 const API = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: (import.meta.env.VITE_PRODUCTION==true)?"":import.meta.env.VITE_API_BASE_URL,
   timeout: 5000,
   withCredentials: true
 });
@@ -150,6 +150,32 @@ export const VerifyUser=async()=>{
         message:response.data.message,
         userId:response.data.userId,
         role:response.data.role
+      }
+    else
+    throw new Error(response.data.message)
+    
+  } catch (error) {
+    console.error(error)
+    return {
+      success:false,
+      message:error?.response?.data?.message ||error.message
+    }
+  }
+}
+
+export const loginUser=async({email,password})=>{
+
+  try {
+    const response=await API.post("/api/auth/login",{
+      
+      email,
+      password,
+    })
+    // console.log('response',response)
+    if(response.data.success)
+      return {
+        success:true,
+        message:response.data.message
       }
     else
     throw new Error(response.data.message)

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const { default: mongoose } = require("mongoose");
 
 const technicalAspectSchema = new mongoose.Schema({
   label: { type: String, required: true },
@@ -14,13 +14,13 @@ const productSchema = new mongoose.Schema(
     brand: { type: String, required: true },
 
     category: {
-      type: String,
-      enum: ["Tools", "Electricals", "Safety", "Office Supplies"], // Expand if needed
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category',
       required: true,
     },
     subCategory: {
-      type: String,
-      enum: ["Drills", "Wrenches", "Cutters", "Others"], // Expand as per app
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Subcategory',
       required: true,
     },
 
@@ -41,14 +41,15 @@ const productSchema = new mongoose.Schema(
     technicalAspects: [technicalAspectSchema],
   },
   { timestamps: true }
-)
+);
 
-productSchema.pre("save",function(next){
-    if(this.isModified("price") || this.isModified("discount")){
-        const finalPriceCal = this.price - (this.price*(this.discount/100));
-        this.finalPrice=Number(finalPriceCal.toFixed(2));
-    }
-    next()
-})
+// Auto-calculate final price
+productSchema.pre("save", function (next) {
+  if (this.isModified("price") || this.isModified("discount")) {
+    const finalPriceCal = this.price - (this.price * (this.discount / 100));
+    this.finalPrice = Number(finalPriceCal.toFixed(2));
+  }
+  next();
+});
 
 module.exports = mongoose.model("Product", productSchema);

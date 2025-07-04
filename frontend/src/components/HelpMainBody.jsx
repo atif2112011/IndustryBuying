@@ -9,7 +9,26 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { HelpCenterContext } from "../pages/HelpCenter";
+import { styled } from '@mui/material/styles';
 
+
+const ResponsiveSummary = styled(AccordionSummary)(({ theme }) => ({
+  '& .MuiAccordionSummary-content': {
+    fontSize: '0.90rem',
+    fontWeight: '500',
+    padding: '0 0',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '0.85rem',
+    },
+  },
+}));
+
+const ResponsiveDetails = styled(AccordionDetails)(({ theme }) => ({
+  fontSize: '0.80rem',
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '0.75rem',
+  },
+}));
 
 
 function HelpMainBody(){
@@ -166,48 +185,41 @@ function HelpMainBody(){
 }, [SearchBardata]);
 
 
-    return <div className="flex flex-col w-full gap-4 p-8 bg-white rounded-md shadow-md overflow-y-auto h-full">
-       <h3>{displayData && displayData.length==0?Title.category:"Search Results"}</h3>
+    return <div className="flex flex-col w-full gap-4 p-4 md:p-8 bg-white rounded-md shadow-md md:overflow-y-auto md:h-full">
+       <h3 className="!text-md md:!text-lg">{displayData && displayData.length==0?Title.category:"Search Results"}</h3>
 
       {displayData && displayData.length > 0 && (
-  <div className="flex flex-col py-4 gap-1 ">
+  <div className="flex flex-col md:py-4 gap-1 ">
     {displayData.map((category, catIndex) =>
-      category.faqs?.map((faq, faqIndex) => (
-        <Accordion
-          key={`${catIndex}-${faqIndex}`}
-          sx={{
-            boxShadow: 'none',
-            borderTop: faqIndex === 0 ? '1px solid #eee' : 'none',
-            borderBottom: '1px solid #eee',
-            '&:before': { display: 'none' },
-          }}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon sx={{ color: 'orangered' }} />}
-            aria-controls={`panel${catIndex}-${faqIndex}-content`}
-            id={`panel${catIndex}-${faqIndex}-header`}
-            sx={{
-              backgroundColor: '#fff',
-              fontWeight: 600,
-              fontSize: '1rem',
-              padding: '16px',
-            }}
-          >
-            {faq.question}
-          </AccordionSummary>
-          <AccordionDetails
-            sx={{
-              backgroundColor: '#fafafa',
-              fontSize: '0.95rem',
-              lineHeight: 1.6,
-              padding: '16px',
-            }}
-          >
-            {faq.answer}
-          </AccordionDetails>
-        </Accordion>
-      ))
-    )}
+  category.faqs?.map((faq, faqIndex) => (
+    <Accordion
+      key={`${catIndex}-${faqIndex}`}
+      sx={{
+        boxShadow: 'none',
+        borderTop: faqIndex === 0 ? '1px solid #eee' : 'none',
+        borderBottom: '1px solid #eee',
+        '&:before': { display: 'none' },
+      }}
+    >
+      <AccordionSummary
+      as={ResponsiveSummary}
+        expandIcon={<ExpandMoreIcon sx={{ color: 'orangered' }} />}
+        aria-controls={`panel${catIndex}-${faqIndex}-content`}
+        id={`panel${catIndex}-${faqIndex}-header`}
+       
+      >
+        {faq.question}
+      </AccordionSummary>
+      <AccordionDetails
+      as={ResponsiveDetails}
+       
+      >
+        {faq.answer}
+      </AccordionDetails>
+    </Accordion>
+  ))
+)}
+
   </div>
 )}
 
@@ -229,21 +241,12 @@ function HelpMainBody(){
             expandIcon={<ExpandMoreIcon sx={{ color: 'orangered' }} />}
             aria-controls={`panel${index}-content`}
             id={`panel${index}-header`}
-            sx={{
-              backgroundColor: '#fff',
-              fontWeight: 500,
-              padding: '16px',
-            }}
+            as={ResponsiveSummary}
           >
             {faq.question}
           </AccordionSummary>
           <AccordionDetails
-            sx={{
-              backgroundColor: '#fafafa',
-              fontSize: '0.95rem',
-              lineHeight: 1.6,
-              padding: '16px',
-            }}
+           as ={ResponsiveDetails}
           >
             {faq.answer}
           </AccordionDetails>

@@ -6,21 +6,21 @@ function GST(){
   const navigate=useNavigate();
 
 
-return <div className='flex flex-col px-22 '>
- <div class="px-8 py-16 md:px-20 flex flex-col-reverse md:flex-row items-center justify-between gap-12">
+return <div className='flex flex-col px-12 md:px-22 '>
+ <div class="md:px-8 py-16 md:px-20 flex flex-col-reverse md:flex-row items-center justify-between gap-12">
   {/* <!-- Left Text Content --> */}
   <div class="md:w-1/2 text-left">
     <p class="!text-sm tracking-widest !text-gray-500 !uppercase">GST Benefits</p>
-    <h2 class="mt-2 !text-2xl md:!text-4xl font-bold !text-gray-900 leading-tight">
+    <h2 class="mt-2 !text-xl md:!text-4xl font-bold !text-gray-900 leading-tight">
       What is a <span className="mt-2 !text-2xl md:!text-4xl font-bold !text-orange-600 leading-tight">GST Invoice</span> ?
     </h2>
-    <p class="mt-6 !text-gray-600 !text-md">
+    <p class="mt-6 !text-gray-600 !text-sm md:!text-md">
       A GST-compliant purchase invoice lists all the goods and services sold and their prices and includes information about the parties engaged in the transaction. In addition to other news, this invoice shows the taxes and discount percentages applied to each item.
     </p>
-    <p class="mt-4 !text-gray-600 !text-md">
+    <p class="mt-4 !text-gray-600 !text-sm md:!text-md">
       The registered businesses can claim an input tax credit, which allows them to offset the GST they have paid on inputs (goods and services used in their business) against the GST they have collected on their sales. This helps in avoiding double taxation and encourages proper compliance.</p>
-    <button class="mt-8 bg-blue-700 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded shadow-md transition duration-300 " onClick={()=>navigate('/user/login')}>
-      Sign Up for Free
+    <button class="!text-sm md:!text-md mt-8 bg-blue-700 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded shadow-md transition duration-300 " onClick={()=>navigate('/user')}>
+      Verify and Add GSTIN
     </button>
   </div>
 

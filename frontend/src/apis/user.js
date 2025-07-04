@@ -3,7 +3,7 @@ import axios from "axios";
 
 // Base URL can point to your backend server
 const API = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: (import.meta.env.VITE_PRODUCTION==true)?"":import.meta.env.VITE_API_BASE_URL,
   timeout: 5000,
   withCredentials: true
 });

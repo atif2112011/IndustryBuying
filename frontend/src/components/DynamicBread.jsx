@@ -15,7 +15,7 @@ const DynamicBreadcrumbs = () => {
       <NavLink
         to="/"
         style={{ textDecoration: 'none', color: 'inherit' }}
-        className="text-sm"
+        className="md:!text-sm text-xs"
       >
         Home
       </NavLink>
@@ -25,15 +25,15 @@ const DynamicBreadcrumbs = () => {
         const isLast = index === pathnames.length - 1;
 
         return isLast ? (
-          <Typography key={to} sx={{ color: 'text.primary' }}>
+          <div key={to} className='md:!text-sm text-xs' >
             {decodeURIComponent(value)}
-          </Typography>
+          </div>
         ) : (
           <NavLink
             key={to}
             to={to}
             style={{ textDecoration: 'none', color: 'inherit' }}
-             className="text-sm"
+             className="md:!text-sm text-xs "
           >
             {decodeURIComponent(value)}
           </NavLink>
