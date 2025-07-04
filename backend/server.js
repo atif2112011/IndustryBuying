@@ -37,6 +37,10 @@ app.use(
 // routes
 // Serve static files from frontend build
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
+//SPA for Render
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+});
 app.use("/api/auth",authRoutes);
 app.use("/api/user",userRoutes);
 app.use("/api/products",productRoutes)
