@@ -2,9 +2,8 @@ import axios from "axios";
 
 
 // Base URL can point to your backend server
-// Base URL can point to your backend server
 const API = axios.create({
-  baseURL: (import.meta.env.PRODUCTION==true)?"":import.meta.env.SERVER_URL,
+  baseURL: (import.meta.env.VITE_PRODUCTION==true)?"":import.meta.env.VITE_API_BASE_URL,
   timeout: 5000,
   withCredentials: true
 });
