@@ -101,58 +101,77 @@ const invoices = [
   return (
     <div className="flex flex-col gap-4">
       {/* My Orders */}
-      <div className="bg-white p-6 rounded-lg shadow-md w-full">
-        <h3 className="font-semibold text-gray-800 mb-4">My Orders</h3>
+      <div className="bg-white p-3 md:p-6 rounded-lg shadow-md w-full">
+        <h3 className="!text-sm md:!text-md font-semibold text-gray-800 mb-4">My Orders</h3>
 
         {/* Sort and Search Inputs */}
-        <div className="flex flex-row justify-between">
-          <div className="flex flex-row gap-4">
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                label="Sort by date"
-                slotProps={{
-                  textField: {
-                    size: "small", // Reduces overall field height
-                    // sx: { fontSize: '12px' }, // Reduces input text size
-                    // InputLabelProps: { sx: { fontSize: '12px' } } // Reduces label size
-                  },
-                }}
-                value={date}
-                onChange={(newValue) => setDate(newValue)}
-              />
-            </LocalizationProvider>
+        <div className="filter-search-wrapper">
+  <div className="filter-group">
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+  <DatePicker
+    label="Sort by date"
+    slotProps={{
+      textField: {
+        size: "small",
+        sx: {
+          fontSize: '14px',
+          '@media (max-width:768px)': {
+            fontSize: '13px',
+            '& input': {
+              fontSize: '13px',
+            },
+            '& label': {
+              fontSize: '13px',
+            }
+          }
+        }
+      }
+    }}
+    value={date}
+    onChange={(newValue) => setDate(newValue)}
+  />
+</LocalizationProvider>
 
-            <FormControl size="small" sx={{ minWidth: 160 }}>
-              <InputLabel
-                id="demo-simple-select-label"
-                // sx={{ fontSize: '0.75rem' }} // Label font size
-              >
-                Filter by Status
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={status}
-                label="Filter by Status"
-                onChange={(e) => setStatus(e.target.value)}
-                size="small"
-                // sx={{ fontSize: '0.8rem' }} // Dropdown font size
-              >
-                <MenuItem value={"processing"}>Processing</MenuItem>
-                <MenuItem value={"confirmed"}>Confirmed</MenuItem>
-                <MenuItem value={"packed"}>Packed</MenuItem>
-                <MenuItem value={"shipped"}>Shipped</MenuItem>
-                <MenuItem value={"delivered"}>Delivered</MenuItem>
-                <MenuItem value={"cancelled"}>Cancelled</MenuItem>
-                <MenuItem value={"returned"}>Returned</MenuItem>
-              </Select>
-            </FormControl>
 
-           
-          </div>
+    <FormControl
+  size="small"
+  sx={{
+    minWidth: 120,
+    '@media (max-width:768px)': {
+      '& .MuiInputLabel-root': {
+        fontSize: '13px',
+      },
+      '& .MuiSelect-select': {
+        fontSize: '13px',
+      }
+    }
+  }}
+>
+  <InputLabel id="demo-simple-select-label">Filter by Status</InputLabel>
+  <Select
+    labelId="demo-simple-select-label"
+    id="demo-simple-select"
+    value={status}
+    label="Filter by Status"
+    onChange={(e) => setStatus(e.target.value)}
+  >
+    <MenuItem value={"processing"}>Processing</MenuItem>
+    <MenuItem value={"confirmed"}>Confirmed</MenuItem>
+    <MenuItem value={"packed"}>Packed</MenuItem>
+    <MenuItem value={"shipped"}>Shipped</MenuItem>
+    <MenuItem value={"delivered"}>Delivered</MenuItem>
+    <MenuItem value={"cancelled"}>Cancelled</MenuItem>
+    <MenuItem value={"returned"}>Returned</MenuItem>
+  </Select>
+</FormControl>
 
-           <SearchBar placeholder={"Search products by Title or Order Number"}/>
-        </div>
+  </div>
+
+  <div className="search-bar">
+    <SearchBar placeholder="Search products by Title or Order Number" />
+  </div>
+</div>
+
         {/* Sort and Search Inputs end */}
 
          {/* Order Table */}
@@ -160,7 +179,7 @@ const invoices = [
                     <TableContainer component={Paper} sx={{ 
                         padding:'4px',
                         boxShadow: 'none' ,border:'none',  }}>
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <Table sx={{  }} aria-label="simple table">
                        
                         <TableBody>
                         {orders.slice(orderpage * rowsPerPage, orderpage * rowsPerPage + rowsPerPage).map((order) => (
@@ -251,25 +270,36 @@ const invoices = [
       {/* Invoices and Billing */}
       <div className="bg-white p-6 rounded-lg shadow-md w-full">
 
-        <h3 className="font-semibold text-gray-800 mb-4">My Invoices</h3>
+        <h3 className="!text-sm md:!text-md font-semibold text-gray-800 mb-4">My Invoices</h3>
 
            {/* Sort and Search Inputs */}
-        <div className="flex flex-row justify-between">
-          <div className="flex flex-row gap-4">
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                label="Sort by date"
-                slotProps={{
-                  textField: {
-                    size: "small", // Reduces overall field height
-                    // sx: { fontSize: '12px' }, // Reduces input text size
-                    // InputLabelProps: { sx: { fontSize: '12px' } } // Reduces label size
-                  },
-                }}
-                value={date}
-                onChange={(newValue) => setDate(newValue)}
-              />
-            </LocalizationProvider>
+        <div className="filter-search-wrapper">
+          <div className="filter-group">
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+  <DatePicker
+    label="Sort by date"
+    slotProps={{
+      textField: {
+        size: "small",
+        sx: {
+          fontSize: '14px',
+          '@media (max-width:768px)': {
+            fontSize: '13px',
+            '& input': {
+              fontSize: '13px',
+            },
+            '& label': {
+              fontSize: '13px',
+            }
+          }
+        }
+      }
+    }}
+    value={date}
+    onChange={(newValue) => setDate(newValue)}
+  />
+</LocalizationProvider>
+
 
            
           </div>
@@ -281,7 +311,7 @@ const invoices = [
          <TableContainer component={Paper} sx={{ 
                         padding:'4px',
                         boxShadow: 'none' ,border:'none', marginTop:'16px' }}>
-                    <Table sx={{ minWidth: 650, }} aria-label="simple table">
+                    <Table sx={{ }} aria-label="simple table">
                        
                         <TableBody>
                         {invoices.map((invoice) => (
@@ -296,11 +326,11 @@ const invoices = [
                                                                 boxShadow: 'none' ,border:'none',padding:'0px'}}>
                             <div
                                 key={invoice.orderId}
-                                className="flex justify-between items-center px-4 py-3 hover:bg-gray-50 border-b border-gray-300"
+                                className="flex justify-between flex-wrap gap-2 items-center px-4 py-3 hover:bg-gray-50 border-b border-gray-300"
                             >
-                                <div className="text-sm font-medium text-gray-800">Order #{invoice.orderId}</div>
-                                <div className="text-sm text-gray-600">Invoice Date: {invoice.date}</div>
-                                <button className="text-sm text-blue-600 hover:underline">Download</button>
+                                <div className="text-xs md:text-sm font-medium text-gray-800">Order #{invoice.orderId}</div>
+                                <div className="text-xs md:text-sm text-gray-600">Invoice Date: {invoice.date}</div>
+                                <button className="text-xs md:text-sm text-blue-600 hover:underline">Download</button>
                             </div>
                             </TableCell>
                             </TableRow>
@@ -359,18 +389,18 @@ function OrderTableComponent({order}){
                                 className="w-24 h-24 object-contain rounded border border-gray-300"
                                 />
                                 <div className="flex-1 flex flex-col gap-1">
-                                <div className="font-semibold text-sm">{order.productName}</div>
-                                <div className="text-sm text-gray-700">Qty: {order.quantity}</div>
-                                <div className="text-sm text-gray-700">Discount: ₹{order.discount}</div>
+                                <div className="font-semibold text-xs md:text-sm">{order.productName}</div>
+                                <div className="text-xs md:text-sm text-gray-700">Qty: {order.quantity}</div>
+                                <div className="text-xs md:text-sm text-gray-700">Discount: ₹{order.discount}</div>
                                 <div>
-                                    <span className="bg-green-200 text-green-800 px-2 py-1 rounded !text-xs font-medium">
+                                    <span className="bg-green-200 text-green-800 px-2 py-1 rounded !text-[10px] md:!text-xs font-medium">
                                     {order.status}
                                     </span>
                                 </div>
-                                <div className="!text-sm text-gray-500">
-                                    Item delivered on: <span className="!text-sm font-medium">{order.deliveryDate}</span>
+                                <div className="text-xs md:!text-sm text-gray-500">
+                                    Item delivered on: <span className="!text-xs md:!text-sm font-medium">{order.deliveryDate}</span>
                                 </div>
-                                <button className="bg-blue-900 text-white px-4 py-1 rounded-full !text-sm w-fit mt-1">
+                                <button className="bg-blue-900 text-white px-4 py-2 rounded-full !text-[10px] md:!text-sm w-fit mt-1">
                                     Give Review
                                 </button>
                                 </div>
@@ -378,14 +408,14 @@ function OrderTableComponent({order}){
 
                             {/* Footer */}
                             <div className="flex justify-between items-center mt-2">
-                                <div className="text-sm font-semibold text-gray-800">
+                                <div className="text-xs md:text-sm font-semibold text-gray-800">
                                 Amount ₹{order.amount.toLocaleString()}
                                 </div>
                                 <div className="flex gap-2">
-                                <button className="border border-gray-400 px-3 py-1 rounded-full text-sm text-gray-700" onClick={()=>setshowTrack(true)}>
+                                <button className="border border-gray-400 px-3 py-1 rounded-full text-xs md:text-sm text-gray-700" onClick={()=>setshowTrack(true)}>
                                     Track Order
                                 </button>
-                                <button className="border border-gray-400 px-3 py-1 rounded-full text-sm text-gray-700">
+                                <button className="border border-gray-400 px-3 py-1 rounded-full text-xs md:text-sm text-gray-700">
                                     Download Invoice
                                 </button>
                                 </div>

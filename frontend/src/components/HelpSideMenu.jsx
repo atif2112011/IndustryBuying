@@ -10,16 +10,18 @@ function HelpSideMenu({options,setSearchTerm}){
     const {helpid}=useParams();
    
     return <>
-    <div className="flex flex-col gap-4 p-4 pl-0 pt-0 bg-none h-full">
-        <div className="w-80 bg-white shadow-md rounded-lg p-4">
-            <h3 className="!font-medium text-left px-4 py-2">FAQ Categories</h3>
+    <div className="flex flex-col md:gap-4 md:p-4 md:pl-0 md:pt-0 bg-none h-full w-full md:w-fit">
+        
+        <h3 className="md:hidden !text-md md:!text-lg !font-medium text-left md:px-4 py-2">FAQ Categories</h3>
+        <div className="w-full md:w-80 bg-white shadow-md rounded-lg md:p-4 items-center md:items-start p-2 flex flex-row md:flex-col overflow-x-scroll md:overflow-x-hidden">
+            <h3 className="hidden md:block !font-medium text-left px-4 py-2">FAQ Categories</h3>
             {options.map((option, index) => (
-                <div key={index} className="relative group">
+                <div key={index} className="relative group w-full">
 
                   {/* Wrap NavLink and Submenu together */}
-                  <div className={`flex items-center gap-2 p-2 group-hover:bg-blue-100 rounded-md cursor-pointer ${option.link=='/help/'+helpid?"bg-blue-100 rounded-md font-semibold":""}`} >
+                  <div className={`min-w-[190px] flex items-center gap-2 p-2 group-hover:bg-blue-100 rounded-md cursor-pointer ${option.link=='/help/'+helpid?"bg-blue-100 rounded-md font-semibold":""}`} >
                     <i className={"ri-question-line text-lg"} ></i>
-                    <span className="!text-sm">{option.category}</span>
+                    <span className="!text-xs md:!text-sm">{option.category}</span>
                   </div>
             
                   {/* Submenu visible on group hover */}

@@ -1,12 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser, loginUser, check, sendOTP, verifyOTP, verifyAuth } = require('../controllers/authController');
+const { registerUser, loginUser, check, sendOTP, verifyOTP, verifyAuth, registerGoogleUser } = require('../controllers/authController');
 
 
 
 
 // @route POST /register
 router.post('/register',registerUser);
+
+router.post('/register-google',registerGoogleUser);
 
 // @route POST /login
 router.post('/login', loginUser);

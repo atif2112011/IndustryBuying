@@ -49,6 +49,48 @@ const registerUser = async (req, res, next) => {
   }
 };
 
+//Register Google User
+const registerGoogleUser = async (req, res, next) => {
+  //TODO : check if user already exists, if not create a new user, store password as hashed value, and send a response back to the client.
+  try {
+    const { name, email, pfp, googleId, phone } = req.body;
+    if (!name || !email || !googleId || !phone)
+      throw new Error(
+        " Check if all fields are present:Name, Email, GoogleId and Phone "
+      );
+
+    if (!validator.isEmail(email)) throw new Error("Invalid Email");
+
+    const existingUser = await User.findOne({ email: email });
+
+    if (existingUser) throw new Error(" User Already Exists. ");
+
+
+    const otpInfo = await OTP.findOne({ phone });
+
+    if (!otpInfo?.isOtpVerified) throw new Error("OTP verification Not Found");
+
+    const savedUser = await User.create({
+      name,
+      email,
+      pfp,
+      googleId,
+      isGoogleLogin: true,
+      phone,
+      isVerified: true,
+    });
+    await OTP.deleteMany({ phone }); // optional if not tracking verified OTPs
+
+    return res.status(200).json({
+      message: "User Registered Successfully.",
+      success: true,
+      user: savedUser,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 //Login an existing user
 const loginUser = async (req, res, next) => {
   //If user does not exist, send an error response.
@@ -56,6 +98,7 @@ const loginUser = async (req, res, next) => {
   // If password is incorrect, send an error response.
   try {
     const { email, password } = req.body;
+    // console.log("req.body", req.body);
 
     if (!email || !password) throw new Error(" fill all details ");
 
@@ -65,6 +108,7 @@ const loginUser = async (req, res, next) => {
 
     //TODO : check if user exists, if yes, compare password with hashed password, and send a response back to the client.
     if (!isExist) throw new Error("User Not Signed Up ");
+    if(isExist.isGoogleLogin) throw new Error("Google Account Found! Log In Using Google");
 
     // Password compare
     const isPassword = await bcrypt.compare(password, isExist.password);
@@ -230,5 +274,6 @@ module.exports = {
   check,
   sendOTP,
   verifyOTP,
-  verifyAuth
+  verifyAuth,
+  registerGoogleUser
 };

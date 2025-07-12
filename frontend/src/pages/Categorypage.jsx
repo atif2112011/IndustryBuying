@@ -13,6 +13,8 @@ import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import ProductShowcaseElectrical from "../components/CategoryShowcase";
 import CardDisplay from "../components/CardDisplay";
 import CategoryShowcase from "../components/CategoryShowcase";
+import { use, useEffect, useState } from "react";
+import { getCategories } from "../apis/category";
 const dummydata1 = [
   {
     title: "Duracell AAA Batteries (Pack of 10)",
@@ -62,6 +64,23 @@ let categoryName=(categories.map((category)=>{
     return category.charAt(0).toUpperCase() +category.slice(1);
 })).join(' ');
 
+const [categoryData,setCategoryData]=useState([]);
+
+  useEffect(()=>{
+
+    
+
+    const fetchCategory=async()=>{
+      const response=await getCategories({categoryId,populateProducts:true})
+      if(response.success)
+      {
+        setCategoryData(response.categories);
+        console.log(response.categories);
+      }
+    }
+    fetchCategory();
+  },[categoryId])
+
   return (
     <div>
         <DynamicBreadcrumbs/>
@@ -75,7 +94,7 @@ let categoryName=(categories.map((category)=>{
         pagination={{
           clickable: true,
         }}
-        navigation={true}
+        navigation={false}
         modules={[Autoplay, Pagination, Navigation]}
         className="mySwiper w-full mb-4"
       >
@@ -83,10 +102,10 @@ let categoryName=(categories.map((category)=>{
         <SwiperSlide><img src={category2} /></SwiperSlide>
 
       </Swiper>
-      <h3 className="mt-4">{categoryName}</h3>
+      <h3 className="mt-4 !text-md md:!text-lg !font-semibold ">{categoryName.toUpperCase()}</h3>
 
      {/* {<CategoryShowcase/>} */}
-      <CategoryShowcase/>
+      {categoryData && <CategoryShowcase categoryData={categoryData}/>}
      {/* {<CategoryShowcase/>} */}
 
      {/* {Recommended Products} */}

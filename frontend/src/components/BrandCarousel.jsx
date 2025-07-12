@@ -19,47 +19,29 @@ function BrandCarousel() {
 
 
   return (
-    <div className="w-full py-6 ">
-      <div className="overflow-hidden">
-        <h3 className="poppins-semibold w-full">
-            TRUSTED BRANDS
-        </h3>
-
-        <Swiper
-  modules={[Pagination, Autoplay]}
-  spaceBetween={30}
-  slidesPerView={5}
-  autoplay={{ delay: 2000 }}
-  pagination={{ clickable: true }}
-   breakpoints={{
-          320: { slidesPerView: 1 },
-          768: { slidesPerView: 3 },
-          1024: { slidesPerView: 5 },
+    <div className="w-full py-6">
+      <h3 className="!text-md md:!text-lg !font-semibold mb-4">TRUSTED BRANDS</h3>
+      <Swiper
+        modules={[Pagination, Autoplay]}
+        autoplay={{ delay: 2500, disableOnInteraction: false }}
+        pagination={{ clickable: true }}
+        loop={true}
+        spaceBetween={20}
+        observer={true}
+        observeParents={true}
+        centeredSlides={false}
+        breakpoints={{
+          0: { slidesPerView: 3 },       // Mobile
+          1024: { slidesPerView: 5 },    // Laptop and up
         }}
-  loop={true}
-  className="bg-white my-4 shadow-lg"
- 
->
-         <SwiperSlide className="flex items-center justify-center">
-            <img src={duracell} alt="brandicon" className="h-32 object-contain" />
+        className="w-full bg-white p-4 shadow-md"
+      >
+        {[duracell, threem, uno, safari, bosch, aristo].map((brand, index) => (
+          <SwiperSlide key={index} className="flex items-center justify-center">
+            <img src={brand} alt={`brand-${index}`} className="h-24 object-contain w-full max-w-[100px]" />
           </SwiperSlide>
-         <SwiperSlide className="flex items-center justify-center">
-            <img src={threem} alt="brandicon" className="h-32 object-contain" />
-          </SwiperSlide>
-         <SwiperSlide className="flex items-center justify-center">
-            <img src={uno} alt="brandicon" className="h-32 object-contain" />
-          </SwiperSlide>
-         <SwiperSlide className="flex items-center justify-center">
-            <img src={safari} alt="brandicon" className="h-32 object-contain" />
-          </SwiperSlide>
-         <SwiperSlide className="flex items-center justify-center">
-            <img src={bosch} alt="brandicon" className="h-32 object-contain" />
-          </SwiperSlide>
-         <SwiperSlide className="flex items-center justify-center">
-            <img src={aristo} alt="brandicon" className="h-32 object-contain" />
-          </SwiperSlide>
+        ))}
       </Swiper>
-        </div>
     </div>
   );
 }

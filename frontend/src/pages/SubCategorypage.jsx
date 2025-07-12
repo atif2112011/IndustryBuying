@@ -3,18 +3,20 @@ import DynamicBreadcrumbs from "../components/DynamicBread";
 import { useState } from "react";
 
 import ProductShowcase from "../components/ProductShowcase";
+import { useEffect } from "react";
+import { getProductsBySubCategory } from "../apis/category";
 
 function SubCategoryPage() {
 
     
 const { subcategoryId,categoryId } = useParams();
 const [selectedSort, setSelectedSort] = useState("Recommended");
+const [products, setProducts] = useState([]);
 
   const sortOptions = [
-    "Recommended",
     "New",
-    "Price:Low to High",
-    "Price:High to Low"
+    "Price: Low to High",
+    "Price: High to Low"
   ];
 
 let categories = subcategoryId.split('-');
@@ -22,25 +24,41 @@ let categoryName = (categories.map((category) => {
     return category.charAt(0).toUpperCase() + category.slice(1);
 })).join(' ');
 
+useEffect(()=>{
+const fetchProducts=async()=>{
+  const response=await getProductsBySubCategory(subcategoryId);
+  if(response.success)
+  {
+    setProducts(response.products);
+  }
+  else
+  {
+    console.log('error',response.message);
+  }
+}
+fetchProducts();
+
+},[])
+
   return (
     <div className="flex flex-col">
         <DynamicBreadcrumbs/>
         {/* Heading */}
         <div className="flex flex-row justify-start gap-4 items-center">
-      <h2>{categoryName}</h2>
-        <span className="text-black !text-sm">Showing 40 out of 50000 Products</span>
+      <h2 className="!text-md md:!text-lg">{categoryName}</h2>
+        <span className="text-black !text-xs md:!text-sm">Showing 40 out of 50000 Products</span>
 
         </div>
         {/* Heading end */}
 
         {/* Sort By */}
-        <div className="flex flex-row justify-start items-center gap-4 flex-wrap">
-            <p className="!text-sm !text-gray-500 poppins-semibold">Sort By</p>
+        <div className="flex flex-row my-3 md:m-0 justify-start items-center gap-2 md:gap-4 flex-wrap">
+            <p className=" !text-xs md:!text-sm !text-gray-500 poppins-semibold md:m-0 mr-1">Sort By :</p>
             {sortOptions.map((option) => (
         <button
           key={option}
           onClick={() => setSelectedSort(option)}
-          className={`!text-sm border px-3 py-1 rounded-2xl bg-white 
+          className={` !text-xs md:!text-sm border px-3 py-1 rounded-2xl bg-white 
             ${selectedSort === option 
               ? "!text-orange-500 border-orange-500" 
               : "!text-black border-gray-300"} 
@@ -52,7 +70,7 @@ let categoryName = (categories.map((category) => {
         </div>
         {/* Sort By ends */}
       {/* Product Showcase */}
-      <ProductShowcase/>
+      <ProductShowcase products={products}/>
       {/* Product Showcase end */}
 
 

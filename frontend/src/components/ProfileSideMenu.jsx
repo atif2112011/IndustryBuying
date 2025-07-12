@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom"
+import { NavLink, useLocation, useParams } from "react-router-dom"
 
 
 const ProfileMenuOptions = [
@@ -20,18 +20,25 @@ const ProfileMenuOptions = [
   
 ]
 
-function ProfileSideMenu(){
+function ProfileSideMenu({ showSideMenu, setShowSideMenu }){
+
     return <>
-    <div className="flex flex-col gap-4 p-4 bg-none h-full">
-        <div className="w-80 bg-white shadow-md rounded-lg p-4">
+    <div  className={`
+      absolute top-0 left-0 z-30 w-3/4 max-h-9/10 
+      transform transition-transform duration-300 ease-in-out
+      ${showSideMenu ? "translate-x-0" : "-translate-x-full"}
+      md:relative md:translate-x-0 md:flex md:w-fit md:h-full md:top-auto md:left-auto
+      flex flex-col gap-4 p-4
+    `}>
+        <div className="md:w-80 bg-white shadow-md rounded-lg p-2 md:p-4">
 
             {ProfileMenuOptions.map((option, index) => (
                 <div key={index} className="relative group">
 
                   {/* Wrap NavLink and Submenu together */}
                   <div className="flex items-center gap-2 p-2 group-hover:bg-blue-100 rounded-md cursor-pointer">
-                    <i className={option.icon +" text-lg"}></i>
-                    <span className="!text-sm">{option.name}</span>
+                    <i className={option.icon +" text-md md:text-lg"}></i>
+                    <span className="!text-xs md:!text-sm">{option.name}</span>
                   </div>
             
                   {/* Submenu visible on group hover */}
@@ -56,8 +63,8 @@ function ProfileSideMenu(){
               ))}
             
               
-                <button className="!text-md poppins-semibold !text-orange-500 trasition:transform duration:200 hover:scale-105 p-2 flex gap-2 items-center" >
-                    <i className="ri-logout-circle-line text-lg"></i>
+                <button className="!text-xs md:!text-md poppins-semibold !text-orange-500 trasition:transform duration:200 hover:scale-105 p-2 flex gap-2 items-center" >
+                    <i className="ri-logout-circle-line text-sm md:text-lg"></i>
                     Logout
                 </button>
               

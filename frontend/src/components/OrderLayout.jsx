@@ -13,8 +13,8 @@ function OrderLayout(){
   };
 
 
-    return <div className="flex-flex-col w-full h-screen">
-        <div className="pt-6 flex justify-center"> 
+    return <div className="flex flex-col w-full h-fit md:h-screen">
+        <div className="pt-6 pl-6 md:pl-0 flex md:justify-center items-center"> 
              <Stepper activeStep={stepMap[location.pathname]} orientation="horizontal" sx={{width:'40vw'}}>
                 
                 {/*  First Step*/}
