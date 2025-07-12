@@ -8,7 +8,7 @@ const notFound = (req, res, next) => {
 // Error Handler Middleware
 const errorHandler = (err, req, res, next) => {
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-  console.error(err);  
+  // console.error(err);  
   res.status(statusCode).json({
     success: false,
     message: err.message,
