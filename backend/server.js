@@ -37,10 +37,7 @@ app.use(
 // routes
 // Serve static files from frontend build
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
-//SPA for Render
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
-});
+
 app.use("/api/auth",authRoutes);
 app.use("/api/user",userRoutes);
 app.use("/api/products",productRoutes)
@@ -55,10 +52,17 @@ app.get("/server", async (req, res) => {
     }
 });
 
+
+
 //Not Found Middleware, place at the end
 app.use(notFound);
 app.use(errorHandler);
 
+//SPA for Render
+// app.get('/*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+// });
+// console.log('Serving:', path.join(__dirname, '../frontend/dist/index.html'));
 
 //Server start
 app.listen(PORT, async() => {
