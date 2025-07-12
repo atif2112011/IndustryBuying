@@ -26,7 +26,7 @@ router.get("/auth/google", (req, res) => {
 });
 
 // Handle Google redirect
-router.get("/auth/google/callback", async (req, res) => {
+router.get("/auth/google/callback", async (req, res,next) => {
   const code = req.query.code;
 
   try {
