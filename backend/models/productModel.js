@@ -15,12 +15,12 @@ const productSchema = new mongoose.Schema(
 
     category: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Category',
+      ref: "Category",
       required: true,
     },
     subCategory: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Subcategory',
+      ref: "Subcategory",
       required: true,
     },
 
@@ -46,7 +46,7 @@ const productSchema = new mongoose.Schema(
 // Auto-calculate final price
 productSchema.pre("save", function (next) {
   if (this.isModified("price") || this.isModified("discount")) {
-    const finalPriceCal = this.price - (this.price * (this.discount / 100));
+    const finalPriceCal = this.price - this.price * (this.discount / 100);
     this.finalPrice = Number(finalPriceCal.toFixed(2));
   }
   next();
