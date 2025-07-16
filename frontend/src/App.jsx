@@ -24,6 +24,7 @@ import Certification from "./pages/Certification.jsx";
 import GST from "./pages/GST.jsx";
 import HelpCenter from "./pages/HelpCenter.jsx";
 import HelpMainBody from "./components/HelpMainBody.jsx";
+import AdminHome from "./pages/AdminHome.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -74,6 +75,8 @@ function App() {
 
         <Route path="/user/login" element={<Login />}></Route>
         <Route path="/user/register" element={<Register />}></Route>
+
+        <Route path="/admin" element={<AdminHome />}></Route>
         
       </Routes>
     </BrowserRouter>
