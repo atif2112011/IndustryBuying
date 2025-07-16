@@ -15,7 +15,7 @@ router.get("/auth/google", (req, res) => {
   const redirectUri = process.env.NODE_ENV === "production"
     ? `${baseUrl}/auth/google/callback`
     : process.env.GOOGLE_REDIRECT_URI;
-
+    console.log('redirectUri',redirectUri)
   const redirectUrl =
     `https://accounts.google.com/o/oauth2/v2/auth?` +
     `client_id=${process.env.GOOGLE_CLIENT_ID}` +
@@ -26,7 +26,7 @@ router.get("/auth/google", (req, res) => {
 });
 
 // Handle Google redirect
-router.get("/auth/google/callback", async (req, res) => {
+router.get("/auth/google/callback", async (req, res,next) => {
   const code = req.query.code;
 
   try {
