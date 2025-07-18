@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, TableFooter, TablePagination } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -7,18 +7,59 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Pagination from "@mui/material/Pagination";
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
-import { useState } from "react";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, Legend, YAxis, XAxis, CartesianGrid } from "recharts";
+import { useEffect, useState } from "react";
+import { useLoader } from "../../contexts/LoaderContext";
+import { FetchAllOrdersAdmin } from "../../apis/order"
+import { getChartData } from "../../apis/category";
 
 export default function Home() {
 
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(0);
+     const [rowsPerPage, setrowsPerPage] = useState(10);
     const ordersData = [
       { id: "A001", user: "John D.", product: "Widget A", status: "Delivered", total: "₹799", date: "12 Jul 2025" },
       { id: "A002", user: "Sarah K.", product: "Gadget B", status: "Pending", total: "₹1,299", date: "12 Jul 2025" },
       { id: "A003", user: "Michael B.", product: "Tool C", status: "Cancelled", total: "₹1,999", date: "11 Jul 2025" },
     ];
+    const [orders, setOrders] = useState([]);
+    const [totalUsers, setTotalUsers] = useState(0);
+    const [totalProducts, setTotalProducts] = useState(0);
+    const [totalOrdersToday, setTotalOrdersToday] = useState(0);
+    const [chartData, setChartData] = useState([]);
+
+    const statusColors = {
+    pending: "bg-yellow-100 text-yellow-800",
+    processing: "bg-blue-100 text-blue-800",
+    packed: "bg-blue-100 text-blue-800",
+    shipped: "bg-purple-100 text-purple-800",
+    delivered: "bg-green-100 text-green-800",
+    refunded: "bg-green-100 text-green-800",
+    cancelled: "bg-red-100 text-red-800",
+  };
+
+    const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+  const {setLoading}=useLoader();
     
+  useEffect(() => {
+    const fetchData = async () => {
+      const response=await FetchAllOrdersAdmin(20,1) 
+      if(response.success)
+      {
+        setOrders(response.orders);
+      }
+      const response2=await getChartData()
+      if(response2.success)
+      {
+        setChartData(response2.products);
+      }
+    }
+    setLoading(true);
+    fetchData();
+    setLoading(false);
+  },[])
     const categoryData = [
       { name: "Electronics", value: 40 },
       { name: "Apparel", value: 25 },
@@ -47,73 +88,90 @@ export default function Home() {
       {/* Orders Table */}
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-3 text-white">Recent Orders</h2>
-        <TableContainer component={Paper} className="bg-gray-900">
+        <TableContainer component={Paper} className="bg-gray-900" sx={{
+          padding: "12px",
+          
+          border: "none",
+          marginTop: "16px",
+        }}>
           <Table size="small">
             <TableHead>
               <TableRow>
-                {["Order ID", "User", "Product", "Status", "Total", "Date"].map(
+                {["Order ID", "Customer Name", "Total Items", "Status", "Total Price", "Date Ordered"].map(
                   (header) => (
-                    <TableCell key={header} sx={{ color: "#e5e7eb" }}>
-                      {header}
+                    <TableCell key={header} sx={{padding:"6px 12px"}}>
+                     <span className="!text-xs md:!text-sm font-semibold text-gray-800">{header}</span>
                     </TableCell>
                   )
                 )}
               </TableRow>
             </TableHead>
             <TableBody>
-              {ordersData.map((order) => (
+              {orders && orders.length>0 && orders.map((order) => (
                 <TableRow key={order.id}>
-                  <TableCell sx={{ color: "#e5e7eb" }}>{order.id}</TableCell>
-                  <TableCell sx={{ color: "#e5e7eb" }}>{order.user}</TableCell>
-                  <TableCell sx={{ color: "#e5e7eb" }}>
-                    {order.product}
+                  <TableCell sx={{padding:"6px 12px"}}><span className="!text-xs md:!text-sm font-medium text-gray-800">{order._id}</span></TableCell>
+                  <TableCell sx={{padding:"6px 12px"}}><span className="!text-xs md:!text-sm font-medium text-gray-800">{order.userName}</span></TableCell>
+                  <TableCell sx={{padding:"6px 12px"}}>
+                    <span className="!text-xs md:!text-sm font-medium text-gray-800">{order.totalItems}</span>
                   </TableCell>
-                  <TableCell sx={{ color: "#e5e7eb" }}>
-                    {order.status}
+                  <TableCell sx={{padding:"6px 12px"}}>
+                    <span className={`!text-xs font-medium ${statusColors[order.status.toLowerCase()]} px-2 py-1 rounded-md`}>{order.status}</span>
                   </TableCell>
-                  <TableCell sx={{ color: "#e5e7eb" }}>{order.total}</TableCell>
-                  <TableCell sx={{ color: "#e5e7eb" }}>{order.date}</TableCell>
+                  <TableCell sx={{padding:"6px 12px"}}><span className="!text-xs md:!text-sm font-medium text-gray-800">{order.totalPrice}</span></TableCell>
+                  <TableCell sx={{padding:"6px 12px"}}><span className="!text-xs md:!text-sm font-medium text-gray-800">{new Date(order.createdAt).getDay()}/{new Date(order.createdAt).getMonth()+1}/{new Date(order.createdAt).getFullYear()}</span></TableCell>
                 </TableRow>
               ))}
             </TableBody>
+            {/* <TableFooter>
+                        <TableRow >
+                          <TablePagination
+                            count={ordersData.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            rowsPerPageOptions={[]}
+                            labelRowsPerPage={""}
+                            className="centered-pagination"
+                            colSpan={6}
+                            
+                          />
+                        </TableRow>
+                      </TableFooter> */}
           </Table>
         </TableContainer>
-        <div className="flex justify-end mt-3">
-          <Pagination
-            count={5}
-            page={page}
-            onChange={(e, val) => setPage(val)}
-            color="primary"
-          />
-        </div>
+  
       </div>
 
       {/* Category Pie Chart */}
-      <div className="bg-gray-800 rounded-xl p-6 max-w-xl mx-auto">
+      <div className="bg-gray-100 rounded-xl p-6  mx-auto w-full">
         <h2 className="text-xl font-semibold mb-4 text-white">
-          Product Categories
+          Product Categories Distribution
         </h2>
-        <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Pie
-              data={categoryData}
-              cx="50%"
-              cy="50%"
-              outerRadius={100}
-              fill="#8884d8"
-              dataKey="value"
-              label
-            >
-              {categoryData.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={COLORS[index % COLORS.length]}
-                />
-              ))}
-            </Pie>
-            <Tooltip />
-          </PieChart>
-        </ResponsiveContainer>
+        {chartData && (
+  <ResponsiveContainer width="100%" height={2000}>
+    <BarChart
+      
+      data={chartData}
+      // Add the layout="vertical" prop to the BarChart itself
+      layout="vertical" 
+      margin={{
+        top: 5,
+        right: 30,
+        left: 20,
+        bottom: 5,
+      }}
+    >
+      <CartesianGrid strokeDasharray="3 3" />
+      {/* The XAxis is now the numerical axis */}
+      <XAxis type="number" /> 
+      {/* The YAxis is now the categorical axis */}
+      <YAxis dataKey="name" type="category" /> 
+      <Tooltip />
+      <Legend />
+      <Bar dataKey="productCount" fill="#2563eb" />
+    </BarChart>
+  </ResponsiveContainer>
+)}
       </div>
     </div>
   );

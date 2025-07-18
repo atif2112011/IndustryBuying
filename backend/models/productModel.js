@@ -39,6 +39,7 @@ const productSchema = new mongoose.Schema(
     tags: [{ type: String }],
 
     technicalAspects: [technicalAspectSchema],
+    isActive: { type: Boolean, default: true },
   },
   { timestamps: true }
 );

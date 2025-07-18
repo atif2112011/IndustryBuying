@@ -162,5 +162,32 @@ const getProductsBySubcategory = async (req, res,next) => {
   }
 };
 
+const getCategoryProductCount = async (req, res,next) => {
+  try {
+    const categories=await Category.find()
+    const products = await Promise.all(
+      categories.map(async (category) => {
+        const productCount = await Product.countDocuments({
+          category: category._id,
+        });
+        return {
+          category: category._id,
+          name: category.name,
+          productCount,
+        };
+      })
+    );
+    
+   res.status(200).json({
+        success: true,
+        message: 'Products Count fetched successfully',
+        products
+    });
+  } catch (err) {
+    console.error("Error fetching products count", err);
+    next(err);
+  }
+};
 
-module.exports={getAllCategoriesWithSubcategories,getProductsByCategory,getProductsBySubcategory,getSubcategories}
+
+module.exports={getAllCategoriesWithSubcategories,getProductsByCategory,getProductsBySubcategory,getSubcategories,getCategoryProductCount}

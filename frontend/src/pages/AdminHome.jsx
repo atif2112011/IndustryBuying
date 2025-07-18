@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Home from "./Admin/Home";
 import Order from "./Admin/Order";
+import Products from "./Admin/Products";
 
 const AdminHome = () => {
 
@@ -24,7 +25,7 @@ const AdminHome = () => {
     },
     {
       label: "Products",
-      component: <div>Products</div>,
+      component: <Products/>,
       link: "/products",
     },
     {

@@ -224,3 +224,15 @@ font-family: 'Poppins';
     width: 100%;
   }
 }
+
+
+/* For centering the pagination in tables */
+/* This rule now works because the spacer is gone */
+.centered-pagination .MuiTablePagination-toolbar {
+  justify-content: center;
+}
+
+/* This is the crucial part: hide the spacer div */
+.centered-pagination .MuiTablePagination-spacer {
+  display: none;
+}

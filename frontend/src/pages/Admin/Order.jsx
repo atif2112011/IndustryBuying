@@ -18,25 +18,38 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import SearchBar from "../../components/SearchBar";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import EditOrderModal from "../../components/Admin/EditOrderModal";
-
+import { FetchAllOrders } from "../../apis/order";
+import {useLoader} from '../../contexts/LoaderContext';
 function Order() {
   const [orderpage, setorderpage] = useState(0);
-  const [rowsPerPage, setrowsPerPage] = useState(5);
+  const [rowsPerPage, setrowsPerPage] = useState(10);
   const [orders, setOrders] = useState([
-  { orderId: "A001", customer: "John Doe", date: "12 Jul 2025, 12:32PM", status: "Delivered", amount: "₹799", payment: "UPI", address: "123 Street, City, PIN, State, Country", items: [{ name: "Widget A", quantity: 1, price: "₹799" }] },
-  { orderId: "A002", customer: "Sarah Khan", date: "12 Jul 2025, 11:18AM", status: "Pending", amount: "₹1,299", payment: "Razorpay", address: "456 Avenue, Metro City, 10001, State, India", items: [{ name: "Widget B", quantity: 2, price: "₹649" }] },
-  { orderId: "A003", customer: "Mike Tyson", date: "11 Jul 2025, 09:42AM", status: "Cancelled", amount: "₹1,099", payment: "COD", address: "789 Lane, Town, 560001, State, India", items: [{ name: "Widget C", quantity: 1, price: "₹1,099" }] },
+  { orderId: "A001", customer: "John Doe", date: "12 Jul 2025, 12:32PM", status: "delivered", amount: "₹799", payment: "UPI", address: "123 Street, City, PIN, State, Country", items: [{ name: "Widget A", quantity: 1, price: "₹799" }],invoiceUrl:"https://example.com/invoice.pdf" },
+  { orderId: "A002", customer: "Sarah Khan", date: "12 Jul 2025, 11:18AM", status: "processing", amount: "₹1,299", payment: "Razorpay", address: "456 Avenue, Metro City, 10001, State, India", items: [{ name: "Widget B", quantity: 2, price: "₹649" }] },
+  { orderId: "A003", customer: "Mike Tyson", date: "11 Jul 2025, 09:42AM", status: "cancelled", amount: "₹1,099", payment: "COD", address: "789 Lane, Town, 560001, State, India", items: [{ name: "Widget C", quantity: 1, price: "₹1,099" }] },
+  { orderId: "A004", customer: "John Doe", date: "12 Jul 2025, 12:32PM", status: "delivered", amount: "₹799", payment: "UPI", address: "123 Street, City, PIN, State, Country", items: [{ name: "Widget A", quantity: 1, price: "₹799" }],invoiceUrl:"https://example.com/invoice.pdf" },
+  { orderId: "A005", customer: "Sarah Khan", date: "12 Jul 2025, 11:18AM", status: "processing", amount: "₹1,299", payment: "Razorpay", address: "456 Avenue, Metro City, 10001, State, India", items: [{ name: "Widget B", quantity: 2, price: "₹649" }] },
+  { orderId: "A006", customer: "Mike Tyson", date: "11 Jul 2025, 09:42AM", status: "cancelled", amount: "₹1,099", payment: "COD", address: "789 Lane, Town, 560001, State, India", items: [{ name: "Widget C", quantity: 1, price: "₹1,099" }] },{ orderId: "A001", customer: "John Doe", date: "12 Jul 2025, 12:32PM", status: "delivered", amount: "₹799", payment: "UPI", address: "123 Street, City, PIN, State, Country", items: [{ name: "Widget A", quantity: 1, price: "₹799" }],invoiceUrl:"https://example.com/invoice.pdf" },
+  { orderId: "A007", customer: "Sarah Khan", date: "12 Jul 2025, 11:18AM", status: "processing", amount: "₹1,299", payment: "Razorpay", address: "456 Avenue, Metro City, 10001, State, India", items: [{ name: "Widget B", quantity: 2, price: "₹649" }] },
+  { orderId: "A008", customer: "Mike Tyson", date: "11 Jul 2025, 09:42AM", status: "cancelled", amount: "₹1,099", payment: "COD", address: "789 Lane, Town, 560001, State, India", items: [{ name: "Widget C", quantity: 1, price: "₹1,099" }] },{ orderId: "A001", customer: "John Doe", date: "12 Jul 2025, 12:32PM", status: "delivered", amount: "₹799", payment: "UPI", address: "123 Street, City, PIN, State, Country", items: [{ name: "Widget A", quantity: 1, price: "₹799" }],invoiceUrl:"https://example.com/invoice.pdf" },
+  { orderId: "A009", customer: "Sarah Khan", date: "12 Jul 2025, 11:18AM", status: "processing", amount: "₹1,299", payment: "Razorpay", address: "456 Avenue, Metro City, 10001, State, India", items: [{ name: "Widget B", quantity: 2, price: "₹649" }] },
+  { orderId: "A0012", customer: "Mike Tyson", date: "11 Jul 2025, 09:42AM", status: "cancelled", amount: "₹1,099", payment: "COD", address: "789 Lane, Town, 560001, State, India", items: [{ name: "Widget C", quantity: 1, price: "₹1,099" }] },{ orderId: "A001", customer: "John Doe", date: "12 Jul 2025, 12:32PM", status: "delivered", amount: "₹799", payment: "UPI", address: "123 Street, City, PIN, State, Country", items: [{ name: "Widget A", quantity: 1, price: "₹799" }],invoiceUrl:"https://example.com/invoice.pdf" },
+  { orderId: "A00212", customer: "Sarah Khan", date: "12 Jul 2025, 11:18AM", status: "processing", amount: "₹1,299", payment: "Razorpay", address: "456 Avenue, Metro City, 10001, State, India", items: [{ name: "Widget B", quantity: 2, price: "₹649" }] },
+  { orderId: "A00311", customer: "Mike Tyson", date: "11 Jul 2025, 09:42AM", status: "cancelled", amount: "₹1,099", payment: "COD", address: "789 Lane, Town, 560001, State, India", items: [{ name: "Widget C", quantity: 1, price: "₹1,099" }] },
 ]);
 
   const statusColors = {
-    Pending: "bg-yellow-100 text-yellow-800",
-    Processing: "bg-blue-100 text-blue-800",
-    Shipped: "bg-purple-100 text-purple-800",
-    Delivered: "bg-green-100 text-green-800",
-    Cancelled: "bg-red-100 text-red-800",
+    pending: "bg-yellow-100 text-yellow-800",
+    processing: "bg-blue-100 text-blue-800",
+    packed: "bg-blue-100 text-blue-800",
+    shipped: "bg-purple-100 text-purple-800",
+    delivered: "bg-green-100 text-green-800",
+    refunded: "bg-green-100 text-green-800",
+    cancelled: "bg-red-100 text-red-800",
   };
+  const {setLoading}=useLoader();
 
   const [date, setDate] = useState(null);
   const [status, setStatus] = useState("");
@@ -56,6 +69,22 @@ function Order() {
   const handleChangePage = (event, newPage) => {
     setorderpage(newPage);
   };
+
+  const handleFilterDate = (newDate) => {
+    setDate(newDate);
+    console.log(newDate);
+  }
+
+ useEffect(() => {
+  const fetchOrders = async () => {
+    setLoading(true);
+    const response=await FetchAllOrders();
+    setLoading(false);
+    if(response.success)
+    setOrders(response.orders);
+  }
+  //  fetchOrders();
+ },[])
 
   return (
     <div className="w-full flex flex-col">
@@ -84,7 +113,7 @@ function Order() {
                 },
               }}
               value={date}
-              onChange={(newValue) => setDate(newValue)}
+              onChange={(newDate)=>{handleFilterDate(newDate)}}
             />
           </LocalizationProvider>
 
@@ -132,7 +161,7 @@ function Order() {
       {/* Sort and Search Inputs end */}
 
       {/* Order Table */}
-      <TableContainer
+      {orders && orders.length>0 && <TableContainer
         component={Paper}
         sx={{
           padding: "12px",
@@ -222,6 +251,8 @@ function Order() {
           <TableFooter>
             <TableRow>
               <TablePagination
+              className="centered-pagination"
+              colSpan={7}
                 count={orders.length}
                 rowsPerPage={rowsPerPage}
                 page={orderpage}
@@ -232,7 +263,7 @@ function Order() {
             </TableRow>
           </TableFooter>
         </Table>
-      </TableContainer>
+      </TableContainer>}
 
       <EditOrderModal
         isOpen={modalOpen}

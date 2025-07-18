@@ -102,3 +102,24 @@ export const getProductsBySubCategory=async(slug)=>{
     }
   }
 }
+
+export const getChartData=async()=>{
+  try {
+    const response=await API.get(`/api/categories/category-productCount`)
+    if(response.data.success)
+      return {
+        success:true,
+        message:response.data.message,
+        products:response.data.products
+      }
+    else
+    throw new Error(response.data.message)
+  } catch (error) {
+    console.error(error)
+    return {
+      success:false,
+      message:error?.response?.data?.message ||error.message
+    }
+  }
+}
+

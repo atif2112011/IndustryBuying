@@ -17,12 +17,14 @@ const Subcategory = require("./models/subcategoryModel");
 const Product = require("./models/productModel");
 const slugify = require("slugify");
 const path = require("path");
+const morgan = require("morgan");
 
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 //Middlewares
+app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
 app.use(

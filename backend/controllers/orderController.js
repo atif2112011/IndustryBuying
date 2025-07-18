@@ -1,3 +1,4 @@
+const { default: mongoose } = require('mongoose');
 const { cloudinary } = require('../config/cloudinary');
 const Order = require('../models/orderModel');
 const multer = require('multer')
@@ -60,6 +61,7 @@ const getUserOrders = async (req, res, next) => {
     next(error);
   }
 };
+
 
 // Get a single order by ID (GET /orders/:id)
 const getOrderById = async (req, res, next) => {
@@ -188,11 +190,130 @@ const uploadInvoiceDirect = async (req, res, next) => {
   }
 };
 
+const getAllOrders = async (req, res, next) => {
+  try {
+    let {
+      page = 1,
+      limit = 10,
+      search,
+      status,
+      date, // Expecting 'YYYY-MM-DD'
+    } = req.query;
+
+    page = parseInt(page);
+    limit = parseInt(limit);
+
+    const skip = (page - 1) * limit;
+
+    // This object will be used in the $match stage of the pipeline
+    const matchQuery = {};
+
+    // Filter by status
+    if (status !== undefined) {
+      matchQuery.status = status;
+    }
+
+    // Filter by date
+    if (date) {
+      const start = new Date(date);
+      const end = new Date(date);
+      end.setHours(23, 59, 59, 999);
+      matchQuery.createdAt = { $gte: start, $lte: end };
+    }
+    
+    // --- Start of New Search Logic ---
+    if (search) {
+      const searchConditions = [
+        // Search by username from the joined 'userDetails'
+        { "userDetails.name": { $regex: search, $options: "i" } },
+      ];
+      
+      // Also check if the search term is a valid Order ID
+      if (mongoose.Types.ObjectId.isValid(search)) {
+        searchConditions.push({ _id: new mongoose.Types.ObjectId(search) });
+      }
+
+      matchQuery.$or = searchConditions;
+    }
+    // --- End of New Search Logic ---
+
+    // The base pipeline for joining and filtering
+    const basePipeline = [
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "userDetails",
+        },
+      },
+      { $unwind: "$userDetails" },
+      { $match: matchQuery },
+    ];
+
+    // We need a separate pipeline to count total matching documents
+    const countPipeline = [...basePipeline, { $count: "total" }];
+    const totalResult = await Order.aggregate(countPipeline);
+    const totalOrders = totalResult.length > 0 ? totalResult[0].total : 0;
+    const totalPages = Math.ceil(totalOrders / limit);
+
+    if (page > totalPages && totalOrders > 0) {
+      throw new Error(`Page ${page} exceeds total pages (${totalPages})`);
+    }
+
+    // Main pipeline to fetch the paginated data
+    const dataPipeline = [
+      ...basePipeline,
+      { $sort: { createdAt: -1 } },
+      { $skip: skip },
+      { $limit: limit },
+      { // Manually shape the output to include user name and id
+        $project: {
+            // Include all original order fields
+            items: 1,
+            billingInfo: 1,
+            totalItems: 1,
+            totalPrice: 1,
+            currency: 1,
+            status: 1,
+            paymentInfo: 1,
+            shippingInfo: 1,
+            orderedItems: 1,
+            totalAmount: 1,
+            createdAt: 1,
+            updatedAt: 1,
+            deliveredAt: 1,
+            invoiceUrl: 1,
+            _id: 1,
+            // Add user details explicitly
+            userId: "$userDetails._id",
+            userName: "$userDetails.name"
+        }
+      }
+    ];
+
+    const orders = await Order.aggregate(dataPipeline);
+
+    res.status(200).json({
+      message: "Orders fetched successfully",
+      success: true,
+      totalPages,
+      totalOrders,
+      currentPage: page,
+      limit,
+      orders,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createOrder,
   getUserOrders,
   getOrderById,
   updateOrderStatus,
   deleteOrder,
-  uploadInvoiceDirect
+  uploadInvoiceDirect,
+  getAllOrders
 };
