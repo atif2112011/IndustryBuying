@@ -10,6 +10,8 @@ const Auth2Routes = require("./routes/Auth2Routes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const orderRoutes = require("./routes/orderRoutes");
+const testimonialRoutes = require("./routes/testimonialRoute")
+const brandRoutes = require("./routes/brandsRoutes")
 
 const cookieParser = require("cookie-parser");
 const Category = require("./models/categoryModel");
@@ -46,6 +48,8 @@ app.use("/api/products",productRoutes)
 app.use("/api/categories",categoryRoutes)
 app.use("/api/cart",cartRoutes)
 app.use("/api/orders",orderRoutes)
+app.use("/api/testimonials",testimonialRoutes)
+app.use("/api/brands",brandRoutes)
 
 app.use("/",Auth2Routes);
 app.get("/server", async (req, res) => {
