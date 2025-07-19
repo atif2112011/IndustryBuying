@@ -6,7 +6,7 @@ const router = express.Router()
 
 router.post("/addTestimonial", upload.single("logo"),addTestimonial)
 router.get("/getTestimonials",getTestimonials)
-router.put("/updateTestimonial/:id",updateTestimonial)
+router.put("/updateTestimonial/:id",upload.single("logo"),updateTestimonial)
 router.delete("/deleteTestimonial/:id",deleteTestimonial)
 
 

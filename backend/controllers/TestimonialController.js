@@ -2,57 +2,65 @@ const Testimonial = require("../models/TestimonialModel")
 const cloudinary = require("../config/cloudinary")
 const multer = require('multer')
 const upload = multer({ storage: multer.memoryStorage() })
+const stream = require("stream");
 
-const addTestimonial = async(req,res,next)=>{
-    try {
-      const { name, designation, company, message } = req.body
+const addTestimonial = async (req, res, next) => {
+  try {
+    const { name, designation, company, message } = req.body;
 
-      console.log(req.body)
+    if (!name || !designation || !company || !message)
+      throw new Error("Fill all the required fields");
 
-    if(!name || !designation || !company || !message)
-        throw new Error("fields empty")
+    const checkDuplicate = await Testimonial.findOne({ name });
+    if (checkDuplicate)
+      throw new Error(`Testimonial already exists for ${checkDuplicate.name}`);
 
-      if (!req.file) {
-        throw new Error("Logo image is required.")
-      }
+    let logo = null;
 
-      // Upload to Cloudinary
-      const result = await cloudinary.uploader.upload_stream(
-        {
-          folder: "testimonials",
-          resource_type: "image",
-        },
-        async (error, result) => {
-          if (error) {
-           throw new Error("Cloudinary upload failed");
-          }
-
-          // Save to MongoDB
-          const testimonial = await Testimonial.create({
-            name,
-            designation,
-            company,
-            message,
-            logo: {
-              public_id: result.public_id,
-              secure_url: result.secure_url,
+    // Only proceed with cloudinary upload if a file is sent
+    if (req.file) {
+      const streamUpload = (file) => {
+        return new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            {
+              folder: "testimonials",
+              resource_type: "image",
             },
-          });
+            (error, result) => {
+              if (error) return reject(new Error("Cloudinary upload failed"));
+              resolve(result);
+            }
+          );
 
-        
-          return res
-            .status(201)
-            .json({ message: "Testimonial created successfully", testimonial:testimonial,success:true });
-        }
-      );
+          stream.end(file.buffer); // Push the file buffer into the stream
+        });
+      };
 
-      // Pipe file buffer to cloudinary
-      result.end(req.file.buffer);
-
-    } catch (error) {
-      next(error);
+      const result = await streamUpload(req.file);
+      logo = {
+        public_id: result.public_id,
+        secure_url: result.secure_url,
+      };
     }
-}
+
+    const testimonial = await Testimonial.create({
+      name,
+      designation,
+      company,
+      message,
+      ...(logo && { logo }),
+    });
+
+    return res.status(201).json({
+      message: "Testimonial created successfully",
+      testimonial,
+      success: true,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 
 const updateTestimonial = async (req, res, next) => {

@@ -93,7 +93,8 @@ const getProducts = async (req, res, next) => {
       .skip(skip)
       .limit(limit)
       .populate("category")
-      .populate("subCategory");
+      .populate("subCategory")
+      .sort({name:1});
 
     if (!products) throw new Error("Products not found");
 

@@ -20,11 +20,11 @@ const testimonialSchema = new mongoose.Schema({
   logo: {
     public_id: {
       type: String,
-      required: true,
+      required: false,
     },
     secure_url: {
       type: String,
-      required: true,
+      required: false,
     },
   },
   
