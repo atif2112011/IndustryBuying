@@ -86,13 +86,17 @@ const getOrderById = async (req, res, next) => {
 };
 
 // Update order status (PUT /orders/:id/status)
-const updateOrderStatus = async (req, res, next) => {
+const updateOrder = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
+    const status = req.body.status
+    
+    if(!status) {
+      throw new Error("Order status is required");
+    }
 
-    const allowedStatuses = ['processing','packed', 'shipped', 'delivered', 'cancelled', 'refunded'];
-    if (!allowedStatuses.includes(status)) {
+    const allowedStatuses = ['processing', 'packed', 'shipped', 'delivered', 'cancelled', 'refunded'];
+    if (status && !allowedStatuses.includes(status)) {
       throw new Error("Invalid order status");
     }
 
@@ -100,17 +104,61 @@ const updateOrderStatus = async (req, res, next) => {
     if (!order) {
       throw new Error("Order not found");
     }
+    console.log(`req.file`, req.file);
 
-    order.status = status;
+    // Check if a new invoice file has been uploaded
+    if (req.file) {
+      // 1. If an old invoice exists, delete it directly from Cloudinary
+      if (order.invoiceUrl) {
+         const getPublicId = (url) => {
+        // Example URL: https://res.cloudinary.com/cloud_name/image/upload/v12345/products/image_id.jpg
+        // We need to extract "products/image_id"
+        const parts = url.split("/");
+        const publicIdWithExtension = parts
+          .slice(parts.indexOf("products"))
+          .join("/");
+        return publicIdWithExtension.split(".")[0];
+      };
+        await cloudinary.uploader.destroy(getPublicId(order.invoiceUrl));
+      }
+
+      // 2. Upload the new file directly to Cloudinary
+      const result = await new Promise((resolve, reject) => {
+          cloudinary.uploader
+            .upload_stream(
+              {
+                resource_type: "image",
+                folder: "invoices",
+                public_id: req.file.originalname.split(".")[0],
+              },
+              (error, result) => {
+                if (error) reject(error);
+                else resolve(result);
+              }
+            )
+            .end(req.file.buffer);
+        });
+
+      // 3. Update the order's invoice details
+      order.invoiceUrl = result.secure_url;
+    }
+
+    if (status) {
+      order.status = status;
+    }
 
     if (status === 'delivered') {
       order.deliveredAt = new Date();
+    }
+    else
+    {
+      order.deliveredAt = null;
     }
 
     await order.save();
 
     res.status(200).json({
-      message: "Order status updated successfully",
+      message: "Order updated successfully",
       success: true,
       order,
     });
@@ -118,7 +166,6 @@ const updateOrderStatus = async (req, res, next) => {
     next(error);
   }
 };
-
 // Delete an order (DELETE /orders/:id)
 const deleteOrder = async (req, res, next) => {
   try {
@@ -312,7 +359,7 @@ module.exports = {
   createOrder,
   getUserOrders,
   getOrderById,
-  updateOrderStatus,
+  updateOrder,
   deleteOrder,
   uploadInvoiceDirect,
   getAllOrders

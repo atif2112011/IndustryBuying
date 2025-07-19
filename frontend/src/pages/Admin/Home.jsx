@@ -45,7 +45,7 @@ export default function Home() {
     
   useEffect(() => {
     const fetchData = async () => {
-      const response=await FetchAllOrdersAdmin(20,1) 
+      const response=await FetchAllOrdersAdmin(1,20) 
       if(response.success)
       {
         setOrders(response.orders);
@@ -143,7 +143,7 @@ export default function Home() {
       </div>
 
       {/* Category Pie Chart */}
-      <div className="bg-gray-100 rounded-xl p-6  mx-auto w-full">
+      <div className="rounded-xl p-6 px-0 mx-auto w-full">
         <h2 className="text-xl font-semibold mb-4 text-white">
           Product Categories Distribution
         </h2>

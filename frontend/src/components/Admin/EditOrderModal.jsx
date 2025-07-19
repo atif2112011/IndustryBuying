@@ -1,12 +1,18 @@
 import { Button, FormControl, MenuItem, Select } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const EditOrderModal = ({ isOpen, onClose, orderData, onSave }) => {
   const [status, setStatus] = useState(null);
   const [invoice, setInvoice] = useState(null);
 
+  useEffect(() => {
+    if (orderData) {
+      setStatus(orderData.status);
+      setInvoice(orderData.invoiceUrl);
+    }
+  }, [orderData]);
+
   const statusColors = {
-    pending: "bg-yellow-100 text-yellow-800",
     processing: "bg-blue-100 text-blue-800",
     packed: "bg-blue-100 text-blue-800",
     shipped: "bg-purple-100 text-purple-800",
@@ -14,44 +20,44 @@ const EditOrderModal = ({ isOpen, onClose, orderData, onSave }) => {
     refunded: "bg-green-100 text-green-800",
     cancelled: "bg-red-100 text-red-800",
   };
-  console.log("orderData", orderData);
+  // console.log("orderData", orderData);
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 overflow-auto p-4">
       <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90%] overflow-auto p-6 shadow-lg ">
         <h2 className="!text-md md:!text-lg font-semibold mb-2">
-          Order ID: {orderData?.orderId}
+          Order ID: {orderData?._id}
         </h2>
         <p className="!text-xs md:!text-sm mb-1">
           <span className="font-semibold !text-xs md:!text-sm">
             Date Ordered:{" "}
           </span>
-          {orderData?.date}
+          {new Date(orderData?.createdAt).toLocaleString()}
         </p>
         <p className="!text-xs md:!text-sm mb-1">
           <span className="font-semibold !text-xs md:!text-sm">
             Customer Name:{" "}
           </span>
-          {orderData?.customer}
+          {orderData?.userName}
         </p>
         <p className="!text-xs md:!text-sm mb-2">
           <span className="font-semibold !text-xs md:!text-sm ">
             Shipping Address:{" "}
           </span>
-          {orderData?.address}
+          {"---"}
         </p>
         <p className="!text-xs md:!text-sm mb-2">
           <span className="font-semibold !text-xs md:!text-sm ">
             Billing Address:{" "}
           </span>
-          {orderData?.address}
+          {"---"}
         </p>
         <p className="!text-xs md:!text-sm mb-2">
           <span className="font-semibold !text-xs md:!text-sm ">
             Payment Method:{" "}
           </span>
-          {orderData?.payment}
+          {orderData?.paymentInfo?.method || "NUll"}
         </p>
         <h3 className="font-semibold !text-md md:!text-lg mt-4 mb-2">
           Product Items:
@@ -63,10 +69,10 @@ const EditOrderModal = ({ isOpen, onClose, orderData, onSave }) => {
             <span className="!text-xs md:!text-sm text-blue-950">Price</span>
             <span className="!text-xs md:!text-sm text-blue-950">Subtotal</span>
           </div>
-          {orderData?.items?.map((item, index) => (
+          {orderData && orderData.items && orderData.items.length>0 && orderData.items.map((item, index) => (
             <div key={index} className="grid grid-cols-4 px-2 py-1 border-t">
               <span className="!text-xs md:!text-sm text-gray-800">
-                {item.name}
+                {item.productName}
               </span>
               <span className="!text-xs md:!text-sm text-gray-800">
                 {item.quantity}
@@ -75,7 +81,7 @@ const EditOrderModal = ({ isOpen, onClose, orderData, onSave }) => {
                 {item.price}
               </span>
               <span className="!text-xs md:!text-sm text-gray-800">
-                {item.price}
+                {item.subtotal}
               </span>
             </div>
           ))}
@@ -87,7 +93,7 @@ const EditOrderModal = ({ isOpen, onClose, orderData, onSave }) => {
           </label>
           <FormControl fullWidth>
             <Select
-              value={orderData?.status}
+              value={status || ""}
               onChange={(e) => setStatus(e.target.value)}
               size="small"
             >
@@ -110,7 +116,7 @@ const EditOrderModal = ({ isOpen, onClose, orderData, onSave }) => {
               className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
             />
           </div>
-          {orderData?.invoiceUrl && (
+          {orderData && orderData.invoiceUrl && (
             <div className="mb-4">
               <Button
                 variant="outlined"
