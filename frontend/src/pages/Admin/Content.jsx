@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   IconButton,
   Table,
@@ -9,29 +9,22 @@ import {
   TextField,
 } from "@mui/material";
 import "remixicon/fonts/remixicon.css";
+import { getBrandIcons, getTestimonials } from "../../apis/content";
+import { useLoader } from "../../contexts/LoaderContext";
+import { useAlert } from "../../contexts/AlertContext";
+
+
+
 
 const ContentTab = () => {
-  const [brandIcons] = useState([
-    { name: "Apple", img: "https://via.placeholder.com/50" },
-    { name: "Samsung", img: "https://via.placeholder.com/50" },
-  ]);
 
-  const [testimonials] = useState([
-    {
-      name: "John Doe",
-      designation: "CEO",
-      company: "Acme Inc",
-      logo: "https://via.placeholder.com/40",
-      message: "Great experience!",
-    },
-    {
-      name: "Jane Smith",
-      designation: "Manager",
-      company: "Tech Co",
-      logo: "https://via.placeholder.com/40",
-      message: "Loved the service.",
-    },
-  ]);
+  const {setLoading}=useLoader();
+const {setMessage,setShowSnackBar}=useAlert();
+  const [brandIcons,setBrandIcons] = useState([]);
+
+
+
+  const [testimonials,setTestimonials] = useState([]);
 
   const [aboutText] = useState(
     "We are a forward-thinking company focused on innovation and quality. Our team is dedicated to delivering the best products and services to our customers."
@@ -49,6 +42,34 @@ const ContentTab = () => {
       text: "Certified for information security management.",
     },
   ]);
+
+  useEffect(()=>{
+    const fetchData=async()=>{
+      const response=await getBrandIcons();
+      if(response.success)
+      {
+        setBrandIcons(response.brands);
+      }
+      else
+      {
+        setMessage(response.message);
+        setShowSnackBar(true);
+      }
+
+      const response2=await getTestimonials();
+      if(response2.success)
+      {
+        setTestimonials(response2.testimonials);
+      }
+      else
+      {
+        setMessage(response2.message);
+        setShowSnackBar(true);
+      }
+      
+    }
+    fetchData();
+  },[])
 
   return (
     <div className="p-4 space-y-10">
@@ -79,7 +100,7 @@ const ContentTab = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {brandIcons.map((brand, index) => (
+            {brandIcons && brandIcons.map((brand, index) => (
               <TableRow key={index}>
                 <TableCell sx={{ padding: "6px 12px" }} className="text-xs md:text-md font-medium text-gray-800">
                   {brand.name}
@@ -88,7 +109,7 @@ const ContentTab = () => {
                   <img
                     src={brand?.img?.secure_url || ""}
                     alt={brand.name}
-                    className="w-10 h-10 object-contain"
+                    className="w-15 h-15 object-contain"
                   />
                 </TableCell>
                 <TableCell sx={{ padding: "6px 12px" }}>
@@ -131,7 +152,7 @@ const ContentTab = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {testimonials.map((t, index) => (
+            {testimonials && testimonials.map((t, index) => (
               <TableRow key={index}>
                 <TableCell sx={{ padding: "6px 12px" }} className="text-xs md:text-md">{t.name}</TableCell>
                 <TableCell sx={{ padding: "6px 12px" }} className="text-xs md:text-md">
@@ -147,7 +168,7 @@ const ContentTab = () => {
                     className="w-10 h-10 object-contain"
                   />
                 </TableCell>
-                <TableCell sx={{ padding: "6px 12px" }} className="text-xs md:text-md truncate">
+                <TableCell sx={{ padding: "6px 12px" }} className="text-xs md:text-md truncate max-w-[200px]">
                   {t.message}
                 </TableCell>
                 <TableCell sx={{ padding: "6px 12px" }}>
@@ -173,7 +194,7 @@ const ContentTab = () => {
       </section>
 
       {/* About Us Section */}
-      <section >
+      {/* <section >
         <h2 className="text-xs md:text-lg font-semibold mb-4 flex items-center gap-2">
           <i className="ri-information-line text-blue-600" />
           About Us
@@ -181,7 +202,7 @@ const ContentTab = () => {
         <div className="bg-white p-4 rounded-md shadow-sm text-xs md:text-md leading-relaxed text-gray-800">
           {aboutText}
         </div>
-      </section>
+      </section> */}
 
       {/* Certifications Section */}
       <section>
@@ -213,9 +234,25 @@ const ContentTab = () => {
                 <TableCell sx={{ padding: "6px 12px" }} className="text-xs md:text-md">
                   {cert.title}
                 </TableCell>
-                <TableCell sx={{ padding: "6px 12px" }} className="text-xs md:text-md">
+                <TableCell sx={{ padding: "6px 12px" }} className="text-xs md:text-md truncate">
                   {cert.text}
                 </TableCell>
+                 <TableCell sx={{ padding: "6px 12px" }}>
+                                      <div className="flex items-center gap-2">
+                                        {/* <IconButton
+                                          size="small"
+                                          onClick={() => handleEdit(product)}
+                                        >
+                                          <i className="ri-pencil-line text-blue-600 text-base"></i>
+                                        </IconButton> */}
+                                        <IconButton
+                                          size="small"
+                                          // onClick={() => handleDelete(product._id)}
+                                        >
+                                          <i className="ri-delete-bin-line text-red-600 text-base"></i>
+                                        </IconButton>
+                                      </div>
+                                    </TableCell>
               </TableRow>
             ))}
           </TableBody>
