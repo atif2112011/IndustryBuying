@@ -45,19 +45,25 @@ const EditOrderModal = ({ isOpen, onClose, orderData, onSave }) => {
           <span className="font-semibold !text-xs md:!text-sm ">
             Shipping Address:{" "}
           </span>
-          {"---"}
+          {orderData?.shippingInfo && formatAddress(orderData?.shippingInfo)}
         </p>
         <p className="!text-xs md:!text-sm mb-2">
           <span className="font-semibold !text-xs md:!text-sm ">
             Billing Address:{" "}
           </span>
-          {"---"}
+          {orderData?.billingInfo && formatAddress(orderData?.billingInfo)}
         </p>
         <p className="!text-xs md:!text-sm mb-2">
           <span className="font-semibold !text-xs md:!text-sm ">
             Payment Method:{" "}
           </span>
           {orderData?.paymentInfo?.method || "NUll"}
+        </p>
+        <p className="!text-xs md:!text-sm mb-2">
+          <span className="font-semibold !text-xs md:!text-sm ">
+            Payment Status:{" "}
+          </span>
+          {orderData?.paymentInfo?.status || "NUll"}
         </p>
         <h3 className="font-semibold !text-md md:!text-lg mt-4 mb-2">
           Product Items:
@@ -147,5 +153,19 @@ const EditOrderModal = ({ isOpen, onClose, orderData, onSave }) => {
     </div>
   );
 };
+
+function formatAddress(address = {}) {
+  const parts = [
+    address.flat,
+    address.area,
+    address.landmark,
+    address.city,
+    address.state,
+    address.pincode
+  ];
+
+  // Filter out falsy values and join with commas
+  return parts.filter(Boolean).join(", ");
+}
 
 export default EditOrderModal;

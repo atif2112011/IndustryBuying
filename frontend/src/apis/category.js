@@ -123,3 +123,30 @@ export const getChartData=async()=>{
   }
 }
 
+export const getCatwithProductandSubCount=async(page=1,limit=10,search=null)=>{
+  try {
+    const queryParams={
+      page,
+      limit,
+      search
+    }
+    const response=await API.get(`/api/categories/category-productsubCount`,{params:queryParams})
+    if(response.data.success)
+      return {
+        success:true,
+        message:response.data.message,
+        categories:response.data.categories,
+        totalCategories:response.data.totalCategories,
+        totalPages:response.data.totalPages
+      }
+    else
+    throw new Error(response.data.message)
+  } catch (error) {
+    console.error(error)
+    return {
+      success:false,
+      message:error?.response?.data?.message ||error.message
+    }
+  }
+}
+

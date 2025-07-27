@@ -25,6 +25,7 @@ import GST from "./pages/GST.jsx";
 import HelpCenter from "./pages/HelpCenter.jsx";
 import HelpMainBody from "./components/HelpMainBody.jsx";
 import AdminHome from "./pages/AdminHome.jsx";
+import SearchPage from "./pages/SearchResultPage.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -33,6 +34,7 @@ function App() {
           {/* Nested routes inside MainBody */}
           <Route element={<MainBody />}>
             <Route path="/" element={<LandingPage />} />
+            <Route path="/search" element={<SearchPage />} />
             <Route path="/categories" element={<LandingPage />} />
             <Route path="/categories/:categoryId" element={<CategoryPage />} />
             <Route

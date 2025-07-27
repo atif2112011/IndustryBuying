@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import Home from "./Admin/Home";
 import Order from "./Admin/Order";
 import Products from "./Admin/Products";
+import Category from "./Admin/Category";
+import User from "./Admin/User";
+import ContentTab from "./Admin/Content";
 
 const AdminHome = () => {
 
@@ -29,13 +32,18 @@ const AdminHome = () => {
       link: "/products",
     },
     {
+      label: "Category",
+      component: <Category/>,
+      link: "/categories",
+    },
+    {
       label: "Users",
-      component: <div>Users</div>,
+      component: <User/>,
       link: "/users",
     },
      {
       label: "Content",
-      component: <div>Content</div>,
+      component: <ContentTab/>,
       link: "/content",
     },
   ];
