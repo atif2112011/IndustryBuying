@@ -15,6 +15,8 @@ import CardDisplay from "../components/CardDisplay";
 import CategoryShowcase from "../components/CategoryShowcase";
 import { use, useEffect, useState } from "react";
 import { getCategories } from "../apis/category";
+import { useLoader } from "../contexts/LoaderContext";
+
 const dummydata1 = [
   {
     title: "Duracell AAA Batteries (Pack of 10)",
@@ -65,6 +67,7 @@ let categoryName=(categories.map((category)=>{
 })).join(' ');
 
 const [categoryData,setCategoryData]=useState([]);
+const {setLoading}=useLoader();
 
   useEffect(()=>{
 
@@ -78,7 +81,9 @@ const [categoryData,setCategoryData]=useState([]);
         console.log(response.categories);
       }
     }
+    setLoading(true);
     fetchCategory();
+    setLoading(false);
   },[categoryId])
 
   return (

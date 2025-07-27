@@ -1,48 +1,66 @@
-import { NavLink, useLocation, useParams } from "react-router-dom"
-
+import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
+import { LogoutUser } from "../apis/auth";
+import { useLoader } from "../contexts/LoaderContext";
+import { useAlert } from "../contexts/AlertContext";
 
 const ProfileMenuOptions = [
   {
     link: "/user",
     name: "Account and Business",
-    icon: "ri-account-box-line"
+    icon: "ri-account-box-line",
   },
   {
     link: "/user/order-and-billing",
     name: "Order and Billings",
-    icon: "ri-archive-line"
+    icon: "ri-archive-line",
   },
   {
     link: "user/support",
     name: "Support and Services",
-    icon: "ri-customer-service-2-line"
+    icon: "ri-customer-service-2-line",
   },
-  
-]
+];
 
-function ProfileSideMenu({ showSideMenu, setShowSideMenu }){
+function ProfileSideMenu({ showSideMenu, setShowSideMenu }) {
+  const { setLoading } = useLoader();
+  const { setMessage, setShowSnackBar } = useAlert();
+  const navigate = useNavigate();
+  const handleLogoutUser = async () => {
+    setLoading(true);
+    const response = await LogoutUser();
+    setLoading(false);
+    if (response.success) {
+      setShowSnackBar(true);
+      setMessage(response.message);
+      navigate("/user/login");
+    } else {
+      setShowSnackBar(true);
+      setMessage(response.message);
+    }
+  };
 
-    return <>
-    <div  className={`
+  return (
+    <>
+      <div
+        className={`
       absolute top-0 left-0 z-30 w-3/4 max-h-9/10 
       transform transition-transform duration-300 ease-in-out
       ${showSideMenu ? "translate-x-0" : "-translate-x-full"}
       md:relative md:translate-x-0 md:flex md:w-fit md:h-full md:top-auto md:left-auto
       flex flex-col gap-4 p-4
-    `}>
+    `}
+      >
         <div className="md:w-80 bg-white shadow-md rounded-lg p-2 md:p-4">
+          {ProfileMenuOptions.map((option, index) => (
+            <div key={index} className="relative group">
+              {/* Wrap NavLink and Submenu together */}
+              <div className="flex items-center gap-2 p-2 group-hover:bg-blue-100 rounded-md cursor-pointer">
+                <i className={option.icon + " text-md md:text-lg"}></i>
+                <span className="!text-xs md:!text-sm">{option.name}</span>
+              </div>
 
-            {ProfileMenuOptions.map((option, index) => (
-                <div key={index} className="relative group">
-
-                  {/* Wrap NavLink and Submenu together */}
-                  <div className="flex items-center gap-2 p-2 group-hover:bg-blue-100 rounded-md cursor-pointer">
-                    <i className={option.icon +" text-md md:text-lg"}></i>
-                    <span className="!text-xs md:!text-sm">{option.name}</span>
-                  </div>
-            
-                  {/* Submenu visible on group hover */}
-                  {/* <div className="hidden group-hover:block absolute left-full top-0 w-80 bg-white shadow-md rounded-lg p-4 z-10">
+              {/* Submenu visible on group hover */}
+              {/* <div className="hidden group-hover:block absolute left-full top-0 w-80 bg-white shadow-md rounded-lg p-4 z-10">
                     {option.subcategories.map((subcategory, subIndex) => (
                       <NavLink
                         key={subIndex}
@@ -53,25 +71,20 @@ function ProfileSideMenu({ showSideMenu, setShowSideMenu }){
                       </NavLink>
                     ))}
                   </div> */}
-            
-                  {/* Transparent overlay on top to keep NavLink clickable */}
-                  <NavLink
-                    to={option.link}
-                    className="absolute inset-0 z-0"
-                  />
-                </div>
-              ))}
-            
-              
-                <button className="!text-xs md:!text-md poppins-semibold !text-orange-500 trasition:transform duration:200 hover:scale-105 p-2 flex gap-2 items-center" >
-                    <i className="ri-logout-circle-line text-sm md:text-lg"></i>
-                    Logout
-                </button>
-              
+
+              {/* Transparent overlay on top to keep NavLink clickable */}
+              <NavLink to={option.link} className="absolute inset-0 z-0" />
+            </div>
+          ))}
+
+          <button onClick={handleLogoutUser} className="!text-xs md:!text-sm poppins-semibold !text-orange-500 trasition:transform duration:200 hover:scale-105 p-2 flex gap-2 items-center">
+            <i className="ri-logout-circle-line text-sm md:text-lg"></i>
+            Logout
+          </button>
         </div>
-    </div>
-    
+      </div>
     </>
+  );
 }
 
-export default ProfileSideMenu
+export default ProfileSideMenu;

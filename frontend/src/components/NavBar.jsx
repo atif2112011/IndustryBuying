@@ -9,6 +9,7 @@ import { useAlert } from "../contexts/AlertContext";
 
 import { useAuth } from "../contexts/AuthContext";
 import { useLoader } from "../contexts/LoaderContext";
+import { getCart } from "../apis/cart";
 
 function NavBar() {
   const navigate = useNavigate();
@@ -17,7 +18,26 @@ function NavBar() {
    const {setLoading}=useLoader();
    const { user, setUser }=useAuth();
    const [searchTerm, setSearchTerm] = useState("");
+   const [cartCount, setCartCount] = useState(0);
+  
 
+   useEffect(()=>{
+    const fetchCart=async()=>{
+      const response=await getCart();
+      console.log(`response of getCart`,response);
+      if(response.success)
+      {
+        setCartCount(response.totalItems);
+      }
+
+    }
+    if(user!==null)
+    {
+      console.log("User in fetchCart",user);
+      fetchCart();
+    }
+     
+   },[user])
  
 
 
@@ -40,16 +60,12 @@ function NavBar() {
           }
           else
           {
+            setLoading(false);
             throw new Error(getUserResponse?.message || getUserResponse);
           }
 
-        } else {
-          setLoading(false);
-          setMessage("Session Expired!! Login Again");
-          setShowSnackBar(true);
-          navigate("/user/login");
-         throw new Error(response?.message || response);
-        }
+
+        } 
       } catch (error) {
         setLoading(false);
         
@@ -57,6 +73,7 @@ function NavBar() {
       }
     };
     checkUser();
+    setLoading(false);
    
   },[])
 
@@ -165,9 +182,14 @@ function NavBar() {
           {/* Cart button for desktop only */}
           <button
             onClick={() => navigate("/order/cart")}
-            className="hidden md:block"
+            className="hidden md:block relative"
           >
             <i className="ri-shopping-cart-2-line text-xl"></i>
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-2 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center !text-[10px]">
+                {cartCount}
+              </span>
+            )}
           </button>
         </div>
       </div>

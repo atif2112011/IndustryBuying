@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser, loginUser, check, sendOTP, verifyOTP, verifyAuth, registerGoogleUser } = require('../controllers/authController');
+const { registerUser, loginUser, check, sendOTP, verifyOTP, verifyAuth, registerGoogleUser, LogoutUser } = require('../controllers/authController');
 
 
 
@@ -22,5 +22,7 @@ router.post('/check',check)
 router.post("/sendOTP", sendOTP);
 
 router.post("/verifyOTP", verifyOTP);
+
+router.get("/logout",LogoutUser)
 
 module.exports = router;

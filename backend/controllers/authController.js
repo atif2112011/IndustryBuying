@@ -268,6 +268,25 @@ const verifyAuth = (req, res, next) => {
   }
 };
 
+const LogoutUser=(req,res,next)=>{
+  try {
+    return res
+      .clearCookie("Token", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV == "production"?true:false, // Set to true in production
+        sameSite: "strict",
+        maxAge: 24 * 60 * 60 * 1000,
+      })
+      .status(200)
+      .json({
+        message: "User Logged Out Successfully ",
+        success: true,
+      });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   registerUser,
   loginUser,
@@ -275,5 +294,6 @@ module.exports = {
   sendOTP,
   verifyOTP,
   verifyAuth,
-  registerGoogleUser
+  registerGoogleUser,
+  LogoutUser
 };

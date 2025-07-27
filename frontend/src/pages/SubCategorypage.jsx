@@ -5,6 +5,7 @@ import { useState } from "react";
 import ProductShowcase from "../components/ProductShowcase";
 import { useEffect } from "react";
 import { getProductsBySubCategory } from "../apis/category";
+import { useLoader } from "../contexts/LoaderContext";
 
 function SubCategoryPage() {
 
@@ -23,6 +24,7 @@ let categories = subcategoryId.split('-');
 let categoryName = (categories.map((category) => {
     return category.charAt(0).toUpperCase() + category.slice(1);
 })).join(' ');
+const {setLoading}=useLoader();
 
 useEffect(()=>{
 const fetchProducts=async()=>{
@@ -36,7 +38,9 @@ const fetchProducts=async()=>{
     console.log('error',response.message);
   }
 }
+setLoading(true);
 fetchProducts();
+setLoading(false);
 
 },[])
 
