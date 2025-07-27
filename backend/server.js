@@ -8,6 +8,11 @@ const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes")
 const Auth2Routes = require("./routes/Auth2Routes");
 const categoryRoutes = require("./routes/categoryRoutes");
+const cartRoutes = require("./routes/cartRoutes");
+const orderRoutes = require("./routes/orderRoutes");
+const testimonialRoutes = require("./routes/testimonialRoute")
+const brandRoutes = require("./routes/brandsRoutes")
+const certificateRoutes = require("./routes/certificateRoutes")
 
 const cookieParser = require("cookie-parser");
 const Category = require("./models/categoryModel");
@@ -15,12 +20,14 @@ const Subcategory = require("./models/subcategoryModel");
 const Product = require("./models/productModel");
 const slugify = require("slugify");
 const path = require("path");
+const morgan = require("morgan");
 
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 //Middlewares
+app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
 app.use(
@@ -42,6 +49,11 @@ app.use("/api/auth",authRoutes);
 app.use("/api/user",userRoutes);
 app.use("/api/products",productRoutes)
 app.use("/api/categories",categoryRoutes)
+app.use("/api/cart",cartRoutes)
+app.use("/api/orders",orderRoutes)
+app.use("/api/testimonials",testimonialRoutes)
+app.use("/api/brands",brandRoutes)
+app.use("/api/certificates",certificateRoutes)
 
 app.use("/",Auth2Routes);
 app.get("/server", async (req, res) => {

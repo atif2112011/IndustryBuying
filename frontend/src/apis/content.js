@@ -8,38 +8,17 @@ const API = axios.create({
   withCredentials: true
 });
 
-export const getMenu=async()=>{
+
+export const getBrandIcons=async()=>{
 
   try {
-    const response=await API.get(`/api/categories/menu`)
+    const response=await API.get(`/api/brands/getBrands`)
     // console.log('response',response)
     if(response.data.success)
       return {
         success:true,
         message:response.data.message,
-        menu:response.data.categories
-      }
-    else
-    throw new Error(response.data.message)
-    
-  } catch (error) {
-    console.error(error)
-    return {
-      success:false,
-      message:error?.response?.data?.message ||error.message
-    }
-  }
-}
-export const getCategories=async({categoryId,populateProducts})=>{
-
-  try {
-    const response=await API.post(`/api/categories/get-subcategories`,{slug:categoryId,populateProducts})
-    // console.log('response',response)
-    if(response.data.success)
-      return {
-        success:true,
-        message:response.data.message,
-        categories:response.data.data
+        brands:response.data.brands
       }
     else
     throw new Error(response.data.message)
@@ -53,18 +32,19 @@ export const getCategories=async({categoryId,populateProducts})=>{
   }
 }
 
-export const getProductsByCategory=async(categoryId)=>{
+export const AddNewBrand=async(data)=>{
 
   try {
-    const response=await API.post(`/api/categories/fetch-category`,{
-        categoryId
-    })
+    const formParams=new FormData()
+    formParams.append('name',data.name)
+    formParams.append('img',data.img)
+    const response=await API.post(`/api/brands/addBrand`,formParams)
     // console.log('response',response)
     if(response.data.success)
       return {
         success:true,
         message:response.data.message,
-        products:response.data.products
+        brand:response.data.brand
       }
     else
     throw new Error(response.data.message)
@@ -78,18 +58,19 @@ export const getProductsByCategory=async(categoryId)=>{
   }
 }
 
-export const getProductsBySubCategory=async(slug)=>{
+export const UpdateBrand=async(data)=>{
 
   try {
-    const response=await API.post(`/api/categories/fetch-subcategory`,{
-        slug
-    })
+    const formParams=new FormData()
+    formParams.append('name',data.name)
+    formParams.append('img',data.img)
+    const response=await API.post(`/api/brands/updateBrand/${data._id}`,formParams)
     // console.log('response',response)
     if(response.data.success)
       return {
         success:true,
         message:response.data.message,
-        products:response.data.products
+        brand:response.data.brand
       }
     else
     throw new Error(response.data.message)
@@ -103,17 +84,20 @@ export const getProductsBySubCategory=async(slug)=>{
   }
 }
 
-export const getChartData=async()=>{
+export const DeleteBrand=async(data)=>{
+
   try {
-    const response=await API.get(`/api/categories/category-productCount`)
+
+    const response=await API.post(`/api/brands/deleteBrand/${data._id}`)
+    // console.log('response',response)
     if(response.data.success)
       return {
         success:true,
         message:response.data.message,
-        products:response.data.products
       }
     else
     throw new Error(response.data.message)
+    
   } catch (error) {
     console.error(error)
     return {
@@ -123,24 +107,21 @@ export const getChartData=async()=>{
   }
 }
 
-export const getCatwithProductandSubCount=async(page=1,limit=10,search=null)=>{
+// Testimonials functions
+export const getTestimonials=async()=>{
+
   try {
-    const queryParams={
-      page,
-      limit,
-      search
-    }
-    const response=await API.get(`/api/categories/category-productsubCount`,{params:queryParams})
+    const response=await API.get(`/api/testimonials/getTestimonials`)
+    // console.log('response',response)
     if(response.data.success)
       return {
         success:true,
         message:response.data.message,
-        categories:response.data.categories,
-        totalCategories:response.data.totalCategories,
-        totalPages:response.data.totalPages
+        testimonials:response.data.testimonials
       }
     else
     throw new Error(response.data.message)
+    
   } catch (error) {
     console.error(error)
     return {
@@ -149,4 +130,3 @@ export const getCatwithProductandSubCount=async(page=1,limit=10,search=null)=>{
     }
   }
 }
-

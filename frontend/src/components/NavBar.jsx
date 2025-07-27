@@ -92,7 +92,7 @@ function NavBar() {
 
         {/* Search Bar */}
         <div className="w-full md:w-[28rem] mt-2 md:mt-0 !font-medium">
-          <SearchBar placeholder="Search by SKU , Brand Name, Product etc" />
+          <SearchBar placeholder="Search by ProductID, Name or Description" />
         </div>
 
         {/* Navigation Menu */}

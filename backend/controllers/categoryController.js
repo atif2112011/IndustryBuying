@@ -162,5 +162,99 @@ const getProductsBySubcategory = async (req, res,next) => {
   }
 };
 
+const getCategoryProductCount = async (req, res,next) => {
+  try {
+    const categories=await Category.find()
+    const products = await Promise.all(
+      categories.map(async (category) => {
+        const productCount = await Product.countDocuments({
+          category: category._id,
+        });
+        return {
+          category: category._id,
+          name: category.name,
+          productCount,
+        };
+      })
+    );
+    
+   res.status(200).json({
+        success: true,
+        message: 'Products Count fetched successfully',
+        products
+    });
+  } catch (err) {
+    console.error("Error fetching products count", err);
+    next(err);
+  }
+};
 
-module.exports={getAllCategoriesWithSubcategories,getProductsByCategory,getProductsBySubcategory,getSubcategories}
+const getCategoryAdmin=async (req,res,next)=>{
+  try {
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const search=req.query.search || null
+
+    const query = search ? {
+      $or: [
+        { name: { $regex: search, $options: 'i' } },
+      ]
+    } : {};
+    
+
+    const categories=await Category.find(query).skip(skip).limit(limit).sort({name:1 });
+    const totalCategories = await Category.countDocuments(query);
+    const totalPages = Math.ceil(totalCategories / limit);
+    
+    const categorywithProductCount = await Promise.all(
+      categories.map(async (category) => {
+        const productCount = await Product.countDocuments({
+          category: category._id,
+        });
+        return {
+          _id: category._id,
+          name: category.name,
+          productCount,
+        };
+      })
+    );
+
+    const CategorywithProductandSubcategoryCount=await Promise.all(
+      categorywithProductCount.map(async (category) => {
+        const subcategoryCount = await Subcategory.countDocuments({
+          categoryId: category._id,
+        });
+
+        const subcategories=await Subcategory.find({categoryId:category._id}).lean();
+
+        return {
+          _id: category._id,
+          name: category.name,
+          productCount: category.productCount,
+          subcategoryCount,
+          subcategories
+        };
+      })
+    )
+    
+
+    res.status(200).json({
+      success: true,
+      message: 'Categories fetched successfully',
+      categories:CategorywithProductandSubcategoryCount,
+      totalCategories,
+      totalPages,
+      currentPage:page
+
+    });
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
+}
+
+
+module.exports={getAllCategoriesWithSubcategories,getProductsByCategory,getProductsBySubcategory,getSubcategories,getCategoryProductCount,getCategoryAdmin}

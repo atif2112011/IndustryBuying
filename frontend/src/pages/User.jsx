@@ -194,6 +194,13 @@ const handleChangePrimary = (isShipping, Changedaddress) => {
         </button>
       </div>
 
+      <EditUserModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        userData={user}
+        onSave={handleSave}
+      />
+
       {/* Personal Information end */}
 
       {/* Company Profile */}
@@ -251,33 +258,20 @@ const handleChangePrimary = (isShipping, Changedaddress) => {
 
       {/* Company Profile end */}
 
-      <EditUserModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        userData={user}
-        onSave={handleSave}
+      {/* Address Edit Modal */}
+      <EditAddressModal
+        isOpen={isModalOpenAddress}
+        onClose={() => setIsModalOpenAddress(false)}
+        initialData={editingAddress}
+        onSave={handleSaveAddress}
       />
 
-        {/* Address Edit Modal */}
-            <EditAddressModal
-            isOpen={isModalOpenAddress}
-            onClose={() => setIsModalOpenAddress(false)}
-            initialData={editingAddress}
-            onSave={handleSaveAddress}
-
-            
-        />
-
-        <EditAddressModal
-                    isOpen={isCreateAddressModalOpen}
-                    onClose={() => setisCreateAddressModalOpen(false)}
-                    initialData={editingAddress}
-                    onSave={handleCreateAddress}
-
-                    
-                />
-
-      
+      <EditAddressModal
+        isOpen={isCreateAddressModalOpen}
+        onClose={() => setisCreateAddressModalOpen(false)}
+        initialData={editingAddress}
+        onSave={handleCreateAddress}
+      />
 
       {/* Addresses */}
       <div className="flex flex-col bg-white p-6 rounded-lg shadow-md w-full">
@@ -361,24 +355,30 @@ const handleChangePrimary = (isShipping, Changedaddress) => {
                 );
               })}
 
-            <div className="flex items-center justify-center bg-white p-4 px-8 rounded shadow-md w-2/5 border border-gray-200 cursor-pointer" onClick={()=>{seteditingAddress({
-                            id:'',
-                            name: '',
-                            email: '',
-                            mobile: '',
-                            alternateMobile: '',
-                            gstin: '',
-                            flat: '',
-                            area: '',
-                            landmark: '',
-                            pincode: '',
-                            city: '',
-                            state: '',
-                            type: 'other',
-                            isPrimary: false,
-                            isShipping: false,
-                        });setisCreateAddressModalOpen(true)}}>
-              <i class="ri-add-large-line" ></i>
+            <div
+              className="flex items-center justify-center bg-white p-4 px-8 rounded shadow-md w-2/5 border border-gray-200 cursor-pointer"
+              onClick={() => {
+                seteditingAddress({
+                  id: "",
+                  name: "",
+                  email: "",
+                  mobile: "",
+                  alternateMobile: "",
+                  gstin: "",
+                  flat: "",
+                  area: "",
+                  landmark: "",
+                  pincode: "",
+                  city: "",
+                  state: "",
+                  type: "other",
+                  isPrimary: false,
+                  isShipping: false,
+                });
+                setisCreateAddressModalOpen(true);
+              }}
+            >
+              <i class="ri-add-large-line"></i>
             </div>
           </div>
         </div>
@@ -403,7 +403,12 @@ const handleChangePrimary = (isShipping, Changedaddress) => {
                           Primary Address
                         </span>
                       ) : (
-                        <span className="bg-white !text-green-600 border border-green-600 !text-xs px-2 py-1 rounded font-medium cursor-pointer" onClick={()=>handleChangePrimary(true,address)}>Make Primary</span>
+                        <span
+                          className="bg-white !text-green-600 border border-green-600 !text-xs px-2 py-1 rounded font-medium cursor-pointer"
+                          onClick={() => handleChangePrimary(true, address)}
+                        >
+                          Make Primary
+                        </span>
                       )}
                       <div className="flex items-center gap-2">
                         <button className="text-red-500 hover:text-red-700">
@@ -424,7 +429,10 @@ const handleChangePrimary = (isShipping, Changedaddress) => {
                         </button>
                         <button
                           className="border border-orange-500 text-orange-500 text-xs px-3 py-1 rounded hover:bg-orange-50 font-medium cursor-pointer"
-                          onClick={()=>{seteditingAddress(address); setIsModalOpenAddress(true)}}
+                          onClick={() => {
+                            seteditingAddress(address);
+                            setIsModalOpenAddress(true);
+                          }}
                         >
                           Edit
                         </button>
@@ -460,23 +468,29 @@ const handleChangePrimary = (isShipping, Changedaddress) => {
                 );
               })}
 
-            <div className="flex items-center justify-center bg-white p-4 px-8 rounded shadow-md w-2/5 border border-gray-200 cursor-pointer" onClick={()=>{seteditingAddress({
-                            id:'',
-                            name: '',
-                            email: '',
-                            mobile: '',
-                            alternateMobile: '',
-                            gstin: '',
-                            flat: '',
-                            area: '',
-                            landmark: '',
-                            pincode: '',
-                            city: '',
-                            state: '',
-                            type: 'other',
-                            isPrimary: false,
-                            isShipping: true,
-                        }); setisCreateAddressModalOpen(true);}}>
+            <div
+              className="flex items-center justify-center bg-white p-4 px-8 rounded shadow-md w-2/5 border border-gray-200 cursor-pointer"
+              onClick={() => {
+                seteditingAddress({
+                  id: "",
+                  name: "",
+                  email: "",
+                  mobile: "",
+                  alternateMobile: "",
+                  gstin: "",
+                  flat: "",
+                  area: "",
+                  landmark: "",
+                  pincode: "",
+                  city: "",
+                  state: "",
+                  type: "other",
+                  isPrimary: false,
+                  isShipping: true,
+                });
+                setisCreateAddressModalOpen(true);
+              }}
+            >
               <i class="ri-add-large-line"></i>
             </div>
           </div>
