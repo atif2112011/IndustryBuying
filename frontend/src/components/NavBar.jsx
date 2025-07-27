@@ -16,6 +16,8 @@ function NavBar() {
    const { setShowSnackBar, setMessage } = useAlert();
    const {setLoading}=useLoader();
    const { user, setUser }=useAuth();
+   const [searchTerm, setSearchTerm] = useState("");
+
  
 
 
@@ -58,6 +60,19 @@ function NavBar() {
    
   },[])
 
+  const handleSearch = () => {
+    if(searchTerm===""){
+      setMessage("Search term cant be empty !");
+      setShowSnackBar(true);
+    }
+    else if(searchTerm.length<3){
+      setMessage("Search term must be at least 3 characters long !");
+      setShowSnackBar(true);
+    }
+    else
+    navigate(`/search/?q=${searchTerm}`);
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Navbar */}
@@ -92,7 +107,7 @@ function NavBar() {
 
         {/* Search Bar */}
         <div className="w-full md:w-[28rem] mt-2 md:mt-0 !font-medium">
-          <SearchBar placeholder="Search by ProductID, Name or Description" />
+          <SearchBar placeholder="Search by ProductID, Name or Description" searchTerm={searchTerm} setSearchTerm={setSearchTerm} handleSearch={handleSearch}/>
         </div>
 
         {/* Navigation Menu */}
@@ -138,6 +153,13 @@ function NavBar() {
             onClick={() => {navigate("/user") ,setMobileMenuOpen(false)}}
           >
             Profile
+          </button>}
+
+          {user && user.role=="admin" && <button
+            className="bg-blue-700 !text-sm text-white px-6 py-2 rounded-sm shadow hover:bg-blue-800"
+            onClick={() => {navigate("/admin") ,setMobileMenuOpen(false)}}
+          >
+            Admin Panel
           </button>}
 
           {/* Cart button for desktop only */}

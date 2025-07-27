@@ -9,7 +9,7 @@ import {
   TextField,
 } from "@mui/material";
 import "remixicon/fonts/remixicon.css";
-import { getBrandIcons, getTestimonials } from "../../apis/content";
+import { getBrandIcons, getCertificates, getTestimonials } from "../../apis/content";
 import { useLoader } from "../../contexts/LoaderContext";
 import { useAlert } from "../../contexts/AlertContext";
 
@@ -30,18 +30,7 @@ const {setMessage,setShowSnackBar}=useAlert();
     "We are a forward-thinking company focused on innovation and quality. Our team is dedicated to delivering the best products and services to our customers."
   );
 
-  const [certifications] = useState([
-    {
-      img: "https://via.placeholder.com/80",
-      title: "ISO 9001",
-      text: "Certified for quality management standards.",
-    },
-    {
-      img: "https://via.placeholder.com/80",
-      title: "ISO 27001",
-      text: "Certified for information security management.",
-    },
-  ]);
+  const [certificates,setCertificates] = useState([]);
 
   useEffect(()=>{
     const fetchData=async()=>{
@@ -66,9 +55,21 @@ const {setMessage,setShowSnackBar}=useAlert();
         setMessage(response2.message);
         setShowSnackBar(true);
       }
+      const response3=await getCertificates();
+      if(response3.success)
+      {
+        setCertificates(response3.certificates);
+      }
+      else
+      {
+        setMessage(response3.message);
+        setShowSnackBar(true);
+      }
       
     }
+    setLoading(true);
     fetchData();
+    setLoading(false);  
   },[])
 
   return (
@@ -107,7 +108,7 @@ const {setMessage,setShowSnackBar}=useAlert();
                 </TableCell>
                 <TableCell sx={{ padding: "6px 12px" }}>
                   <img
-                    src={brand?.img?.secure_url || ""}
+                    src={brand?.img?.secure_url || null}
                     alt={brand.name}
                     className="w-15 h-15 object-contain"
                   />
@@ -163,7 +164,7 @@ const {setMessage,setShowSnackBar}=useAlert();
                 </TableCell>
                 <TableCell sx={{ padding: "6px 12px" }}>
                   <img
-                    src={t?.logo?.secure_url || ""}
+                    src={t?.logo?.secure_url || null}
                     alt="logo"
                     className="w-10 h-10 object-contain"
                   />
@@ -222,11 +223,11 @@ const {setMessage,setShowSnackBar}=useAlert();
             </TableRow>
           </TableHead>
           <TableBody>
-            {certifications.map((cert, index) => (
+            {certificates && certificates.map((cert, index) => (
               <TableRow key={index}>
                 <TableCell sx={{ padding: "6px 12px" }}>
                   <img
-                    src={cert?.img?.secure_url || ""}
+                    src={cert?.img?.secure_url || null}
                     alt={cert.title}
                     className="w-16 h-16 object-contain"
                   />
@@ -234,8 +235,8 @@ const {setMessage,setShowSnackBar}=useAlert();
                 <TableCell sx={{ padding: "6px 12px" }} className="text-xs md:text-md">
                   {cert.title}
                 </TableCell>
-                <TableCell sx={{ padding: "6px 12px" }} className="text-xs md:text-md truncate">
-                  {cert.text}
+                <TableCell sx={{ padding: "6px 12px" }} className="text-xs md:text-md truncate max-w-[400px]">
+                  {cert.description}
                 </TableCell>
                  <TableCell sx={{ padding: "6px 12px" }}>
                                       <div className="flex items-center gap-2">

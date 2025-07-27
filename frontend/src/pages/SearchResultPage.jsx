@@ -22,6 +22,7 @@ import { useAlert } from "../contexts/AlertContext";
 
 import { getAllProducts } from "../apis/products";
 
+
 const dummydata1 = [
   {
     title: "Duracell AAA Batteries (Pack of 10)",
@@ -72,7 +73,7 @@ const [searchData,setSearchData]=useState([]);
 
     const [searchParams] = useSearchParams();
  
-    const [query,setQuery]=useState(searchParams.get("q") || "");
+    // const [query,setQuery]=useState(searchParams.get("q") || "");
    const [totalPages,settotalPages]=useState(0);
    const [totalProducts,settotalProducts]=useState(0);
 
@@ -86,7 +87,7 @@ const [searchData,setSearchData]=useState([]);
         setSearchData(response.products);
         settotalPages(response.totalPages);
         settotalProducts(response.totalProducts);
-        setpage(value);
+        setPage(value);
     }
   };
 
@@ -99,7 +100,7 @@ const [searchData,setSearchData]=useState([]);
             setSearchData(response.products);
             settotalPages(response.totalPages);
             settotalProducts(response.totalProducts);
-            setpage(1);
+            setPage(1);
         }
         else
         {
@@ -107,11 +108,17 @@ const [searchData,setSearchData]=useState([]);
             setShowSnackBar(true);
         }
     }
+    const query = searchParams.get("q") || "";
+    //  console.log("Search param changed:", query);
+    setLoading(true);
     fetchResult();
+    setLoading(false);
 
 
     
-  },[query])
+  },[searchParams])
+
+   
 
   return (
     <div>
@@ -134,7 +141,7 @@ const [searchData,setSearchData]=useState([]);
         <SwiperSlide><img src={category2} /></SwiperSlide>
 
       </Swiper>
-      {/* <h3 className="mt-4 !text-md md:!text-lg !font-semibold ">{categoryName.toUpperCase()}</h3> */}
+      <h3 className="mt-4 !text-md md:!text-lg !font-semibold ">{`Seach results for: ${searchParams.get("q") || ""}`}</h3>
 
      {/* {<CategoryShowcase/>} */}
        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-x-12 md:gap-y-4 py-4 ">
