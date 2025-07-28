@@ -28,7 +28,9 @@ const {setLoading}=useLoader();
 
 useEffect(()=>{
 const fetchProducts=async()=>{
+  setLoading(true);
   const response=await getProductsBySubCategory(subcategoryId);
+  setLoading(false);
   if(response.success)
   {
     setProducts(response.products);
@@ -38,9 +40,9 @@ const fetchProducts=async()=>{
     console.log('error',response.message);
   }
 }
-setLoading(true);
+
 fetchProducts();
-setLoading(false);
+
 
 },[])
 

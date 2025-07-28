@@ -16,9 +16,9 @@ function NavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
    const { setShowSnackBar, setMessage } = useAlert();
    const {setLoading}=useLoader();
-   const { user, setUser }=useAuth();
+   const { user, setUser,cart,setCart,cartCount,setCartCount }=useAuth();
    const [searchTerm, setSearchTerm] = useState("");
-   const [cartCount, setCartCount] = useState(0);
+ 
   
 
    useEffect(()=>{
@@ -27,6 +27,7 @@ function NavBar() {
       console.log(`response of getCart`,response);
       if(response.success)
       {
+        setCart(response.cart);
         setCartCount(response.totalItems);
       }
 

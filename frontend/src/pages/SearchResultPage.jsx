@@ -1,4 +1,4 @@
-import { useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import DynamicBreadcrumbs from "../components/DynamicBread";
 import category1 from '../assets/images/bannerimages/category1.png';
 import category2 from '../assets/images/bannerimages/category2.png';
@@ -21,6 +21,8 @@ import { useLoader } from "../contexts/LoaderContext";
 import { useAlert } from "../contexts/AlertContext";
 
 import { getAllProducts } from "../apis/products";
+import { addToCart } from "../apis/cart";
+import { useAuth } from "../contexts/AuthContext";
 
 
 const dummydata1 = [
@@ -70,12 +72,13 @@ const {setLoading}=useLoader();
 const {setMessage,setShowSnackBar}=useAlert();
 const [rowsPerPage,setRowsPerPage]=useState(10);
 const [searchData,setSearchData]=useState([]);
-
+const {cart,setCart,cartCount,setCartCount}=useAuth();
     const [searchParams] = useSearchParams();
  
     // const [query,setQuery]=useState(searchParams.get("q") || "");
    const [totalPages,settotalPages]=useState(0);
    const [totalProducts,settotalProducts]=useState(0);
+   const navigate=useNavigate();
 
 
     const [page, setPage] = useState(1);
@@ -91,11 +94,46 @@ const [searchData,setSearchData]=useState([]);
     }
   };
 
+const handleAddtoCart=async(product)=>{
+    setLoading(true);
+    const response=await addToCart(product._id,1);
+    setLoading(false);
+    if(response.success){
+        setMessage(response.message);
+        setShowSnackBar(true);
+        setCart(response.cart);
+        setCartCount(response.totalItems);
+    }
+    else{
+        setMessage(response.message);
+        setShowSnackBar(true);
+    }
+}
+
+const handleBuyNow=async(product)=>{
+    setLoading(true);
+    const response=await addToCart(product._id,1);
+    setLoading(false);
+    if(response.success){
+        setMessage(response.message);
+        setShowSnackBar(true);
+        setCart(response.cart);
+        setCartCount(response.totalItems);
+        navigate("/order/cart");
+
+    }
+    else{
+        setMessage(response.message);
+        setShowSnackBar(true);
+    }
+}
 
   useEffect(()=>{
 
     const fetchResult=async()=>{
+      setLoading(true);
         const response=await getAllProducts(1,rowsPerPage,query,null,null);
+        setLoading(false);
         if(response.success){
             setSearchData(response.products);
             settotalPages(response.totalPages);
@@ -110,9 +148,9 @@ const [searchData,setSearchData]=useState([]);
     }
     const query = searchParams.get("q") || "";
     //  console.log("Search param changed:", query);
-    setLoading(true);
+    
     fetchResult();
-    setLoading(false);
+    
 
 
     
@@ -193,10 +231,10 @@ const [searchData,setSearchData]=useState([]);
             </div>
 
             <div className="hidden md:flex gap-4 mt-3">
-              <button className="border border-orange-500 text-orange-500 text-[0.6rem] md:text-sm px-3 py-1 rounded hover:bg-orange-50">
+              <button onClick={() => handleAddtoCart(product)} className="border border-orange-500 text-orange-500 text-[0.6rem] md:text-sm px-3 py-1 rounded hover:bg-orange-50">
                 Add to Cart
               </button>
-              <button className="bg-blue-800 text-white !text-sm px-3 py-1 rounded hover:bg-blue-700">
+              <button onClick={() => handleBuyNow(product)} className="bg-blue-800 text-white !text-sm px-3 py-1 rounded hover:bg-blue-700">
                 Buy Now
               </button>
             </div>

@@ -7,9 +7,15 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import sampleImage from "../assets/images/productImages/product2.jpg";
 import { TableFooter, TablePagination } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CardDisplay from "../components/CardDisplay";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+import { getCart, RemoveCartItem, upDateCartItem } from "../apis/cart";
+import { useLoader } from "../contexts/LoaderContext";
+import { useAlert } from "../contexts/AlertContext";
+import { getProductDetails } from "../apis/products";
+
 const data = [
   {
     id: 1,
@@ -147,6 +153,10 @@ function Cartpage() {
   const navigate = useNavigate();
   const [cartPage, setcartPage] = useState(0);
   const [rowsPerPage, setrowsPerPage] = useState(5);
+
+  const { user, setUser, cart, setCart,cartCount, setCartCount } = useAuth();
+  const { setMessage, setShowSnackBar } = useAlert();
+  const { setLoading } = useLoader();
   const [checkPin, setcheckPin] = useState({
     data: {
       pincode: 211016,
@@ -161,12 +171,72 @@ function Cartpage() {
     setcartPage(newPage);
   };
 
+  const handleIncreaseQuantity = async (product) => {
+    const checkStock = await getProductDetails(product.productId);
+    if (checkStock.product.stock < product.quantity + 1) {
+      setMessage("Product is out of stock");
+      setShowSnackBar(true);
+      return;
+    }
+    const response = await upDateCartItem({
+      ...product,
+      quantity: product.quantity + 1,
+    });
+    if (response.success) {
+      setCart(response.cart);
+      setCartCount(response.totalItems);
+    }
+  };
+  const handleDecreaseQuantity = async (product) => {
+    if (product.quantity === 1) {
+      const response = await RemoveCartItem(product);
+      if (response.success) {
+        setCart(response.cart);
+        setCartCount(response.totalItems);
+      }
+
+      return;
+    }
+    const response = await upDateCartItem({
+      ...product,
+      quantity: product.quantity - 1,
+    });
+
+    if (response.success) {
+      setCart(response.cart);
+      setCartCount(response.totalItems);
+    }
+  };
+
+  const handleRemoveItem = async (product) => {
+    const response = await RemoveCartItem(product);
+    if (response.success){
+      setCart(response.cart);
+    setCartCount(response.totalItems);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await getCart();
+      if (response.success) 
+      {
+        setCart(response.cart);
+        setCartCount(response.totalItems);
+
+      }
+    };
+    setLoading(true);
+    fetchData();
+    setLoading(false);
+  }, []);
+
   return (
     <div className="flex flex-col md:flex-row p-2 mt-2 md:m-0 md:p-6 gap-2 md:h-screen">
       {/* Left Div */}
       <div className=" flex flex-col gap-4 p-2 w-full md:mb-8 md:w-3/4 md:overflow-y-auto hide-scroll">
         <p className="!text-sm !text-gray-500 font-semibold">
-          My Cart(2 items)
+          {`My Cart (${cart?.length || 0}) items`}
         </p>
         {/* Cart Table */}
         <div className="flex w-full ">
@@ -178,113 +248,127 @@ function Cartpage() {
               border: "none",
             }}
           >
-            <Table sx={{ }} aria-label="simple table">
+            <Table sx={{}} aria-label="simple table">
               <TableBody>
-                {data
-                  .slice(
-                    cartPage * rowsPerPage,
-                    cartPage * rowsPerPage + rowsPerPage
-                  )
-                  .map((item) => (
-                    <TableRow
-                      key={item.id}
-                      sx={{
-                        "&:last-child td, &:last-child th": { border: 0 },
-                        backgroundColor: "#f5f5f5",
-                        boxShadow: "none",
-                        border: "none",
-                      }}
-                    >
-                      <TableCell
-                        align="left"
+                {cart &&
+                  cart.length > 0 &&
+                  cart
+                    .slice(
+                      cartPage * rowsPerPage,
+                      cartPage * rowsPerPage + rowsPerPage
+                    )
+                    .map((item) => (
+                      <TableRow
+                        key={item.id}
                         sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
                           backgroundColor: "#f5f5f5",
                           boxShadow: "none",
                           border: "none",
-                          padding: "8px",
                         }}
                       >
-                        <div className="flex flex-wrap gap-2 md:gap-0 items-center justify-between bg-white md:p-4 p-3 rounded-md shadow-sm">
-                          {/* Product Info */}
-                          <div className="flex gap-4 lg:w-1/2 ">
-                            <img
-                              src={sampleImage} // replace with actual image URL
-                              alt={item.name}
-                              className="w-20 h-20 object-contain"
-                            />
-                            <div>
-                              <h2 className="font-semibold !text-xs md:!text-sm">
-                                {item.name} <br />
-                                
-                              </h2>
-                              <div className="flex items-center gap-2 mt-2 md:mt-1">
-                                <span className="line-through text-gray-400 !text-xs md:!text-sm">
-                                  ₹{item.originalPrice}
-                                </span>
-                              <span className="font-bold !text-xs md:!text-md">
-                                  ₹{item.discountedPrice}
-                                </span>
-                              </div>
-                              {item.codEligible ? null : (
-                                <p className="!text-orange-500 border border-red-300 !bg-orange-50 !text-[0.6rem] md:!text-xs md:px-2 py-1 px-1 rounded mt-2 inline-block">
-                                  This item is not eligible for Cash On
-                                  Delivery.
-                                </p>
-                              )}
-                            </div>
-                          </div>
-
-                          {/* Quantity and Price */}
-                          {/* <div className="flex flex-col items-end gap-2"> */}
-                          <div className="flex items-center rounded bg-gray-100 p-1 items-center">
-                            <button className="px-2 text-md md:text-xl text-gray-600 bg-white">
-                              −
-                            </button>
-                            <span className="px-3 md:py-1 !text-xs md:!text-sm">
-                              {item.quantity}
-                            </span>
-                            <button className="px-2 text-md md:text-xl text-gray-600 bg-white">
-                              +
-                            </button>
-                          </div>
-                          <div className="md:text-right">
-                            <div className="text-md md:text-lg font-bold">₹1,651</div>
-                            <button className="relative group !text-xs text-gray-500 underline">
-                              Price Details
-                              <div className="absolute left-0 top-4 w-40 bg-white p-2 rounded border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
-                                <div className="flex justify-between  text-gray-700 mb-2">
-                                  <span className="!text-xs">
-                                    Selling Price
+                        <TableCell
+                          align="left"
+                          sx={{
+                            backgroundColor: "#f5f5f5",
+                            boxShadow: "none",
+                            border: "none",
+                            padding: "8px",
+                          }}
+                        >
+                          <div className="flex flex-wrap gap-2 md:gap-0 items-center justify-between bg-white md:p-4 p-3 rounded-md shadow-sm">
+                            {/* Product Info */}
+                            <div className="flex gap-4 lg:w-1/2 ">
+                              <img
+                                src={item?.image || null} // replace with actual image URL
+                                alt={item.name}
+                                className="w-20 h-20 object-contain"
+                              />
+                              <div>
+                                <h2 className="font-semibold !text-xs md:!text-sm">
+                                  {item?.productName} <br />
+                                </h2>
+                                <div className="flex items-center gap-2 mt-2 md:mt-1">
+                                  <span className="text-gray-700 font-medium !text-xs md:!text-sm">
+                                    ₹{parseFloat(item?.price.toFixed(2)) || 0}
                                   </span>
-                                  <span className="!text-xs">₹1,399</span>
+                                  {/* <span className="font-bold !text-xs md:!text-md">
+                                    ₹{item?.discountedPrice || 0}
+                                  </span> */}
                                 </div>
-                                <div className="flex justify-between text-gray-700 mb-2">
-                                  <span className="!text-xs">GST@ 18%</span>
-                                  <span className="!text-xs">+₹252</span>
-                                </div>
-                                <hr className="my-2 text-gray-400" />
-                                <div className="flex justify-between font-semibold text-green-700">
-                                  <span className="!text-xs">Final Price</span>
-                                  <span className="!text-xs">₹1,651</span>
-                                </div>
+                                {/* {item.codEligible ? null : (
+                                  <p className="!text-orange-500 border border-red-300 !bg-orange-50 !text-[0.6rem] md:!text-xs md:px-2 py-1 px-1 rounded mt-2 inline-block">
+                                    This item is not eligible for Cash On
+                                    Delivery.
+                                  </p>
+                                )} */}
                               </div>
+                            </div>
+
+                            {/* Quantity and Price */}
+                            {/* <div className="flex flex-col items-end gap-2"> */}
+                            <div className="flex items-center rounded bg-gray-100 p-1 items-center">
+                              <button
+                                onClick={() => handleDecreaseQuantity(item)}
+                                className="px-2 text-md md:text-xl text-gray-600 bg-white"
+                              >
+                                −
+                              </button>
+                              <span className="px-3 md:py-1 !text-xs md:!text-sm">
+                                {item?.quantity || 0}
+                              </span>
+                              <button
+                                onClick={() => handleIncreaseQuantity(item)}
+                                className="px-2 text-md md:text-xl text-gray-600 bg-white"
+                              >
+                                +
+                              </button>
+                            </div>
+                            <div className="md:text-right">
+                              <div className="text-md md:text-lg font-bold">
+                                {parseFloat(item?.subtotal.toFixed(2)) || 0}
+                              </div>
+                              <button className="relative group !text-xs text-gray-500 underline">
+                                Price Details
+                                <div className="absolute left-0 top-4 w-40 bg-white p-2 rounded border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+                                  <div className="flex justify-between  text-gray-700 mb-2">
+                                    <span className="!text-xs">
+                                      Selling Price
+                                    </span>
+                                    <span className="!text-xs">₹1,399</span>
+                                  </div>
+                                  <div className="flex justify-between text-gray-700 mb-2">
+                                    <span className="!text-xs">GST@ 18%</span>
+                                    <span className="!text-xs">+₹252</span>
+                                  </div>
+                                  <hr className="my-2 text-gray-400" />
+                                  <div className="flex justify-between font-semibold text-green-700">
+                                    <span className="!text-xs">
+                                      Final Price
+                                    </span>
+                                    <span className="!text-xs">₹1,651</span>
+                                  </div>
+                                </div>
+                              </button>
+                            </div>
+                            {/* </div> */}
+
+                            {/* Close Button */}
+                            <button
+                              onClick={() => handleRemoveItem(item)}
+                              className="text-gray-400 hover:text-red-500 text-lg"
+                            >
+                              <i class="ri-delete-bin-line text-gray-500"></i>
                             </button>
                           </div>
-                          {/* </div> */}
-
-                          {/* Close Button */}
-                          <button className="text-gray-400 hover:text-red-500 text-lg">
-                            <i class="ri-delete-bin-line text-gray-500"></i>
-                          </button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                        </TableCell>
+                      </TableRow>
+                    ))}
               </TableBody>
               <TableFooter>
                 <TableRow>
                   <TablePagination
-                    count={data.length}
+                    count={cart.length || 0}
                     rowsPerPage={rowsPerPage}
                     page={cartPage}
                     onPageChange={handleChangePage}

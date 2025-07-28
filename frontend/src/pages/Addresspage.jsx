@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import EditAddressModal from "../components/EditAddressModal";
 
 function Addresspage() {
   const [addresses, setAddresses] = useState([
@@ -72,9 +73,25 @@ function Addresspage() {
         setselectedShipping(address);
     });
   }, [addresses]);
+  const [editingAddress,seteditingAddress]=useState({})
+  const [isModalOpenAddress, setIsModalOpenAddress] = useState(false);
+  const [isCreateAddressModalOpen,setisCreateAddressModalOpen]=useState(false)
+ const handleCreateAddress = (newAddress) => {
+
+        setAddresses([...addresses,newAddress])
+    ; // Here you can also call API to update user
+  };
+ 
+ 
   return (
     <div className="flex flex-col md:flex-row p-2 mt-2 md:m-0 md:p-6 gap-2 md:h-screen ">
       {/* Left Div */}
+      <EditAddressModal
+              isOpen={isCreateAddressModalOpen}
+              onClose={() => setisCreateAddressModalOpen(false)}
+              initialData={editingAddress}
+              onSave={handleCreateAddress}
+            />
       <div className=" flex flex-col gap-4 p-2 md:w-3/4 md:overflow-y-auto hide-scroll">
         {/* Billing Address select */}
         <div className="flex flex-col gap-4 mb-6">
@@ -133,6 +150,32 @@ function Addresspage() {
                   </div>
                 );
               })}
+
+              <div
+              className="flex items-center justify-center bg-white p-4 px-8 rounded shadow-md w-2/5 border border-gray-200 cursor-pointer"
+              onClick={() => {
+                seteditingAddress({
+                  id: "",
+                  name: "",
+                  email: "",
+                  mobile: "",
+                  alternateMobile: "",
+                  gstin: "",
+                  flat: "",
+                  area: "",
+                  landmark: "",
+                  pincode: "",
+                  city: "",
+                  state: "",
+                  type: "other",
+                  isPrimary: false,
+                  isShipping: false,
+                });
+                setisCreateAddressModalOpen(true);
+              }}
+            >
+              <i class="ri-add-large-line"></i>
+            </div>
           </div>
         </div>
         {/* Billing Address select end */}
@@ -194,6 +237,32 @@ function Addresspage() {
                   </div>
                 );
               })}
+
+              <div
+              className="flex items-center justify-center bg-white p-4 px-8 rounded shadow-md w-2/5 border border-gray-200 cursor-pointer"
+              onClick={() => {
+                seteditingAddress({
+                  id: "",
+                  name: "",
+                  email: "",
+                  mobile: "",
+                  alternateMobile: "",
+                  gstin: "",
+                  flat: "",
+                  area: "",
+                  landmark: "",
+                  pincode: "",
+                  city: "",
+                  state: "",
+                  type: "other",
+                  isPrimary: false,
+                  isShipping: true,
+                });
+                setisCreateAddressModalOpen(true);
+              }}
+            >
+              <i class="ri-add-large-line"></i>
+            </div>
           </div>
         </div>
         {/* Shipping Address select end */}

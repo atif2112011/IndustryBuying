@@ -7,8 +7,9 @@ import { useNavigate } from "react-router-dom";
 const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [cart,setCart]=useState([]);
     const {setLoading}=useLoader();
-    
+      const [cartCount, setCartCount] = useState(0);
 
 
 //    useEffect(() => {
@@ -42,7 +43,7 @@ export const AuthProvider = ({ children }) => {
 
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user, setUser,cart,setCart,cartCount,setCartCount }}>
       {children}
     </AuthContext.Provider>
   );

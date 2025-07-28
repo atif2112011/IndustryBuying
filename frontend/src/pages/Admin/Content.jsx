@@ -34,7 +34,9 @@ const {setMessage,setShowSnackBar}=useAlert();
 
   useEffect(()=>{
     const fetchData=async()=>{
+      setLoading(true);
       const response=await getBrandIcons();
+      setLoading(false); 
       if(response.success)
       {
         setBrandIcons(response.brands);
@@ -44,8 +46,9 @@ const {setMessage,setShowSnackBar}=useAlert();
         setMessage(response.message);
         setShowSnackBar(true);
       }
-
+      setLoading(true);
       const response2=await getTestimonials();
+      setLoading(false); 
       if(response2.success)
       {
         setTestimonials(response2.testimonials);
@@ -55,7 +58,9 @@ const {setMessage,setShowSnackBar}=useAlert();
         setMessage(response2.message);
         setShowSnackBar(true);
       }
+      setLoading(true);
       const response3=await getCertificates();
+      setLoading(false); 
       if(response3.success)
       {
         setCertificates(response3.certificates);
@@ -67,9 +72,9 @@ const {setMessage,setShowSnackBar}=useAlert();
       }
       
     }
-    setLoading(true);
+    
     fetchData();
-    setLoading(false);  
+     
   },[])
 
   return (

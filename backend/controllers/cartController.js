@@ -70,12 +70,15 @@ const updateCartItem = async (req, res, next) => {
     const { productId } = req.params;
     const { quantity } = req.body;
 
+   
+
     const cart = await Cart.findOne({ userId });
     if (!cart) {
      throw new Error("Cart not found");
     }
+    
 
-    const item = cart.items.find(item => item.productId.toString() === productId);
+    const item = cart.items.find(item => item.productId.toString() == productId);
     if (!item) {
       throw new Error("Product not in cart");
     }
