@@ -9,7 +9,18 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [cart,setCart]=useState([]);
     const {setLoading}=useLoader();
-      const [cartCount, setCartCount] = useState(0);
+      const [cartCount, setCartCount] = useState(0)
+      const [cartDetails, setCartDetails] = useState({
+        totalItems: 0,
+        totalGst:0,
+        totalPrice: 0,
+        billingInfo:{},
+        shippingInfo:{},
+        paymentInfo:{},
+      }
+      
+    )
+ 
 
 
 //    useEffect(() => {
@@ -43,7 +54,7 @@ export const AuthProvider = ({ children }) => {
 
 
   return (
-    <AuthContext.Provider value={{ user, setUser,cart,setCart,cartCount,setCartCount }}>
+    <AuthContext.Provider value={{ user, setUser,cart,setCart,cartCount,setCartCount,cartDetails,setCartDetails }}>
       {children}
     </AuthContext.Provider>
   );

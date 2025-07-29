@@ -7,6 +7,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 const createOrder = async (req, res, next) => {
   try {
     const userId = req.user.userId;
+    console.log('data recieved in createOrder',req.body);
     const {
       items,
       shippingInfo,
@@ -14,6 +15,7 @@ const createOrder = async (req, res, next) => {
       paymentInfo,
       totalItems,
       totalPrice,
+      totalGst,
       currency,
     } = req.body;
 
@@ -29,9 +31,9 @@ const createOrder = async (req, res, next) => {
       paymentInfo,
       totalItems,
       totalPrice,
+      totalGst,
       currency: currency || 'INR',
     });
-
     const savedOrder = await newOrder.save();
 
     res.status(201).json({
@@ -48,13 +50,61 @@ const createOrder = async (req, res, next) => {
 const getUserOrders = async (req, res, next) => {
   try {
     const userId = req.user.userId;
+    let {
+      page = 1,
+      limit = 10,
+      search,
+      status,
+      date, // Expecting 'YYYY-MM-DD'
+    } = req.query;
 
-    const orders = await Order.find({ userId }).sort({ createdAt: -1 });
+    page = parseInt(page);
+    limit = parseInt(limit);
 
+    const skip = (page - 1) * limit;
+
+    // This object will be used in the $match stage of the pipeline
+    const matchQuery = {};
+
+    // Filter by status
+    if (status !== undefined) {
+      matchQuery.status = status;
+    }
+
+    // Filter by date
+    if (date) {
+      const start = new Date(date);
+      const end = new Date(date);
+      end.setHours(23, 59, 59, 999);
+      matchQuery.createdAt = { $gte: start, $lte: end };
+    }
+    
+    // --- Start of New Search Logic ---
+    if (search) {
+      const searchConditions = [
+        // Search by username from the joined 'userDetails'
+        { "items.productName": { $regex: search, $options: "i" } },
+        
+      ];
+      
+      // Also check if the search term is a valid Order ID
+      if (mongoose.Types.ObjectId.isValid(search)) {
+        searchConditions.push({ _id: new mongoose.Types.ObjectId(search) });
+      }
+
+      matchQuery.$or = searchConditions;
+    }
+    const totalOrders = await Order.countDocuments({ userId, ...matchQuery });
+
+    const orders = await Order.find({ userId, ...matchQuery }).skip(skip).limit(limit).sort({ createdAt: -1 });
+    const totalPages = Math.ceil(totalOrders / limit);
     res.status(200).json({
       message: "Orders fetched successfully",
       success: true,
-      totalOrders: orders.length,
+      totalOrders: totalOrders,
+      totalPages: totalPages,
+      currentPage: page,
+      limit: limit,
       orders,
     });
   } catch (error) {

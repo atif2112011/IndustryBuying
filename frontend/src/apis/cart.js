@@ -19,6 +19,8 @@ export const getCart=async()=>{
             success:true,
             message:response.data.message,
             cart:response.data.cart.items,
+            totalGst:response.data.cart.totalGst,
+            totalPrice:response.data.cart.totalPrice,
             totalItems:response.data.cart.totalItems
         }
     }
@@ -47,7 +49,9 @@ export const upDateCartItem=async(product)=>{
             success:true,
             message:response.data.message,
             cart:response.data.cart.items,
-            totalItems:response.data.cart.totalItems
+            totalItems:response.data.cart.totalItems,
+            totalGst:response.data.cart.totalGst,
+            totalPrice:response.data.cart.totalPrice
         }
     }
     else

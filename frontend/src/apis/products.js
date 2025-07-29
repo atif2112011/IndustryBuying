@@ -56,7 +56,7 @@ export const AddNewProductAPI = async (data) => {
       price: data.price,
       discount: data.discount,
       stock: data.stock,
-
+      gst: data.gst,
       name: data.name,
       description: data.description,
       shortDescription: data.shortDescription,
@@ -100,6 +100,7 @@ export const UpdateProductAPI = async (data) => {
       subCategory: data.subCategory._id,
       price: data.price,
       discount: data.discount,
+      gst: data.gst,
       stock: data.stock,
       name: data.name,
       description: data.description,

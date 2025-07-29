@@ -23,6 +23,7 @@ const AddNewProduct = ({ isOpen, onClose, onSave, menu }) => {
   const [subcategory, setSubcategory] = useState("");
   const [price, setPrice] = useState("0");
   const [discount, setDiscount] = useState("0");
+  const [gst,setGst]=useState("0");
   const [stock, setStock] = useState("0");
   const [images, setImages] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
@@ -41,6 +42,7 @@ const AddNewProduct = ({ isOpen, onClose, onSave, menu }) => {
       setSubcategory("");
       setPrice("0");
       setDiscount("0");
+      setGst("0");
       setStock("0");
       setImages([]);
       setImagePreviews([]);
@@ -66,6 +68,7 @@ const AddNewProduct = ({ isOpen, onClose, onSave, menu }) => {
       !stock ||
       !name ||
       !description ||
+      !gst ||
       !shortDescription ||
       !brand ||
       !rating ||
@@ -234,6 +237,14 @@ const AddNewProduct = ({ isOpen, onClose, onSave, menu }) => {
             value={discount}
             onChange={(e) => setDiscount(Number(e.target.value))}
           />
+           <TextField
+            label="GST (%)"
+            size="small"
+            type="number"
+            fullWidth
+            value={gst}
+            onChange={(e) => setGst(Number(e.target.value))}
+          />
           <TextField
             label="Stock *"
             size="small"
@@ -379,6 +390,7 @@ const AddNewProduct = ({ isOpen, onClose, onSave, menu }) => {
                 subcategory,
                 price,
                 discount,
+                gst,
                 stock,
                 images,
                 name,

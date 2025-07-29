@@ -154,7 +154,16 @@ function Cartpage() {
   const [cartPage, setcartPage] = useState(0);
   const [rowsPerPage, setrowsPerPage] = useState(5);
 
-  const { user, setUser, cart, setCart,cartCount, setCartCount } = useAuth();
+  const {
+    user,
+    setUser,
+    cart,
+    setCart,
+    cartCount,
+    setCartCount,
+    cartDetails,
+    setCartDetails,
+  } = useAuth();
   const { setMessage, setShowSnackBar } = useAlert();
   const { setLoading } = useLoader();
   const [checkPin, setcheckPin] = useState({
@@ -184,6 +193,13 @@ function Cartpage() {
     });
     if (response.success) {
       setCart(response.cart);
+      setCartDetails({
+        totalItems: response.totalItems,
+        totalGst: response.totalGst,
+        totalPrice: response.totalPrice,
+      });
+      setCartCount(response.totalItems);
+
       setCartCount(response.totalItems);
     }
   };
@@ -192,6 +208,13 @@ function Cartpage() {
       const response = await RemoveCartItem(product);
       if (response.success) {
         setCart(response.cart);
+        setCartDetails({
+          totalItems: response.totalItems,
+          totalGst: response.totalGst,
+          totalPrice: response.totalPrice,
+        });
+        setCartCount(response.totalItems);
+
         setCartCount(response.totalItems);
       }
 
@@ -204,26 +227,43 @@ function Cartpage() {
 
     if (response.success) {
       setCart(response.cart);
+      setCartDetails({
+        totalItems: response.totalItems,
+        totalGst: response.totalGst,
+        totalPrice: response.totalPrice,
+      });
+      setCartCount(response.totalItems);
+
       setCartCount(response.totalItems);
     }
   };
 
   const handleRemoveItem = async (product) => {
     const response = await RemoveCartItem(product);
-    if (response.success){
+    if (response.success) {
       setCart(response.cart);
-    setCartCount(response.totalItems);
+      setCartDetails({
+        totalItems: response.totalItems,
+        totalGst: response.totalGst,
+        totalPrice: response.totalPrice,
+      });
+      setCartCount(response.totalItems);
+
+      setCartCount(response.totalItems);
     }
   };
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await getCart();
-      if (response.success) 
-      {
+      if (response.success) {
         setCart(response.cart);
+        setCartDetails({
+          totalItems: response.totalItems,
+          totalGst: response.totalGst,
+          totalPrice: response.totalPrice,
+        });
         setCartCount(response.totalItems);
-
       }
     };
     setLoading(true);
@@ -335,18 +375,33 @@ function Cartpage() {
                                     <span className="!text-xs">
                                       Selling Price
                                     </span>
-                                    <span className="!text-xs">₹1,399</span>
+                                    <span className="!text-xs">
+                                      ₹
+                                      {parseFloat(
+                                        (item?.price * item?.quantity).toFixed(
+                                          2
+                                        )
+                                      ) || 0}
+                                    </span>
                                   </div>
                                   <div className="flex justify-between text-gray-700 mb-2">
-                                    <span className="!text-xs">GST@ 18%</span>
-                                    <span className="!text-xs">+₹252</span>
+                                    <span className="!text-xs">
+                                      GST@ {item?.gstPercentage || 0}%
+                                    </span>
+                                    <span className="!text-xs">
+                                      +₹{parseFloat(item?.gst?.toFixed(2)) || 0}
+                                    </span>
                                   </div>
                                   <hr className="my-2 text-gray-400" />
                                   <div className="flex justify-between font-semibold text-green-700">
                                     <span className="!text-xs">
                                       Final Price
                                     </span>
-                                    <span className="!text-xs">₹1,651</span>
+                                    <span className="!text-xs">
+                                      ₹
+                                      {parseFloat(item?.subtotal.toFixed(2)) ||
+                                        0}
+                                    </span>
                                   </div>
                                 </div>
                               </button>
@@ -430,18 +485,27 @@ function Cartpage() {
         {/* Payment Summary */}
         <div className="bg-white p-4 max-w-sm rounded-sm shadow-md">
           <p className="!font-semibold !text-sm mb-2">
-            Payment Summary <span className="!text-sm">(2 Items)</span>
+            Payment Summary{" "}
+            <span className="!text-sm">
+              ({cartDetails?.totalItems?.toFixed(0) || 0} Items)
+            </span>
           </p>
           <hr className="mb-2" />
 
           <div className="flex justify-between mb-1">
             <span className="!text-gray-800 !text-xs">Total Selling Price</span>
-            <span className="!font-semibold !text-xs">₹2,268</span>
+            <span className="!font-semibold !text-xs">
+              ₹
+              {(cartDetails?.totalPrice - cartDetails?.totalGst).toFixed(2) ||
+                0}
+            </span>
           </div>
 
           <div className="flex justify-between mb-1">
             <span className="!text-gray-800 !text-xs">GST Amount</span>
-            <span className="!font-semibold !text-xs">+₹408</span>
+            <span className="!font-semibold !text-xs">
+              +₹{cartDetails?.totalGst?.toFixed(2) || 0}
+            </span>
           </div>
 
           <div className="flex justify-between mb-2">
@@ -455,7 +519,9 @@ function Cartpage() {
 
           <div className="flex justify-between">
             <span className="!text-sm !font-bold">Amount Payable</span>
-            <span className="!text-sm !font-bold">₹2,676</span>
+            <span className="!text-sm !font-bold">
+              ₹{cartDetails?.totalPrice?.toFixed(2) || 0}
+            </span>
           </div>
         </div>
         {/* Payment Summary  end*/}

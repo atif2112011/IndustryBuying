@@ -28,6 +28,7 @@ const productSchema = new mongoose.Schema(
 
     price: { type: Number, required: true },
     discount: { type: Number, default: 0 },
+    gst: { type: Number, default: 0 },
     finalPrice: { type: Number },
 
     stock: { type: Number, default: 0 },

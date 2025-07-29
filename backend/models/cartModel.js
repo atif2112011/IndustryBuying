@@ -20,6 +20,16 @@ const cartItemSchema = new mongoose.Schema({
     default: 1,
     min: 1,
   },
+  gstPercentage: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
+  gst: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
   subtotal: {
     type: Number,
     required: true,
@@ -38,6 +48,10 @@ const cartSchema = new mongoose.Schema(
     },
     items: [cartItemSchema],
     totalItems: {
+      type: Number,
+      default: 0,
+    },
+    totalGst: {
       type: Number,
       default: 0,
     },

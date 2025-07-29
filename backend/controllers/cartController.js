@@ -11,7 +11,7 @@ const getCart = async (req, res, next) => {
     res.status(200).json({
       message: "Cart fetched successfully",
       success: true,
-      cart: cart || { items: [], totalItems: 0, totalPrice: 0 },
+      cart: cart || { items: [], totalItems: 0, totalPrice: 0 ,totalGst:0},
     });
   } catch (error) {
     next(error);
@@ -37,20 +37,26 @@ const addToCart = async (req, res, next) => {
     const existingItem = cart.items.find(item => item.productId.toString() === productId);
     if (existingItem) {
       existingItem.quantity += quantity;
-      existingItem.subtotal = existingItem.quantity * existingItem.price;
+      existingItem.price = product.price;
+      existingItem.gstPercentage=product.gst;
+      existingItem.gst=product.price*existingItem.quantity*product.gst/100;
+      existingItem.subtotal = existingItem.quantity * existingItem.price + product.price*existingItem.quantity*product.gst/100;
     } else {
       cart.items.push({
         productId,
         productName: product.name,
         price: product.price,
         quantity,
-        subtotal: product.price * quantity,
+        gstPercentage:product.gst,
+        gst:product.price*quantity*product.gst/100,
+        subtotal: product.price * quantity + product.price*quantity*product.gst/100,
         image: product.images[0] || '',
       });
     }
 
     cart.totalItems = cart.items.reduce((acc, item) => acc + item.quantity, 0);
     cart.totalPrice = cart.items.reduce((acc, item) => acc + item.subtotal, 0);
+    cart.totalGst=cart.items.reduce((acc, item) => acc + item.gst, 0);
     await cart.save();
 
     res.status(200).json({
@@ -84,10 +90,12 @@ const updateCartItem = async (req, res, next) => {
     }
 
     item.quantity = quantity;
-    item.subtotal = quantity * item.price;
+    item.gst=item.price*quantity*item.gstPercentage/100;
+    item.subtotal = quantity * item.price+(item.price*quantity*item.gstPercentage/100);
 
     cart.totalItems = cart.items.reduce((acc, item) => acc + item.quantity, 0);
     cart.totalPrice = cart.items.reduce((acc, item) => acc + item.subtotal, 0);
+    cart.totalGst=cart.items.reduce((acc, item) => acc + item.gst, 0);
     await cart.save();
 
     res.status(200).json({

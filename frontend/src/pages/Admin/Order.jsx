@@ -76,7 +76,7 @@ function Order() {
   const handleChangePage = async(event, newPage) => {
     setorderpage(newPage);
     setLoading(true);
-    const response=await FetchAllOrdersAdmin(newPage+1,rowsPerPage);
+    const response=await FetchAllOrdersAdmin(newPage+1,rowsPerPage,search,status,date);
     setLoading(false);
     if(response.success)
     {
