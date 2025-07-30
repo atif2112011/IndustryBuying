@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import "remixicon/fonts/remixicon.css";
 
+
 const EditProductModal = ({ isOpen, onClose, productData, onSave, menu }) => {
   
   useEffect(() => {
@@ -39,6 +40,7 @@ const EditProductModal = ({ isOpen, onClose, productData, onSave, menu }) => {
     setTechnicalAspects(productData?.technicalAspects);
     setPrice(productData?.price);
     setDiscount(productData?.discount);
+    setGst(productData?.gst);
     setStock(productData?.stock);
     setImages(productData?.images);
     setImagePreviews(productData?.images);
@@ -65,6 +67,7 @@ const EditProductModal = ({ isOpen, onClose, productData, onSave, menu }) => {
   const [subcategory, setSubcategory] = useState("");
   const [price, setPrice] = useState(0);
   const [discount, setDiscount] = useState(0);
+  const [gst, setGst] = useState(0);
   const [stock, setStock] = useState(0);
   const [images, setImages] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
@@ -226,6 +229,14 @@ const EditProductModal = ({ isOpen, onClose, productData, onSave, menu }) => {
             onChange={(e) => setDiscount(Number(e.target.value))}
           />
           <TextField
+            label="GST (%)"
+            size="small"
+            type="number"
+            fullWidth
+            value={gst}
+            onChange={(e) => setGst(Number(e.target.value))}
+          />
+          <TextField
             label="Stock"
             size="small"
             type="number"
@@ -370,6 +381,7 @@ const EditProductModal = ({ isOpen, onClose, productData, onSave, menu }) => {
                 subCategory: subcategory,
                 price,
                 discount,
+                gst,
                 stock,
                 images,
                 name,

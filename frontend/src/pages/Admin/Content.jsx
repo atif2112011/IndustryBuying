@@ -59,23 +59,29 @@ const ContentTab = () => {
         setMessage(response.message);
         setShowSnackBar(true);
       }
-
-      const response2 = await getTestimonials();
-      if (response2.success) {
+      setLoading(true);
+      const response2=await getTestimonials();
+      setLoading(false); 
+      if(response2.success)
+      {
         setTestimonials(response2.testimonials);
       } else {
         setMessage(response2.message);
         setShowSnackBar(true);
       }
-      const response3 = await getCertificates();
-      if (response3.success) {
+      setLoading(true);
+      const response3=await getCertificates();
+      setLoading(false); 
+      if(response3.success)
+      {
         setCertificates(response3.certificates);
       } else {
         setMessage(response3.message);
         setShowSnackBar(true);
       }
-    };
-    setLoading(true);
+      
+    }
+    
     fetchData();
     setLoading(false);
     setIsSuccess(false);

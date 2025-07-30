@@ -18,6 +18,14 @@ const orderItemSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  gstPercentage: {
+    type: Number,
+    required:false
+  },
+  gst: {
+    type: Number,
+    required: false,
+  },
   subtotal: {
     type: Number,
     required: true,
@@ -81,6 +89,10 @@ const orderSchema = new mongoose.Schema(
     totalPrice: {
       type: Number,
       required: true,
+    },
+    totalGst: {
+      type: Number,
+      required: false,
     },
     currency: {
       type: String,

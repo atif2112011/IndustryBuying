@@ -18,11 +18,16 @@ const getUserProfile = async (req, res, next) => {
       message: "User Details ",
       success: true,
       userDetails: {
-        ...existingUser._doc,
-        password: null,
-        createdAt: null,
-        updatedAt: null,
-        __v: null,
+        _id: existingUser._id,
+        role: existingUser.role,
+        isVerified: existingUser.isVerified,
+        pfp: existingUser.pfp,
+        isBlock: existingUser.isBlock,
+        name: existingUser.name,
+        email: existingUser.email,
+        phone: existingUser.phone,
+        address: existingUser.address,
+        gstin: existingUser.gstin,
       },
     });
   } catch (error) {
@@ -34,7 +39,7 @@ const updateUserProfile = async (req, res, next) => {
   try {
     const { id } = req.params;
     const updatedUser = req.body;
-    console.log(updatedUser);
+    // console.log(updatedUser);
 
     // DB call to get User
     const existingUser = await User.findByIdAndUpdate(

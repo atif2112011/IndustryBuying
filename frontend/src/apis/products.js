@@ -56,7 +56,7 @@ export const AddNewProductAPI = async (data) => {
       price: data.price,
       discount: data.discount,
       stock: data.stock,
-
+      gst: data.gst,
       name: data.name,
       description: data.description,
       shortDescription: data.shortDescription,
@@ -100,6 +100,7 @@ export const UpdateProductAPI = async (data) => {
       subCategory: data.subCategory._id,
       price: data.price,
       discount: data.discount,
+      gst: data.gst,
       stock: data.stock,
       name: data.name,
       description: data.description,
@@ -153,3 +154,26 @@ export const DeleteProductAPI = async (id) => {
     };
   }
 };
+
+
+export const getProductDetails=async(id)=>{
+  try {
+    const response=await API.get(`/api/products/${id}`)
+    // console.log('response',response)
+    if(response.data.success)
+      return {
+        success:true,
+        message:response.data.message,
+        product:response.data.product
+      }
+    else
+    throw new Error(response.data.message)
+    
+  } catch (error) {
+    console.error(error)
+    return {
+      success:false,
+      message:error?.response?.data?.message ||error.message
+    }
+  }
+}

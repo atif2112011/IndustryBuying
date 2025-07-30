@@ -27,6 +27,7 @@ import HelpMainBody from "./components/HelpMainBody.jsx";
 import AdminHome from "./pages/AdminHome.jsx";
 import SearchPage from "./pages/SearchResultPage.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import OrderSummary from "./pages/OrderSummary.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -100,6 +101,16 @@ function App() {
               }
             />
           </Route>
+
+          {/* Order Creation Completion */}
+          <Route
+            path="/summary"
+            element={
+              <ProtectedRoute>
+                <OrderSummary />
+              </ProtectedRoute>
+            }
+          ></Route>
 
           {/* Utility */}
           <Route path="/aboutus" element={<AboutUs />}></Route>

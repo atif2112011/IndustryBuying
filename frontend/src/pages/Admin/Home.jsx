@@ -45,20 +45,24 @@ export default function Home() {
     
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       const response=await FetchAllOrdersAdmin(1,20) 
+       setLoading(false);
       if(response.success)
       {
         setOrders(response.orders);
       }
+      setLoading(true);
       const response2=await getChartData()
+       setLoading(false);
       if(response2.success)
       {
         setChartData(response2.products);
       }
     }
-    setLoading(true);
+    
     fetchData();
-    setLoading(false);
+   
   },[])
     const categoryData = [
       { name: "Electronics", value: 40 },

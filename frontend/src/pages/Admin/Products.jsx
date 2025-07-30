@@ -335,6 +335,7 @@ function Products() {
                   "Subcategory",
                   "Price",
                   "Discount",
+                  "GST Applicable",
                   "Stock",
                   "Status",
                   "Actions",
@@ -385,6 +386,11 @@ function Products() {
                     <TableCell sx={{ padding: "6px 12px" }}>
                       <div className="text-xs md:text-sm font-medium text-gray-800">
                         {product.discount} %
+                      </div>
+                    </TableCell>
+                    <TableCell sx={{ padding: "6px 12px" }}>
+                      <div className="text-xs md:text-sm font-medium text-gray-800">
+                        {product?.gst || 0} %
                       </div>
                     </TableCell>
                     <TableCell sx={{ padding: "6px 12px" }}>

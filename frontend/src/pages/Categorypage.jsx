@@ -74,16 +74,18 @@ const {setLoading}=useLoader();
     
 
     const fetchCategory=async()=>{
+      setLoading(true);
       const response=await getCategories({categoryId,populateProducts:true})
+      setLoading(false);
       if(response.success)
       {
         setCategoryData(response.categories);
         console.log(response.categories);
       }
     }
-    setLoading(true);
+    
     fetchCategory();
-    setLoading(false);
+    
   },[categoryId])
 
   return (
