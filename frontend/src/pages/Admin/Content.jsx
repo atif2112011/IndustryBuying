@@ -52,7 +52,9 @@ const ContentTab = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+       setLoading(true);
       const response = await getBrandIcons();
+       setLoading(false);
         if (response.success) {
         setBrandIcons(response.brands);
       } else {
