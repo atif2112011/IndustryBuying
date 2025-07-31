@@ -114,7 +114,7 @@ const AddNewCertificateComponent = ({
           p: 4,
         }}
       >
-        <Typography variant="h6" className="mb-4 text-center">
+        <Typography variant="h6" className="!mb-4 text-center">
           {mode === "add" ? "Add Certificate" : "Edit Certificate"}
         </Typography>
 

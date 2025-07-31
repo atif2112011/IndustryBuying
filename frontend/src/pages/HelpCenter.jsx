@@ -113,7 +113,7 @@ function HelpCenter(){
 
 return <div className="flex flex-col w-full md:h-screen items-center p-4 px-8 mt-4">
     {/* Search Area */}
-    <div className="flex flex-col w-full p-4 py-5 items-center rounded-md shadow-md !bg-[url(/public/search.png)] bg-cover ">
+    <div className="flex flex-col w-full p-4 py-5 items-center rounded-md shadow-md !bg-[url(/search.png)] bg-cover ">
     <div className="flex flex-col gap-4 md:w-3/4 md:p-4">
     <h2 className="!text-4xl !font-medium text-center md:!text-blue-950 !text-white-900">How can we help you ?</h2>
     <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} placeholder={"Search keywords, queries and topics"}/>

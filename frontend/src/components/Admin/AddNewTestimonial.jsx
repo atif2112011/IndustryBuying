@@ -119,7 +119,7 @@ const AddNewTestimonialComponent = ({
           p: 4,
         }}
       >
-        <Typography variant="h6" className="mb-4 text-center">
+        <Typography variant="h6" className="!mb-4 text-center">
           {mode === "add" ? "Add Testimonial" : "Edit Testimonial"}
         </Typography>
 

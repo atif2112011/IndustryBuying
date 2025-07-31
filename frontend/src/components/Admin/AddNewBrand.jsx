@@ -91,7 +91,7 @@ const AddNewBrandComponent = ({
           p: 4,
         }}
       >
-        <Typography variant="h6" className="mb-4 text-center">
+        <Typography variant="h6" className="!mb-4 text-center">
           {mode === "add" ? "Add Brand" : "Edit Brand"}
         </Typography>
         <div className="flex flex-col gap-4">

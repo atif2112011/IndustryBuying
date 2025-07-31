@@ -78,18 +78,28 @@ export const getProductsByCategory=async(categoryId)=>{
   }
 }
 
-export const getProductsBySubCategory=async(slug)=>{
+export const getProductsBySubCategory=async(slug,page=1,limit=10,sort=null,priceRanges=null,brands=null,discountRange=null)=>{
 
   try {
-    const response=await API.post(`/api/categories/fetch-subcategory`,{
-        slug
+    const response=await API.post(`/api/categories/fetch-subcategory-filtered`,{
+        
+          slug,
+          page,
+          limit,
+          sort,
+        priceRanges,
+          brands,
+          discountRange
     })
     // console.log('response',response)
     if(response.data.success)
       return {
         success:true,
         message:response.data.message,
-        products:response.data.products
+        products:response.data.products,
+        totalPages:response.data.totalPages,
+        totalProducts:response.data.totalProducts,
+        currentPage:response.data.currentPage
       }
     else
     throw new Error(response.data.message)

@@ -72,7 +72,7 @@ const {setLoading}=useLoader();
 const {setMessage,setShowSnackBar}=useAlert();
 const [rowsPerPage,setRowsPerPage]=useState(10);
 const [searchData,setSearchData]=useState([]);
-const {cart,setCart,cartCount,setCartCount}=useAuth();
+const {cart,setCart,cartCount,setCartCount,user}=useAuth();
     const [searchParams] = useSearchParams();
  
     // const [query,setQuery]=useState(searchParams.get("q") || "");
@@ -95,6 +95,11 @@ const {cart,setCart,cartCount,setCartCount}=useAuth();
   };
 
 const handleAddtoCart=async(product)=>{
+  if(!user){
+      setMessage("Please login to add to cart");
+      setShowSnackBar(true);
+      return
+    }
     setLoading(true);
     const response=await addToCart(product._id,1);
     setLoading(false);
@@ -111,6 +116,11 @@ const handleAddtoCart=async(product)=>{
 }
 
 const handleBuyNow=async(product)=>{
+  if(!user){
+      setMessage("Please login to add to cart");
+      setShowSnackBar(true);
+      return
+    }
     setLoading(true);
     const response=await addToCart(product._id,1);
     setLoading(false);

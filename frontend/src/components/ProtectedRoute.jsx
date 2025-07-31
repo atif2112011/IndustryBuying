@@ -27,9 +27,9 @@ function ProtectedRoute({ children }) {
              {
                setUser(getUserResponse.user);
                setLoading(false);
-               setMessage("Welcome"+" "+getUserResponse.user.name);
-               setShowSnackBar(true);
-               console.log("User Retrieved", getUserResponse?.user);
+              //  setMessage("Welcome"+" "+getUserResponse.user.name);
+              //  setShowSnackBar(true);
+              //  console.log("User Retrieved", getUserResponse?.user);
              }
              else
              {
