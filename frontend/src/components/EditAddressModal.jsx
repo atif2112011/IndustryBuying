@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react';
 export default function EditAddressModal({ isOpen, onClose, initialData, onSave }) {
     if (!isOpen) return null;
   const [form, setForm] = useState({
-    id:'',
+    _id:'',
     name: '',
     email: '',
-    mobile: '',
-    alternateMobile: '',
+    phone: '',
+    alternatePhone: '',
     gstin: '',
     flat: '',
     area: '',
@@ -24,11 +24,11 @@ export default function EditAddressModal({ isOpen, onClose, initialData, onSave 
 
   useEffect(() => {
     setForm({
-    id:'',
+    _id:'',
     name: '',
     email: '',
-    mobile: '',
-    alternateMobile: '',
+    phone: '',
+    alternatePhone: '',
     gstin: '',
     flat: '',
     area: '',
@@ -44,11 +44,11 @@ export default function EditAddressModal({ isOpen, onClose, initialData, onSave 
         console.log('recieved data',initialData)
       setForm(prev => ({
         ...prev,
-        id:initialData.id,
+        _id:initialData._id,
         name: initialData.name,
         email: initialData.email, // Sample
-        mobile: initialData.mobile,
-        alternateMobile: initialData.alternateMobile,
+        phone: initialData.phone,
+        alternatePhone: initialData.alternatePhone,
         gstin: initialData.gstin,
         flat: initialData.flat,
         area: initialData.area,
@@ -75,9 +75,9 @@ export default function EditAddressModal({ isOpen, onClose, initialData, onSave 
     const newErrors = {};
     
     if (!form.name|| form.name.trim().length < 2) newErrors.name = 'Name must be at least 2 characters long';
-    if (!form.mobile ) newErrors.mobile = 'Mobile is required';
-    if (form.mobile && !/^[6-9]\d{9}$/.test(form.mobile)) {
-        newErrors.mobile = 'Phone number must be a 10-digit Indian mobile number';
+    if (!form.phone ) newErrors.phone = 'Mobile is required';
+    if (form.phone && !/^[6-9]\d{9}$/.test(form.phone)) {
+        newErrors.phone = 'Phone number must be a 10-digit Indian phone number';
         }
 
     if (!form.email || !/^\S+@\S+\.\S+$/.test(form.email)) newErrors.email = 'Please enter a valid email';
@@ -153,9 +153,9 @@ export default function EditAddressModal({ isOpen, onClose, initialData, onSave 
         <div>
             <label className='!text-xs md:!text-sm text-gray-800 !font-medium'>Alternate Number</label>
           <input
-            name="alternateMobile"
+            name="alternatePhone"
             
-            value={form.alternateMobile}
+            value={form.alternatePhone}
             onChange={handleChange}
             className="w-full border border-gray-500 outline-none px-3 py-2 rounded !text-xs md:text-sm"
           />
@@ -166,15 +166,15 @@ export default function EditAddressModal({ isOpen, onClose, initialData, onSave 
           <div className='flex flex-row gap-2 flex-wrap'>
           <input
           type="tel"
-            name="mobile"
+            name="phone"
             required
-            value={form.mobile}
+            value={form.phone}
             onChange={handleChange}
             className="flex-1 border border-gray-500 outline-none px-3 py-2 rounded !text-xs md:text-sm"
           />
           <button className="bg-gray-200 px-4 py-2 rounded !text-[10px] md:text-sm">Send OTP</button>
         </div>
-        {errors.mobile && <p className="!text-red-500 !text-[10px] md:!text-xs col-span-2">{errors.mobile}</p>}
+        {errors.phone && <p className="!text-red-500 !text-[10px] md:!text-xs col-span-2">{errors.phone}</p>}
         </div>
 
         <div>

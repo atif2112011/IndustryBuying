@@ -9,13 +9,36 @@ import { useAlert } from "../contexts/AlertContext";
 
 import { useAuth } from "../contexts/AuthContext";
 import { useLoader } from "../contexts/LoaderContext";
+import { getCart } from "../apis/cart";
 
 function NavBar() {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
    const { setShowSnackBar, setMessage } = useAlert();
    const {setLoading}=useLoader();
-   const { user, setUser }=useAuth();
+   const { user, setUser,cart,setCart,cartCount,setCartCount }=useAuth();
+   const [searchTerm, setSearchTerm] = useState("");
+ 
+  
+
+   useEffect(()=>{
+    const fetchCart=async()=>{
+      const response=await getCart();
+      console.log(`response of getCart`,response);
+      if(response.success)
+      {
+        setCart(response.cart);
+        setCartCount(response.totalItems);
+      }
+
+    }
+    if(user!==null)
+    {
+      console.log("User in fetchCart",user);
+      fetchCart();
+    }
+     
+   },[user])
  
 
 
@@ -38,16 +61,12 @@ function NavBar() {
           }
           else
           {
+            setLoading(false);
             throw new Error(getUserResponse?.message || getUserResponse);
           }
 
-        } else {
-          setLoading(false);
-          setMessage("Session Expired!! Login Again");
-          setShowSnackBar(true);
-          navigate("/user/login");
-         throw new Error(response?.message || response);
-        }
+
+        } 
       } catch (error) {
         setLoading(false);
         
@@ -55,8 +74,22 @@ function NavBar() {
       }
     };
     checkUser();
+    setLoading(false);
    
   },[])
+
+  const handleSearch = () => {
+    if(searchTerm===""){
+      setMessage("Search term cant be empty !");
+      setShowSnackBar(true);
+    }
+    else if(searchTerm.length<3){
+      setMessage("Search term must be at least 3 characters long !");
+      setShowSnackBar(true);
+    }
+    else
+    navigate(`/search/?q=${searchTerm}`);
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -92,7 +125,7 @@ function NavBar() {
 
         {/* Search Bar */}
         <div className="w-full md:w-[28rem] mt-2 md:mt-0 !font-medium">
-          <SearchBar placeholder="Search by ProductID, Name or Description" />
+          <SearchBar placeholder="Search by ProductID, Name or Description" searchTerm={searchTerm} setSearchTerm={setSearchTerm} handleSearch={handleSearch}/>
         </div>
 
         {/* Navigation Menu */}
@@ -140,12 +173,24 @@ function NavBar() {
             Profile
           </button>}
 
+          {user && user.role=="admin" && <button
+            className="bg-blue-700 !text-sm text-white px-6 py-2 rounded-sm shadow hover:bg-blue-800"
+            onClick={() => {navigate("/admin") ,setMobileMenuOpen(false)}}
+          >
+            Admin Panel
+          </button>}
+
           {/* Cart button for desktop only */}
           <button
             onClick={() => navigate("/order/cart")}
-            className="hidden md:block"
+            className="hidden md:block relative"
           >
             <i className="ri-shopping-cart-2-line text-xl"></i>
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-2 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center !text-[10px]">
+                {cartCount}
+              </span>
+            )}
           </button>
         </div>
       </div>

@@ -26,6 +26,8 @@ import HelpCenter from "./pages/HelpCenter.jsx";
 import HelpMainBody from "./components/HelpMainBody.jsx";
 import AdminHome from "./pages/AdminHome.jsx";
 import SearchPage from "./pages/SearchResultPage.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import OrderSummary from "./pages/OrderSummary.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -45,33 +47,77 @@ function App() {
               path="/categories/:categoryId/:subcategoryId/:productId"
               element={<Productpage />}
             />
-            <Route path="/user" element={<User />} />
+            <Route
+              path="/user"
+              element={
+                <ProtectedRoute>
+                  <User />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/user/order-and-billing"
-              element={<OrderandBilling />}
+              element={
+                <ProtectedRoute>
+                  <OrderandBilling />
+                </ProtectedRoute>
+              }
             />
 
             <Route path="*" element={<div>404 Not Found</div>} />
           </Route>
 
           {/* Order Routes */}
-          <Route path="/order" element={<OrderLayout />}>
-          <Route path="/order/cart" element={<Cartpage />} />
-          <Route path="/order/address" element={<Addresspage />} />
-          <Route path="/order/payment" element={<Paymentpage />} />
-
-          
+          <Route
+            path="/order"
+            element={
+              <ProtectedRoute>
+                <OrderLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route
+              path="/order/cart"
+              element={
+                <ProtectedRoute>
+                  <Cartpage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/order/address"
+              element={
+                <ProtectedRoute>
+                  <Addresspage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/order/payment"
+              element={
+                <ProtectedRoute>
+                  <Paymentpage />
+                </ProtectedRoute>
+              }
+            />
           </Route>
+
+          {/* Order Creation Completion */}
+          <Route
+            path="/summary"
+            element={
+              <ProtectedRoute>
+                <OrderSummary />
+              </ProtectedRoute>
+            }
+          ></Route>
 
           {/* Utility */}
           <Route path="/aboutus" element={<AboutUs />}></Route>
           <Route path="/cert" element={<Certification />}></Route>
           <Route path="/gst" element={<GST />}></Route>
           <Route path="/help" element={<HelpCenter />}>
-          <Route path="/help/:helpid" element={<HelpMainBody />}/>
-
-          
-          
+            <Route path="/help/:helpid" element={<HelpMainBody />} />
           </Route>
         </Route>
 
@@ -79,7 +125,6 @@ function App() {
         <Route path="/user/register" element={<Register />}></Route>
 
         <Route path="/admin" element={<AdminHome />}></Route>
-        
       </Routes>
     </BrowserRouter>
   );

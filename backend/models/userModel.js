@@ -58,17 +58,11 @@ const userSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Company", // Must create a separate Company model
     },
-    GSTIN: {
+    gstin: {
       type: String,
       required:false,
       unique:false,
-      validate: {
-        validator: function (v) {
-          return v.length === 15;
-        },
-        message: (props) =>
-          `${props.value} is not a valid GST number (must be 15 characters)`,
-      },
+      
     },
     address: [
       {
@@ -89,6 +83,10 @@ const userSchema = new mongoose.Schema(
           required: true,
         },
         isShipping: {
+          type: Boolean,
+          default: false,
+        },
+        isPrimary: {
           type: Boolean,
           default: false,
         },
@@ -125,17 +123,12 @@ const userSchema = new mongoose.Schema(
           type: String,
           required: [true, "Pincode is required"],
         },
-        GSTIN: {
+        gstin: {
           type: String,
           required:false,
           unique:false,
-          validate: {
-            validator: function (v) {
-              return v.length === 15;
-            },
-            message: (props) =>
-              `${props.value} is not a valid GST number (must be 15 characters)`,
-          },
+          
+          
         },
       },
     ],

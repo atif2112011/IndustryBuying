@@ -147,6 +147,7 @@ const CategoryShowcase = ({categoryData}) => {
 
   
   useEffect(()=>{
+    
   },[])
 
   return (
@@ -156,7 +157,7 @@ const CategoryShowcase = ({categoryData}) => {
   {categoryData && categoryData.map((item) => (
     <div key={item.name} className="bg-white rounded-lg p-2 md:p-4 shadow-sm max-w-64">
       <img
-        src={sampleproduct}
+        src={item?.products[0]?.images[0] || sampleproduct}
         alt={item.name}
         className="h-[80px] md:h-32 w-full object-contain cursor-pointer"
         onClick={() => navigate(`/categories/${params.categoryId}/${item.slug}`)}
@@ -178,11 +179,11 @@ const CategoryShowcase = ({categoryData}) => {
             </li>
           ))}
         </ul>
-      ): <ul className="text-[0.5rem] md:!text-xs text-blue-900 space-y-1 cursor-pointer font-semibold ">
-        <li className="hover:text-blue-500" onClick={() => navigate("/categories/electrical/circuit-breakers/molded-case-circuit-breakers")}>● Molded Case Circuit Breakers (MCCB)</li>
-        <li className="hover:text-blue-500" onClick={() => navigate("/categories/electrical/circuit-breakers/miniature-circuit-breakers")}>● Miniature Circuit Breakers (MCB)</li>
-        <li className="hover:text-blue-500" onClick={() => navigate("/categories/electrical/circuit-breakers/electrical-spare-accessories")}>● Electrical Spare & Accessories</li>
-      </ul>}
+      ):(
+        <div className="text-[0.5rem] md:!text-xs text-blue-900 space-y-1 cursor-pointer font-semibold">
+          No products found
+        </div>
+      )}
      
 
       <a

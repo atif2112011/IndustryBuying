@@ -14,8 +14,8 @@ const stepIcons = [
   "📬", // Delivered
 ];
 
-const steps = ["Booked", "Confirmed", "Processing", "Packed", "Shipped", "Delivered"];
 
+const steps=['Processing','Packed', 'Shipped', 'Delivered', 'Cancelled', 'Refunded']
 const CustomConnector = styled(StepConnector)(({ theme }) => ({
   alternativeLabel: {
     top: 22,
