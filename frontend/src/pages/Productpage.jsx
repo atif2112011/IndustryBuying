@@ -9,12 +9,18 @@ import product1 from "../assets/images/productImages/product1.jpg";
 import product2 from "../assets/images/productImages/product2.jpg";
 import product3 from "../assets/images/productImages/product3.jpg";
 import needHelp from "../assets/images/bannerimages/need-help-purchase.png";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Autoplay, Navigation, Pagination, Thumbs } from "swiper/modules";
 import DescriptionTabs from "../components/DescriptionTabs";
 import CardDisplay from "../components/CardDisplay";
-import { Box, IconButton, Typography, InputBase, Paper } from "@mui/material";
+import { Box, IconButton, Typography, InputBase, Paper, Rating } from "@mui/material";
 import SnackBar from "../components/SnackBar";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAlert } from "../contexts/AlertContext";
+import { useLoader } from "../contexts/LoaderContext";
+import { getProductDetails } from "../apis/products";
+import { addToCart } from "../apis/cart";
+import { useAuth } from "../contexts/AuthContext";
 
 const productImages = [product1, product2, product3];
 const dummydata2 = [
@@ -75,6 +81,7 @@ const dummydata2 = [
     rating: 4.5,
   },
 ];
+
 function Productpage() {
   const [color, setColor] = useState("Blue");
   const [area, setArea] = useState("1.5 Sq. mm");
@@ -89,21 +96,48 @@ function Productpage() {
     },
     visible: false,
   });
+  const [product, setProduct] = useState({});
   const [openSnackBar, setopenSnackBar] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  const [price, setPrice] = useState(0);
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [gst, setGst] = useState(18);
+  const { productId } = useParams();
+  const navigate = useNavigate();
+  const { setLoading } = useLoader();
+  const { setMessage, setShowSnackBar } = useAlert();
+  const { user,setCart,setCartCount } = useAuth();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const response = await getProductDetails(productId);
+      setLoading(false);
+      if (response.success) {
+        setProduct(response.product);
+        setPrice(response.product.price);
+        setGst(response.product.gst);
+        setDiscountAmount(
+          response.product.price -
+            (response.product.price * response.product.discount) / 100
+        );
+      } else {
+        setMessage(response.message);
+        setShowSnackBar(true);
+      }
+    };
+    fetchData();
+  }, []);
 
   // Quantity Selector
 
   const minQuantity = 1;
 
-  const [productPrice, setproductPrice] = useState(1651);
-  const [gst, setGst] = useState(18);
-
   const myDivRef = useRef(null);
 
   const handleScroll = () => {
     if (myDivRef.current) {
-      myDivRef.current.scrollIntoView({ behavior: 'smooth' });
+      myDivRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -111,21 +145,57 @@ function Productpage() {
     if (quantity > minQuantity) {
       const newQty = quantity - 1;
       setQuantity(newQty);
-      calculatePrice(newQty);
+      // calculatePrice(newQty);
     }
   };
 
   const handleIncrement = () => {
+    if(quantity==10){
+      return;
+    }
     const newQty = quantity + 1;
     setQuantity(newQty);
-    calculatePrice(newQty);
+    // calculatePrice(newQty);
   };
 
-  const calculatePrice = (qty) => {
-    let total = qty * 1399;
-    let finalPrice = parseFloat((total + (gst / 100) * total).toFixed(2));
-    setproductPrice(finalPrice);
-  };
+
+  const handleAddToCart=async()=>{
+    setLoading(true);
+    const response=await addToCart(product._id,quantity);
+    setLoading(false);
+    if(response.success){
+        setMessage(response.message);
+        setShowSnackBar(true);
+        setCart(response.cart);
+        setCartCount(response.totalItems);
+    }
+    else{
+        setMessage(response.message);
+        setShowSnackBar(true);
+    }
+  }
+
+  const handleBuyNow=async()=>{
+    setLoading(true);
+    const response=await addToCart(product._id,quantity);
+    setLoading(false);
+    if(response.success){
+        setMessage(response.message);
+        setShowSnackBar(true);
+        setCart(response.cart);
+        setCartCount(response.totalItems);
+        navigate("/order/cart");
+    }
+    else{
+        setMessage(response.message);
+        setShowSnackBar(true);
+    }
+  }
+  // const calculatePrice = (qty) => {
+  //   let total = qty * 1399;
+  //   let finalPrice = parseFloat((total + (gst / 100) * total).toFixed(2));
+  //   setproductPrice(finalPrice);
+  // };
 
   return (
     <div className="flex flex-col md:flex-row gap-4 h-screen ">
@@ -150,15 +220,17 @@ function Productpage() {
                 modules={[Autoplay, Pagination, Navigation, Thumbs]}
                 className="w-full aspect-[1/1]"
               >
-                {productImages.map((img, index) => (
-                  <SwiperSlide>
-                    <img
-                      src={img}
-                      alt={`Product ${index}`}
-                      className="w-full h-full rounded-md object-cover"
-                    />
-                  </SwiperSlide>
-                ))}
+                {product &&
+                  product.images &&
+                  product.images.map((img, index) => (
+                    <SwiperSlide>
+                      <img
+                        src={img}
+                        alt={`Product ${index}`}
+                        className="w-full h-full rounded-md object-cover"
+                      />
+                    </SwiperSlide>
+                  ))}
               </Swiper>
 
               {/* Thumbnails */}
@@ -170,59 +242,48 @@ function Productpage() {
                 watchSlidesProgress
                 className="my-4"
               >
-                {productImages.map((img, index) => (
-                  <SwiperSlide key={index}>
-                    <div className="w-full aspect-[1/1] cursor-pointer">
-                      <img
-                        src={img}
-                        alt={`Thumbnail ${index}`}
-                        className={`w-full h-full object-cover rounded-md ${
-                          thumbnailIndex == index
-                            ? "border-orange-400"
-                            : "border-gray-300"
-                        } border-1`}
-                        onClick={() => {
-                          setthumbnailIndex(index);
-                        }}
-                      />
-                    </div>
-                  </SwiperSlide>
-                ))}
+                {product &&
+                  product.images &&
+                  product.images.map((img, index) => (
+                    <SwiperSlide key={index}>
+                      <div className="w-full aspect-[1/1] cursor-pointer">
+                        <img
+                          src={img}
+                          alt={`Thumbnail ${index}`}
+                          className={`w-full h-full object-cover rounded-md ${
+                            thumbnailIndex == index
+                              ? "border-orange-400"
+                              : "border-gray-300"
+                          } border-1`}
+                          onClick={() => {
+                            setthumbnailIndex(index);
+                          }}
+                        />
+                      </div>
+                    </SwiperSlide>
+                  ))}
               </Swiper>
             </div>
 
             {/* Right: Product Info */}
-            <div className="w-full space-y-4 ">
-              <h3 className="!text-sm md:!text-md f">
-                BONEX Eco 1.5 sq.mm 1 Core Flame Retardant House Wires Blue
-                (Roll of 90 m)
-              </h3>
+            <div className="w-full flex flex-col gap-2">
+              <h3 className="!text-sm md:!text-lg">{product?.name?.toUpperCase() || ""}</h3>
+              
+              {product?.rating && (
+                  <Rating
+                    name="read-only"
+                    value={product.rating}
+                    readOnly
+                    size="small"
+                    className="p-0 mb-4 mt-[-0.2rem]"
+                  />
+                )}
 
-              {/* <div className="grid grid-cols-2 gap-4"> */}
-              {/* Color Selector */}
-              {/* <div>
-            <label className="!text-sm font-medium">Color</label>
-            <select value={color} onChange={e => setColor(e.target.value)} className="w-full border p-2 rounded-md mt-1 text-xs">
-              <option>Blue</option>
-              <option>Red</option>
-              <option>Yellow</option>
-            </select>
-          </div> */}
-
-              {/* Area Selector */}
-              {/* <div>
-            <label className="!text-sm font-medium">Nominal Area</label>
-            <select value={area} onChange={e => setArea(e.target.value)} className="w-full border p-2 rounded-md mt-1 text-xs">
-              <option>1.5 Sq. mm</option>
-              <option>2.5 Sq. mm</option>
-              <option>4 Sq. mm</option>
-            </select>
-          </div>
-        </div> */}
-
-              {/* <button className="!text-xs bg-blue-50 text-blue-800 border border-blue-300 px-4 py-1 rounded-sm w-fit mt-2">
-          Explore 23 more variants
-        </button> */}
+                {product.shortDescription && (
+                  <p className="!text-xs md:!text-sm text-gray-600 mb-4">
+                    {product.shortDescription}
+                  </p>
+                )}
 
               {/* Offers */}
               <div className="bg-red-50 p-4 rounded-md border-none">
@@ -263,54 +324,64 @@ function Productpage() {
 
               {/* Features */}
 
-              <div className="border rounded-sm mt-6 shadow-sm overflow-hidden !border-gray-200">
-                {/* Header */}
-                <div className=" p-2 md:p-3 font-semibold text-sm bg-white-100 border-b flex justify-between items-center !border-gray-300">
-                  <span className="!text-sm !uppercase !tracking-wide !text-blue-900">
-                    Features
-                  </span>
-                  <span onClick={handleScroll}className="!text-sm !text-blue-900 !text-md hover:underline cursor-pointer">
-                    More Details
-                  </span>
-                </div>
+              {product && product.technicalAspects && (
+                <div className="border rounded-sm mt-6 shadow-sm overflow-hidden !border-gray-200">
+                  {/* Header */}
+                  <div className=" p-2 md:p-3 font-semibold text-sm bg-white-100 border-b flex justify-between items-center !border-gray-300">
+                    <span className="!text-sm !uppercase !tracking-wide !text-blue-900">
+                      Features
+                    </span>
+                    <span
+                      onClick={handleScroll}
+                      className="!text-sm !text-blue-900 !text-md hover:underline cursor-pointer"
+                    >
+                      More Details
+                    </span>
+                  </div>
 
-                {/* Feature List */}
-                <div className=" p-2  md:p-4 text-sm space-y-3 text-gray-800 bg-gray-100 m-2">
-                  <div className="flex justify-between ">
-                    <span className=" !text-xs text-gray-700">Color</span>
-                    <span className="!text-xs font-medium">Blue</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="!text-xs text-gray-700">
-                      Current Carrying Capacity
-                    </span>
-                    <span className="!text-xs font-medium">13 A</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="!text-xs text-gray-700">
-                      Leakage Current
-                    </span>
-                    <span className="!text-xs font-medium">0.009 Amps</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="!text-xs text-gray-700">
-                      Insulation Material
-                    </span>
-                    <span className="!text-xs font-medium">PVC Insulated</span>
+                  {/* Feature List */}
+                  <div className=" p-2  md:p-4 text-sm space-y-3 text-gray-800 bg-gray-100 m-2">
+                    {product &&
+                      product.technicalAspects &&
+                      product.technicalAspects.map((item, index) => (
+                        <div className="flex justify-between ">
+                          <span className=" !text-xs text-gray-700">
+                            {item?.label || ""}
+                          </span>
+                          <span className="!text-xs font-medium">
+                            {item?.value || ""}
+                          </span>
+                        </div>
+                      ))}
                   </div>
                 </div>
-              </div>
+              )}
 
               {/* Footer Links */}
-              <div className="text-sm mt-2 space-y-1 text-blue-600 underline">
-                <p className="!text-xs">
-                  More BONEX Flame Retardant (FR) House Wires products
-                </p>
-              </div>
+              {product && product.brand && (
+                <div className="text-sm mt-2 space-y-1 text-blue-600 underline cursor-pointer">
+                  <p
+                    className="!text-xs"
+                    onClick={() => navigate(`/search/?q=${product.brand}`)}
+                  >
+                    More {product.brand} products
+                  </p>
+                </div>
+              )}
             </div>
           </div>
           {/* Product Details end */}
         </div>
+        
+        {/* Description Tab */}
+        <div
+          className="border rounded-md p-4 bg-white border-gray-300 shadow-md"
+          ref={myDivRef}
+        >
+          {product && <DescriptionTabs productData={product} />}
+        </div>
+        {/* Description Tab ends */}
+
         {/* Ad banner */}
         <div className="border rounded-md p-4 bg-white border-gray-300 shadow-md">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 text-center text-sm text-black font-semibold ">
@@ -333,7 +404,9 @@ function Productpage() {
             {/* Item 3 */}
             <div className="flex flex-col items-center space-y-2">
               <i className="ri-secure-payment-line text-orange-500 text-2xl md:text-3xl"></i>
-              <span className="!text-xs md:!text-sm font-semibold">Secure payments</span>
+              <span className="!text-xs md:!text-sm font-semibold">
+                Secure payments
+              </span>
             </div>
 
             {/* Item 4 */}
@@ -347,17 +420,14 @@ function Productpage() {
             {/* Item 5 */}
             <div className="flex flex-col items-center space-y-2">
               <i className="ri-vip-crown-line text-orange-500 text-2xl md:text-3xl"></i>
-              <span className="!text-xs md:!text-sm font-semibold">Top Brands</span>
+              <span className="!text-xs md:!text-sm font-semibold">
+                Top Brands
+              </span>
             </div>
           </div>
         </div>
 
         {/* Ad banner end */}
-        {/* Description Tab */}
-        <div className="border rounded-md p-4 bg-white border-gray-300 shadow-md" ref={myDivRef}>
-          <DescriptionTabs />
-        </div>
-        {/* Description Tab ends */}
 
         <div className="hidden md:flex width-full">
           {/* {Frequently Bought Together} */}
@@ -377,21 +447,33 @@ function Productpage() {
         {/* Price Display */}
         <div className="flex flex-col rounded-md gap-3 bg-white rounded-md p-4 shadow-md">
           <p className="!text-md md:!text-lg font-semibold">
-            ₹ {productPrice}{" "}
+            ₹ {discountAmount * quantity + discountAmount * quantity * gst/100}{" "}
             <span className="!text-xs md:!text-sm text-gray-800 font-normal ml-2">
-              ( ₹ {1399 * quantity} + 18% GST )
+              ( ₹ {discountAmount * quantity} + {product.gst}% GST )
             </span>
           </p>
 
-          <p className="!text-xs md:!text-sm !text-gray-500">
-            MRP{" "}
-            <span className="!text-xs md:!text-sm text-gray-500 text-decoration-line: line-through">
-              ₹2360
-            </span>
-            <span className="!text-xs !text-green-600 ml-2 font-semibold ml-6 border border-green-500  rounded-sm md:p-1 px-[4px] py-[1px]">
-              30.04% OFF
-            </span>
-          </p>
+          {product && product.discount && product.discount > 0 ? (
+            <p className="!text-xs md:!text-sm !text-gray-700">
+              UNIT MRP :{" "}
+              <span className="!text-xs md:!text-sm text-gray-500 text-decoration-line: line-through">
+                ₹{price}
+              </span>
+              <span className="!text-xs md:!text-sm text-gray-700 ml-2">
+                ₹{price-price*product.discount/100}
+              </span>
+              <span className="!text-xs !text-green-600 ml-2 font-semibold ml-6 border border-green-500  rounded-sm md:p-1 px-[4px] py-[1px]">
+                {product?.discount || 0}% OFF
+              </span>
+            </p>
+          ) : (
+            <p className="!text-xs md:!text-sm !text-gray-700">
+              UNIT MRP :{" "}
+              <span className="!text-xs md:!text-sm text-gray-700">
+                ₹{price}
+              </span>
+            </p>
+          )}
           <Box display="flex" alignItems="center" gap={2}>
             {/* Quantity Control Box */}
             <Paper
@@ -426,7 +508,7 @@ function Productpage() {
           <button
             className="bg-orange-600 !text-sm text-white w-1/2 p-2 rounded-sm shadow-md"
             onClick={() => {
-              setopenSnackBar(true);
+              handleAddToCart();
             }}
           >
             ADD TO CART
@@ -436,7 +518,7 @@ function Productpage() {
             setopenSnackBar={setopenSnackBar}
             message={"Product added to cart successfully !"}
           />
-          <button className="bg-blue-900 !text-sm text-white w-1/2 p-2 rounded-sm shadow-md">
+          <button onClick={() => handleBuyNow()} className="bg-blue-900 !text-sm text-white w-1/2 p-2 rounded-sm shadow-md">
             BUY NOW
           </button>
         </div>

@@ -173,7 +173,7 @@ const CategoryShowcase = ({categoryData}) => {
             <li
               key={product._id}
               className="hover:text-blue-500"
-              onClick={() => navigate(`/categories/${params.categoryId}/${item.slug}/${product.slug}`)}
+              onClick={() => navigate(`/categories/${params.categoryId}/${item.slug}/${product._id}`)}
             >
               ● {product.name}
             </li>

@@ -15,10 +15,12 @@ import {
   checkEmailNumber,
   registerGoogleUser,
   registerUser,
+  sendOTPtoMail,
   sendOTPtoNumber,
   verifyOTP,
 } from "../apis/auth";
 import { useAlert } from "../contexts/AlertContext";
+import { useLoader } from "../contexts/LoaderContext";
 
 function Register() {
   const [activeStep, setActiveStep] = useState(0);
@@ -27,11 +29,13 @@ function Register() {
     mobile: { data: "", error: false, errorMessage: "" },
     email: { data: "", error: false, errorMessage: "" },
     password: { data: "", error: false, errorMessage: "" },
+    gstin: { data: "", error: false, errorMessage: "" },
   });
 
   const [sendOTP, setsendOTP] = useState(false);
   const [otp, setOtp] = useState("");
-  const [businessOption, setbusinessOption] = useState("other");
+  const [disableOTP, setDisableOTP] = useState(false);
+  const [businessOption, setBusinessOption] = useState("other");
   const [token, setToken] = useState(null);
   const [isGoogleLogin, setIsGoogleLogin] = useState(false);
   const [googleUserData, setGoogleUserData] = useState({
@@ -40,6 +44,7 @@ function Register() {
   });
   const navigate = useNavigate();
   const { setShowSnackBar, setMessage } = useAlert();
+  const { setLoading } = useLoader();
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -75,6 +80,7 @@ function Register() {
       mobile: { data: "", error: false, errorMessage: "" },
       email: { data: "", error: false, errorMessage: "" },
       password: { data: "", error: false, errorMessage: "" },
+      gstin: { data: "", error: false, errorMessage: "" },
     });
     setsendOTP(false);
     setIsGoogleLogin(false);
@@ -89,6 +95,7 @@ function Register() {
   };
 
   const handleSubmit = async () => {
+    // console.log("btn clicked");
     let hasErrors = false;
     const updatedInput = { ...input };
 
@@ -102,7 +109,7 @@ function Register() {
         continue;
       }
 
-      if (value === "") {
+      if (value === "" && key !== "gstin") {
         updatedInput[key].error = true;
         updatedInput[key].errorMessage = `${
           key[0].toUpperCase() + key.slice(1)
@@ -139,6 +146,7 @@ function Register() {
     }
 
     setInput(updatedInput);
+    // console.log(updatedInput);
 
     if (!hasErrors) {
       console.log("Form submitted:", {
@@ -149,18 +157,27 @@ function Register() {
       });
 
       //Check number and email
+      setLoading(true);
       const response = await checkEmailNumber(
         input.email.data,
         input.mobile.data
       );
+      setLoading(false);
       if (response.success) {
-        console.log("Number Unique");
-        const sendOTPResponse = await sendOTPtoNumber(input.mobile.data);
+        // console.log("Number Unique");
+        setLoading(true);
+        // const sendOTPResponse = await sendOTPtoNumber(input.mobile.data);
+        const sendOTPResponse = await sendOTPtoMail(input.email.data);
+        setLoading(false);
         if (sendOTPResponse.success) {
-          console.log("OTP Sent to ", input.mobile.data);
-          setMessage("OTP Sent to " + input.mobile.data);
+          console.log("OTP Sent to ", input.email.data);
+          setMessage("OTP Sent to " + input.email.data);
           setShowSnackBar(true);
           setsendOTP(true);
+          setDisableOTP(true);
+          setTimeout(() => {
+            setDisableOTP(false);
+          },30000)
         } else {
           console.log(sendOTPResponse.message);
           setMessage(sendOTPResponse.message);
@@ -169,7 +186,7 @@ function Register() {
       } else {
         console.log(response.message);
         setsendOTP(false);
-        setMessage("Email or Mobile Number already registered.");
+        setMessage("Email already registered.");
         setShowSnackBar(true);
       }
 
@@ -179,7 +196,9 @@ function Register() {
   };
 
   const handleVerifyOTP = async () => {
-    const response = await verifyOTP(input.mobile.data, otp);
+    setLoading(true);
+    const response = await verifyOTP(input.email.data, otp);
+    setLoading(false);
     if (response.success) {
       setMessage("OTP Verified");
       setShowSnackBar(true);
@@ -191,13 +210,29 @@ function Register() {
   };
 
   const handleFinalSumbit = async () => {
+    const gstinRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+    
+    if (businessOption == "gstin") {
+      let gstin = input.gstin.data;
+      gstin = gstin.toUpperCase();
+    
+    if (!gstinRegex.test(gstin) || gstin==null || gstin=="") {
+      setMessage("Invalid GSTIN! Enter a valid GSTIN.");
+      setShowSnackBar(true);
+      return;
+    }
+  }
+    
+
     console.log({
-          name: input.name.data,
-          email: input.email.data,
-          phone: input.mobile.data,
-          pfp: googleUserData.pfp,
-          googleId: googleUserData.googleId,
-        })
+      name: input.name.data,
+      email: input.email.data,
+      phone: input.mobile.data,
+      pfp: googleUserData.pfp,
+      googleId: googleUserData.googleId,
+      gstin: input.gstin.data,
+    });
+    setLoading(true);
     const response = await (isGoogleLogin
       ? registerGoogleUser({
           name: input.name.data,
@@ -205,23 +240,25 @@ function Register() {
           phone: input.mobile.data,
           pfp: googleUserData.pfp,
           googleId: googleUserData.googleId,
+          gstin: input.gstin.data,
         })
       : registerUser({
           name: input.name.data,
           email: input.email.data,
           password: input.password.data,
           phone: input.mobile.data,
+          gstin: input.gstin.data,
         }));
+    setLoading(false);
 
-        if(response.success){
-          setMessage(response.message);
-          setShowSnackBar(true);
-          navigate("/user/login");
-        }
-        else{
-          setMessage(response.message);
-          setShowSnackBar(true);
-        }
+    if (response.success) {
+      setMessage(response.message);
+      setShowSnackBar(true);
+      navigate("/user/login");
+    } else {
+      setMessage(response.message);
+      setShowSnackBar(true);
+    }
   };
 
   return (
@@ -300,7 +337,7 @@ function Register() {
                     />
                   </div>
 
-                  <button
+                  {/* <button
                     className="bg-blue-600 text-white text-sm px-8 py-2 mt-4 ml-2 rounded hover:bg-blue-700 "
                     // disabled={!(input.mobile.data.length>0 && !input.mobile.error)}
                     onClick={() => {
@@ -308,7 +345,21 @@ function Register() {
                     }}
                   >
                     Send OTP
-                  </button>
+                  </button> */}
+                  {disableOTP ?<button
+                    className="bg-neutral-400 text-white text-sm px-8 py-2 mt-4 ml-2 rounded "
+                    // disabled={!(input.mobile.data.length>0 && !input.mobile.error)}
+                  >
+                    Try Again after 1 min
+                  </button>:<button
+                    className="bg-blue-600 text-white text-sm px-8 py-2 mt-4 ml-2 rounded hover:bg-blue-700 "
+                    // disabled={!(input.mobile.data.length>0 && !input.mobile.error)}
+                    onClick={() => {
+                      handleSubmit();
+                    }}
+                  >
+                    Send OTP
+                  </button>}
 
                   {sendOTP && (
                     <div className="flex flex-row items-center gap-4 mt-8">
@@ -357,13 +408,34 @@ function Register() {
                       <MenuItem value={"business"} disabled>
                         Business Name
                       </MenuItem>
-                      <MenuItem value={"gstin"} disabled>
+                      <MenuItem
+                        value={"gstin"}
+                        onClick={() => setBusinessOption("gstin")}
+                      >
                         GSTIN
                       </MenuItem>
-                      <MenuItem value={"other"} selected>
+                      <MenuItem
+                        value={"other"}
+                        selected
+                        onClick={() => setBusinessOption("other")}
+                      >
                         Other
                       </MenuItem>
                     </Select>
+
+                    {businessOption === "gstin" && (
+                      <TextField
+                        id="outlined-gstin"
+                        label="GSTIN"
+                        variant="outlined"
+                        size="small"
+                        sx={{ m: "8px" }}
+                        value={input.gstin.data}
+                        onChange={(e) => handleChange("gstin", e.target.value)}
+                        error={input.gstin.error}
+                        helperText={input.gstin.errorMessage}
+                      />
+                    )}
                   </div>
 
                   <div className="flex flex-row gap-12">

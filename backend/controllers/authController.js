@@ -4,17 +4,21 @@ const jwt = require("jsonwebtoken");
 const validator = require("validator");
 const otpGenerator = require("otp-generator");
 const OTP = require("../models/otpSchema");
+const { sendOtpEmail } = require("./mailController");
+const sendEmail = require("../utils/sendMail");
 // const { Error } = require("mongoose");
 
 //Register a new user
 const registerUser = async (req, res, next) => {
   //TODO : check if user already exists, if not create a new user, store password as hashed value, and send a response back to the client.
   try {
-    const { name, email, password, phone } = req.body;
+    const { name, email, password, phone,gstin } = req.body;
     if (!name || !email || !password || !phone)
       throw new Error(
         " Check if all fields are present:Name, Email, Password and Phone "
       );
+
+
 
     if (!validator.isEmail(email)) throw new Error("Invalid Email");
 
@@ -26,7 +30,7 @@ const registerUser = async (req, res, next) => {
 
     if (!hashedPassword) throw new Error(" Error in hashing Password ");
 
-    const otpInfo = await OTP.findOne({ phone });
+    const otpInfo = await OTP.findOne({ email: email });
 
     if (!otpInfo?.isOtpVerified) throw new Error("OTP verification Not Found");
 
@@ -36,8 +40,9 @@ const registerUser = async (req, res, next) => {
       password: hashedPassword,
       phone,
       isVerified: true,
+      gstin
     });
-    await OTP.deleteMany({ phone }); // optional if not tracking verified OTPs
+    await OTP.deleteMany({ email: email }); // optional if not tracking verified OTPs
 
     return res.status(200).json({
       message: "User Registered Successfully.",
@@ -53,7 +58,7 @@ const registerUser = async (req, res, next) => {
 const registerGoogleUser = async (req, res, next) => {
   //TODO : check if user already exists, if not create a new user, store password as hashed value, and send a response back to the client.
   try {
-    const { name, email, pfp, googleId, phone } = req.body;
+    const { name, email, pfp, googleId, phone, gstin } = req.body;
     if (!name || !email || !googleId || !phone)
       throw new Error(
         " Check if all fields are present:Name, Email, GoogleId and Phone "
@@ -66,7 +71,7 @@ const registerGoogleUser = async (req, res, next) => {
     if (existingUser) throw new Error(" User Already Exists. ");
 
 
-    const otpInfo = await OTP.findOne({ phone });
+    const otpInfo = await OTP.findOne({ email: email });
 
     if (!otpInfo?.isOtpVerified) throw new Error("OTP verification Not Found");
 
@@ -78,8 +83,9 @@ const registerGoogleUser = async (req, res, next) => {
       isGoogleLogin: true,
       phone,
       isVerified: true,
+      gstin
     });
-    await OTP.deleteMany({ phone }); // optional if not tracking verified OTPs
+    await OTP.deleteMany({ email: email }); // optional if not tracking verified OTPs
 
     return res.status(200).json({
       message: "User Registered Successfully.",
@@ -110,6 +116,8 @@ const loginUser = async (req, res, next) => {
     if (!isExist) throw new Error("User Not Signed Up ");
     if(isExist.isGoogleLogin) throw new Error("Google Account Found! Log In Using Google");
   
+
+    if(isExist.isBlock) throw new Error("Account Blocked! Contact Support");
     // Password compare
     const isPassword = await bcrypt.compare(password, isExist.password);
 
@@ -147,22 +155,17 @@ const loginUser = async (req, res, next) => {
 // /auth/check
 const check = async (req, res, next) => {
   try {
-    const { email, phone } = req.body;
+    const { email } = req.body;
 
-    if (!email || !phone) throw new Error("Enter Phone and Email ");
+    if (!email) throw new Error("Enter Phone and Email ");
 
-    const phoneRegex = /^[6-9]\d{9}$/;
-    if (!phoneRegex.test(phone)) {
-      throw new Error(
-        "Enter a valid 10-digit Indian phone number (excluding +91)"
-      );
-    }
+  
 
     if (!validator.isEmail(email)) throw new Error("Invalid Email");
 
-    const user = await User.findOne({ $or: [{ email }, { phone }] });
+    const user = await User.findOne({ $or: [{ email }] });
 
-    if (user) throw new Error("User Already Exist with this Email OR Phone");
+    if (user) throw new Error("User Already Exist with this Email");
 
     return res
       .status(200)
@@ -175,13 +178,10 @@ const check = async (req, res, next) => {
 ///auth/sendOTP
 const sendOTP = async (req, res, next) => {
   try {
-    const { phone } = req.body;
-    if (!phone) throw new Error("Please Enter Phone Number");
+    const { email } = req.body;
+    if (!email) throw new Error("Please Enter Email");
 
-    const phoneRegex = /^[6-9]\d{9}$/;
-    if (!phoneRegex.test(phone)) {
-      throw new Error("Enter a valid 10-digit Indian phone number (no +91)");
-    }
+    if (!validator.isEmail(email)) throw new Error("Invalid Email");
 
     // OTP generate
     const otp = otpGenerator.generate(6, {
@@ -190,23 +190,79 @@ const sendOTP = async (req, res, next) => {
       specialChars: false,
     });
 
-    console.log(`otp generated for number ${phone} : `, otp);
+    console.log(`otp generated for email ${email} : `, otp);
     const hashedOtp = await bcrypt.hash(otp, 10);
 
     // saved OTP in DB
     const newExpiry = Date.now() + 5 * 60 * 1000;
 
     const otpInfo = await OTP.create({
-      phone,
+      email,
       otp: hashedOtp,
       expiresAt: newExpiry,
     });
+    if(!otpInfo) throw new Error("Error in saving OTP");
+    
+    await sendEmail({
+      to: email,
+      subject: "OTP Verification",
+      html: `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Welcome to Our Platform</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f6f8; padding: 20px; margin: 0;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden;">
+          <tr>
+            <td style="background-color: #4F46E5; padding: 30px; color: white; text-align: center;">
+              <h1 style="margin: 0; font-size: 24px;">👋 Welcome to [Your Company Name]</h1>
+              <p style="margin: 10px 0 0; font-size: 16px;">Let’s get you started</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 30px;">
+              <p style="font-size: 16px; color: #333;">
+                Hi <strong>{{name}}</strong>,
+              </p>
+              <p style="font-size: 16px; color: #333;">
+                Your account has been successfully created. Use the OTP below to log in and access your dashboard.
+              </p>
+              <div style="margin: 20px 0; text-align: center;">
+                <span style="display: inline-block; font-size: 24px; background-color: #E0E7FF; color: #1E3A8A; padding: 15px 30px; border-radius: 8px; font-weight: bold; letter-spacing: 4px;">
+                  {${otp}}
+                </span>
+              </div>
+              <p style="font-size: 14px; color: #666;">
+                This OTP is valid for 10 minutes. Please do not share it with anyone.
+              </p>
+              <p style="font-size: 16px; color: #333;">
+                Need help? Contact our support team at <a href="mailto:support@yourcompany.com" style="color: #4F46E5; text-decoration: none;">support@yourcompany.com</a>.
+              </p>
+              <p style="font-size: 16px; color: #333;">
+                Cheers,<br />
+                The [Your Company Name] Team
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="background-color: #F3F4F6; text-align: center; padding: 20px; font-size: 12px; color: #888;">
+              © {{year}} [Your Company Name]. All rights reserved.
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+`,})
+  
 
-    // send otp to phone
-    // try {
-    // } catch (error) {
-    //   throw error;
-    // }
 
     res.status(200).json({ message: "OTP send Successfully", success: true });
   } catch (error) {
@@ -216,11 +272,11 @@ const sendOTP = async (req, res, next) => {
 
 const verifyOTP = async (req, res, next) => {
   try {
-    const { otp, phone } = req.body;
+    const { otp, email } = req.body;
 
-    if (!otp || !phone) throw new Error("OTP or Phone is missing");
+    if (!otp || !email) throw new Error("OTP or Email is missing");
 
-    const savedOTP = await OTP.findOne({ phone, isOtpVerified: false }).sort({
+    const savedOTP = await OTP.findOne({ email, isOtpVerified: false }).sort({
       createdAt: -1,
     });
 
