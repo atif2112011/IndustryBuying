@@ -22,7 +22,7 @@ const getAllCategoriesWithSubcategories = async (req, res, next) => {
           subcategories: { _id: 1, name: 1, slug: 1 },
         },
       },
-    ]);
+    ]).sort({ name: 1 });
 
     res.status(200).json({
       success: true,

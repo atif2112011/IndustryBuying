@@ -6,6 +6,7 @@ import { useAlert } from "../contexts/AlertContext";
 import { useNavigate } from "react-router-dom";
 import { CreateOrder } from "../apis/order";
 import OrderSummary from "./OrderSummary";
+import { deleteCart } from "../apis/cart";
 
 function Paymentpage() {
   const [selectedOption, setSelectedOption] = useState("");
@@ -66,9 +67,16 @@ const { setLoading } = useLoader();
       setLoading(false);
       if(response.success)
       {
-      //  setCart(null);
-      //  setCartCount(0);
-      //  setCartDetails({shippingInfo:null,billingInfo:null,paymentInfo:});
+        setLoading(true);
+        const clearCart=await deleteCart();
+        setLoading(false);
+        if(clearCart.success)
+        {
+          setCart([]);
+          setCartCount(0);
+
+          setCartDetails({shippingInfo:null,billingInfo:null,paymentInfo:null,totalItems:0,totalGst:0,totalPrice:0});
+        }
       setOrderSummary(response.order);
        setShowSummary(true);
        setMessage("Order Created Successfully");

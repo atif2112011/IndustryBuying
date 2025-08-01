@@ -94,7 +94,7 @@ const getProducts = async (req, res, next) => {
       .limit(limit)
       .populate("category")
       .populate("subCategory")
-      .sort({name:1});
+      .sort({ createdAt: -1 });
 
     if (!products) throw new Error("Products not found");
 
@@ -233,6 +233,7 @@ const searchProducts = async (req, res, next) => {
       keywords.forEach((word) => {
         searchConditions.push(
           { name: { $regex: word, $options: "i" } },
+          { brand: { $regex: word, $options: "i" } },
           { description: { $regex: word, $options: "i" } },
           { tags: { $regex: word, $options: "i" } }
         );

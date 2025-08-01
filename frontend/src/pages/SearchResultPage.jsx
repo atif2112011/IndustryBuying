@@ -205,7 +205,7 @@ const handleBuyNow=async(product)=>{
               src={product.images[0]}
               alt={product.title}
               className="h-[80px] md:h-32 w-full object-contain cursor-pointer"
-              onClick={() => navigate(`/categories/${categoryId}/${subcategoryId}/${product._id}`)}
+              onClick={() => navigate(`/categories/${product.category.slug}/${product.subCategory.slug}/${product._id}`)}
             />
             <div className="flex flex-col gap-0">
               <div className="mt-2 font-semibold text-[0.7rem] md:text-sm">

@@ -57,12 +57,35 @@ export const sendOTPtoNumber=async(phone)=>{
     }
   }
 }
+export const sendOTPtoMail=async(email)=>{
 
-export const verifyOTP=async(phone,otp)=>{
+  try {
+    const response=await API.post("/api/auth/sendOTP",{
+      email
+    })
+    // console.log('response',response)
+    if(response.data.success)
+      return {
+        success:true,
+        message:response.data.message
+      }
+    else
+    throw new Error(response.data.message)
+    
+  } catch (error) {
+    console.error(error)
+    return {
+      success:false,
+      message:error?.response?.data?.message ||error.message
+    }
+  }
+}
+
+export const verifyOTP=async(email,otp)=>{
 
   try {
     const response=await API.post("/api/auth/verifyOTP",{
-      phone,
+      email,
       otp
     })
     // console.log('response',response)
@@ -83,14 +106,16 @@ export const verifyOTP=async(phone,otp)=>{
   }
 }
 
-export const registerUser=async({name,email,password,phone})=>{
+export const registerUser=async({name,email,password,phone,gstin})=>{
 
   try {
     const response=await API.post("/api/auth/register",{
       name,
       email,
       password,
-      phone
+      phone,
+      gstin
+
     })
     // console.log('response',response)
     if(response.data.success)
@@ -110,7 +135,7 @@ export const registerUser=async({name,email,password,phone})=>{
   }
 }
 
-export const registerGoogleUser=async({name,email,pfp,googleId,phone})=>{
+export const registerGoogleUser=async({name,email,pfp,googleId,phone,gstin})=>{
 
   try {
     const response=await API.post("/api/auth/register-google",{
@@ -118,7 +143,8 @@ export const registerGoogleUser=async({name,email,pfp,googleId,phone})=>{
       email,
       pfp,
       googleId,
-      phone
+      phone,
+      gstin
     })
     // console.log('response',response)
     if(response.data.success)

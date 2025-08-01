@@ -146,7 +146,8 @@ const clearCart = async (req, res, next) => {
 
     cart.items = [];
     cart.totalItems = 0;
-    cart.totalPrice = 0;
+    cart.totalPrice = 0; 
+    cart.totalGst=0
     await cart.save();
 
     res.status(200).json({

@@ -13,6 +13,7 @@ const orderRoutes = require("./routes/orderRoutes");
 const testimonialRoutes = require("./routes/testimonialRoute")
 const brandRoutes = require("./routes/brandsRoutes")
 const certificateRoutes = require("./routes/certificateRoutes")
+const mailRoutes = require("./routes/MailRoutes")
 
 const cookieParser = require("cookie-parser");
 const Category = require("./models/categoryModel");
@@ -45,6 +46,7 @@ app.use(
 // Serve static files from frontend build
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
+app.use("/api/mail",mailRoutes)
 app.use("/api/auth",authRoutes);
 app.use("/api/user",userRoutes);
 app.use("/api/products",productRoutes)

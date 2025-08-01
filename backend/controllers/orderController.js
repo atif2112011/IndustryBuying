@@ -1,13 +1,13 @@
-const { default: mongoose } = require('mongoose');
-const { cloudinary } = require('../config/cloudinary');
-const Order = require('../models/orderModel');
-const multer = require('multer')
+const { default: mongoose } = require("mongoose");
+const { cloudinary } = require("../config/cloudinary");
+const Order = require("../models/orderModel");
+const multer = require("multer");
 const upload = multer({ storage: multer.memoryStorage() });
 // Create a new order (POST /orders)
 const createOrder = async (req, res, next) => {
   try {
     const userId = req.user.userId;
-    console.log('data recieved in createOrder',req.body);
+    console.log("data recieved in createOrder", req.body);
     const {
       items,
       shippingInfo,
@@ -32,7 +32,7 @@ const createOrder = async (req, res, next) => {
       totalItems,
       totalPrice,
       totalGst,
-      currency: currency || 'INR',
+      currency: currency || "INR",
     });
     const savedOrder = await newOrder.save();
 
@@ -78,15 +78,14 @@ const getUserOrders = async (req, res, next) => {
       end.setHours(23, 59, 59, 999);
       matchQuery.createdAt = { $gte: start, $lte: end };
     }
-    
+
     // --- Start of New Search Logic ---
     if (search) {
       const searchConditions = [
         // Search by username from the joined 'userDetails'
         { "items.productName": { $regex: search, $options: "i" } },
-        
       ];
-      
+
       // Also check if the search term is a valid Order ID
       if (mongoose.Types.ObjectId.isValid(search)) {
         searchConditions.push({ _id: new mongoose.Types.ObjectId(search) });
@@ -96,7 +95,10 @@ const getUserOrders = async (req, res, next) => {
     }
     const totalOrders = await Order.countDocuments({ userId, ...matchQuery });
 
-    const orders = await Order.find({ userId, ...matchQuery }).skip(skip).limit(limit).sort({ createdAt: -1 });
+    const orders = await Order.find({ userId, ...matchQuery })
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
     const totalPages = Math.ceil(totalOrders / limit);
     res.status(200).json({
       message: "Orders fetched successfully",
@@ -111,7 +113,6 @@ const getUserOrders = async (req, res, next) => {
     next(error);
   }
 };
-
 
 // Get a single order by ID (GET /orders/:id)
 const getOrderById = async (req, res, next) => {
@@ -139,13 +140,20 @@ const getOrderById = async (req, res, next) => {
 const updateOrder = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const status = req.body.status
-    
-    if(!status) {
+    const status = req.body.status;
+
+    if (!status) {
       throw new Error("Order status is required");
     }
 
-    const allowedStatuses = ['processing', 'packed', 'shipped', 'delivered', 'cancelled', 'refunded'];
+    const allowedStatuses = [
+      "processing",
+      "packed",
+      "shipped",
+      "delivered",
+      "cancelled",
+      "refunded",
+    ];
     if (status && !allowedStatuses.includes(status)) {
       throw new Error("Invalid order status");
     }
@@ -160,34 +168,34 @@ const updateOrder = async (req, res, next) => {
     if (req.file) {
       // 1. If an old invoice exists, delete it directly from Cloudinary
       if (order.invoiceUrl) {
-         const getPublicId = (url) => {
-        // Example URL: https://res.cloudinary.com/cloud_name/image/upload/v12345/products/image_id.jpg
-        // We need to extract "products/image_id"
-        const parts = url.split("/");
-        const publicIdWithExtension = parts
-          .slice(parts.indexOf("products"))
-          .join("/");
-        return publicIdWithExtension.split(".")[0];
-      };
+        const getPublicId = (url) => {
+          // Example URL: https://res.cloudinary.com/cloud_name/image/upload/v12345/products/image_id.jpg
+          // We need to extract "products/image_id"
+          const parts = url.split("/");
+          const publicIdWithExtension = parts
+            .slice(parts.indexOf("products"))
+            .join("/");
+          return publicIdWithExtension.split(".")[0];
+        };
         await cloudinary.uploader.destroy(getPublicId(order.invoiceUrl));
       }
 
       // 2. Upload the new file directly to Cloudinary
       const result = await new Promise((resolve, reject) => {
-          cloudinary.uploader
-            .upload_stream(
-              {
-                resource_type: "image",
-                folder: "invoices",
-                public_id: req.file.originalname.split(".")[0],
-              },
-              (error, result) => {
-                if (error) reject(error);
-                else resolve(result);
-              }
-            )
-            .end(req.file.buffer);
-        });
+        cloudinary.uploader
+          .upload_stream(
+            {
+              resource_type: "image",
+              folder: "invoices",
+              public_id: req.file.originalname.split(".")[0],
+            },
+            (error, result) => {
+              if (error) reject(error);
+              else resolve(result);
+            }
+          )
+          .end(req.file.buffer);
+      });
 
       // 3. Update the order's invoice details
       order.invoiceUrl = result.secure_url;
@@ -197,11 +205,9 @@ const updateOrder = async (req, res, next) => {
       order.status = status;
     }
 
-    if (status === 'delivered') {
+    if (status === "delivered") {
       order.deliveredAt = new Date();
-    }
-    else
-    {
+    } else {
       order.deliveredAt = null;
     }
 
@@ -237,14 +243,13 @@ const deleteOrder = async (req, res, next) => {
   }
 };
 
-
 const uploadInvoiceDirect = async (req, res, next) => {
   try {
     const { id } = req.params;
     const file = req.file;
 
     if (!file) {
-      throw new Error('No file uploaded');
+      throw new Error("No file uploaded");
     }
 
     // if (file.mimetype !== 'application/pdf') {
@@ -254,9 +259,9 @@ const uploadInvoiceDirect = async (req, res, next) => {
     // Upload file buffer to Cloudinary
     const result = await cloudinary.uploader.upload_stream(
       {
-        resource_type: 'raw',
-        folder: 'invoices',
-        public_id: `invoice-${id}-${Date.now()}`
+        resource_type: "raw",
+        folder: "invoices",
+        public_id: `invoice-${id}-${Date.now()}`,
       },
       async (error, result) => {
         if (error) {
@@ -278,7 +283,7 @@ const uploadInvoiceDirect = async (req, res, next) => {
     );
 
     // Pipe the file buffer into the Cloudinary stream
-    const stream = require('stream');
+    const stream = require("stream");
     const bufferStream = new stream.PassThrough();
     bufferStream.end(file.buffer);
     bufferStream.pipe(result);
@@ -317,14 +322,14 @@ const getAllOrders = async (req, res, next) => {
       end.setHours(23, 59, 59, 999);
       matchQuery.createdAt = { $gte: start, $lte: end };
     }
-    
+
     // --- Start of New Search Logic ---
     if (search) {
       const searchConditions = [
         // Search by username from the joined 'userDetails'
         { "userDetails.name": { $regex: search, $options: "i" } },
       ];
-      
+
       // Also check if the search term is a valid Order ID
       if (mongoose.Types.ObjectId.isValid(search)) {
         searchConditions.push({ _id: new mongoose.Types.ObjectId(search) });
@@ -364,29 +369,30 @@ const getAllOrders = async (req, res, next) => {
       { $sort: { createdAt: -1 } },
       { $skip: skip },
       { $limit: limit },
-      { // Manually shape the output to include user name and id
+      {
+        // Manually shape the output to include user name and id
         $project: {
-            // Include all original order fields
-            items: 1,
-            billingInfo: 1,
-            totalItems: 1,
-            totalPrice: 1,
-            currency: 1,
-            status: 1,
-            paymentInfo: 1,
-            shippingInfo: 1,
-            orderedItems: 1,
-            totalAmount: 1,
-            createdAt: 1,
-            updatedAt: 1,
-            deliveredAt: 1,
-            invoiceUrl: 1,
-            _id: 1,
-            // Add user details explicitly
-            userId: "$userDetails._id",
-            userName: "$userDetails.name"
-        }
-      }
+          // Include all original order fields
+          items: 1,
+          billingInfo: 1,
+          totalItems: 1,
+          totalPrice: 1,
+          currency: 1,
+          status: 1,
+          paymentInfo: 1,
+          shippingInfo: 1,
+          orderedItems: 1,
+          totalAmount: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          deliveredAt: 1,
+          invoiceUrl: 1,
+          _id: 1,
+          // Add user details explicitly
+          userId: "$userDetails._id",
+          userName: "$userDetails.name",
+        },
+      },
     ];
 
     const orders = await Order.aggregate(dataPipeline);
@@ -405,6 +411,69 @@ const getAllOrders = async (req, res, next) => {
   }
 };
 
+const getUserInvoices = async (req, res, next) => {
+  try {
+    const userId = req.user.userId;
+    let { page, limit, search, status, date } = req.query;
+
+    if (!page) {
+      page = 1;
+    }
+
+    if (!limit) {
+      limit = 10;
+    }
+
+    const skip = (page - 1) * limit;
+const matchQuery = {};
+
+if (date) {
+  const start = new Date(date);
+  const end = new Date(date);
+  end.setHours(23, 59, 59, 999);
+
+  // Match either updatedAt or deliveredAt within range
+  matchQuery.$or = [
+    { updatedAt: { $gte: start, $lte: end } },
+    { deliveredAt: { $gte: start, $lte: end } }
+  ];
+}
+
+if (search) {
+  // Validate if it's a valid ObjectId
+  if (mongoose.Types.ObjectId.isValid(search)) {
+    matchQuery._id = new mongoose.Types.ObjectId(search);
+  }
+}
+
+if (!userId) {
+  throw new Error("User not found");
+}
+
+const orders = await Order.find({ userId, ...matchQuery }).limit(limit).skip(skip).sort({ createdAt: -1 });
+const invoices = orders.filter((order) => order.invoiceUrl);
+
+    const totalInvoices = invoices.length;
+    const totalInvoicePages = Math.ceil(totalInvoices / limit);
+
+    if (page > totalInvoicePages && totalInvoices > 0) {
+      throw new Error(`Page ${page} exceeds total pages (${totalInvoicePages})`);
+    }
+
+    res.status(200).json({
+      message: "Orders fetched successfully",
+      success: true,
+      invoices,
+      totalInvoices,
+      totalInvoicePages,
+      currentPage: page,
+      limit,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createOrder,
   getUserOrders,
@@ -412,5 +481,6 @@ module.exports = {
   updateOrder,
   deleteOrder,
   uploadInvoiceDirect,
-  getAllOrders
+  getAllOrders,
+  getUserInvoices,
 };

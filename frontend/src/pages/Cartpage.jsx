@@ -526,12 +526,17 @@ function Cartpage() {
         </div>
         {/* Payment Summary  end*/}
         {/* <button className="bg-orange-600 !text-sm text-white w-full p-2 rounded-sm shadow-md" onClick={()=>navigate('/login')}>LOGIN TO PLACE ORDER</button>                */}
-        <button
+        {
+          cart.length==0?<button disabled className="bg-gray-200 !text-sm text-gray-500 w-full p-2 rounded-sm shadow-md disabled">
+            PLACE ORDER
+          </button>:<button
           className="bg-orange-600 !text-sm text-white w-full p-2 rounded-sm shadow-md"
           onClick={() => navigate("/order/address")}
         >
           PLACE ORDER
         </button>
+        }
+        
       </div>
       {/* Right Div ends */}
     </div>

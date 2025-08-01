@@ -67,7 +67,7 @@ function a11yProps(index) {
   };
 }
 
-export default function DescriptionTabs() {
+export default function DescriptionTabs({productData}) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -78,16 +78,16 @@ export default function DescriptionTabs() {
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="Specifications" {...a11yProps(0)} className='!text-xs md:!text-sm' />
           <Tab label="Description" {...a11yProps(1)} className='!text-xs md:!text-sm'/>
+          <Tab label="Specifications" {...a11yProps(0)} className='!text-xs md:!text-sm' />
         </Tabs>
       </Box>
-      <CustomTabPanel value={value} index={0} className="pt-4">
+      <CustomTabPanel value={value} index={1} className="pt-4">
   
 
   {/* Feature List */}
   <div className=" p-2 py-3  md:p-4 text-sm space-y-3 text-gray-800 bg-gray-100 md:m-2 rounded-sm">
-    {productData.specifications.map((item,index)=>(
+    {productData && productData.technicalAspects && productData.technicalAspects.map((item,index)=>(
 <div className="flex flex-row justify-between">
       <span className="!text-xs md:!text-sm text-gray-700 w-1/2">{item.label}</span>
       <span className="!text-xs md:!text-sm font-medium w-1/2">{item.value}</span>
@@ -97,10 +97,10 @@ export default function DescriptionTabs() {
   
 </div>
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={1} className="pt-4">
+      <CustomTabPanel value={value} index={0} className="pt-4">
         {/* Feature List */}
   <div className="p-2 py-3  md:p-4 text-sm space-y-3 text-gray-800 bg-gray-100 md:m-2 rounded-sm">
-    {productData.description.split('\n').map((line)=>(
+    {productData && productData.description && productData.description.split('\n').map((line)=>(
         
         <p className="!text-xs md:!text-sm text-gray-700">{line}</p>
     ))}
