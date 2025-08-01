@@ -127,3 +127,34 @@ export const CreateOrder = async (orderData) => {
     };
   }
 };
+
+export const getUserInvoices = async (page = 1, limit = 10,search = null,status = null,date = null) => {
+  try {
+    const response = await API.get("/api/orders/invoice",{
+      params: {
+        page,
+        limit,
+        search,
+        status,
+        date,
+      },
+    });
+    // console.log('response',response)
+    if (response.data.success)
+      return {
+        success: true,
+        message: response.data.message,
+        invoices: response.data.invoices,
+        totalInvoices: response.data.totalInvoices,
+        totalInvoicePages: response.data.totalInvoicePages,
+        currentPage: response.data.currentPage,
+      };
+    else throw new Error(response.data.message);
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      message: error?.response?.data?.message || error.message,
+    };
+  }
+};

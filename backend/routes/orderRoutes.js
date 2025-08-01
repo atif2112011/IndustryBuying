@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const authMiddleware = require('../middlewares/Auth');
-const { getUserOrders, createOrder, getOrderById, updateOrderStatus, deleteOrder, uploadInvoiceDirect, getAllOrders, updateOrder } = require('../controllers/orderController');
+const { getUserOrders, createOrder, getOrderById, updateOrderStatus, deleteOrder, uploadInvoiceDirect, getAllOrders, updateOrder, getUserInvoices } = require('../controllers/orderController');
 const multer = require('multer')
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -14,6 +14,7 @@ router.post(
 );
 router.get("/all",getAllOrders)
 router.get('/',authMiddleware,getUserOrders);
+router.get('/invoice',authMiddleware,getUserInvoices)
 
 router.post("/",authMiddleware,createOrder);
 

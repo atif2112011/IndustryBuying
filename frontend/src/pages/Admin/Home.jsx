@@ -152,29 +152,52 @@ export default function Home() {
           Product Categories Distribution
         </h2>
         {chartData && (
-  <ResponsiveContainer width="100%" height={2000}>
-    <BarChart
+  <ResponsiveContainer width="100%" height={1000}>
+  <BarChart
+    data={chartData}
+    layout="vertical"
+    margin={{
+      top: 20,
+      right: 30,
       
-      data={chartData}
-      // Add the layout="vertical" prop to the BarChart itself
-      layout="vertical" 
-      margin={{
-        top: 5,
-        right: 30,
-        left: 20,
-        bottom: 5,
-      }}
-    >
-      <CartesianGrid strokeDasharray="3 3" />
-      {/* The XAxis is now the numerical axis */}
-      <XAxis type="number" /> 
-      {/* The YAxis is now the categorical axis */}
-      <YAxis dataKey="name" type="category" /> 
-      <Tooltip />
-      <Legend />
-      <Bar dataKey="productCount" fill="#2563eb" />
-    </BarChart>
-  </ResponsiveContainer>
+      bottom: 20,
+    }}
+  >
+    <CartesianGrid strokeDasharray="3 3" />
+    
+    <XAxis 
+      type="number"
+      tick={{ fontSize: 12 }} // text-xs
+      label={{ fontSize: 12 }}
+    />
+    
+    <YAxis 
+      dataKey="name"
+      type="category"
+      tick={{ fontSize: 12 }} // text-xs
+      label={{ fontSize: 12 }}
+      width={200}
+    />
+    
+    <Tooltip 
+      contentStyle={{ fontSize: 12 }} // text-xs
+      itemStyle={{ fontSize: 12 }}
+      labelStyle={{ fontSize: 12 }}
+    />
+    
+    <Legend 
+      wrapperStyle={{ fontSize: 12 }} // text-xs
+    />
+    
+    <Bar 
+      dataKey="productCount" 
+      fill="#2563eb" 
+      label={{ fontSize: 12 }} // optional, if you're showing bar labels
+    />
+  </BarChart>
+</ResponsiveContainer>
+
+
 )}
       </div>
     </div>
