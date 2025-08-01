@@ -166,6 +166,10 @@ button:hover {
   transform: scale(1.05);
   cursor: pointer;
 }
+button:disabled{
+  transform: none;
+  cursor: auto;
+}
 
 /* Utility */
 .hide-scroll

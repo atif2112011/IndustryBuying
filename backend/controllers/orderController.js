@@ -450,7 +450,7 @@ if (!userId) {
   throw new Error("User not found");
 }
 
-const orders = await Order.find({ userId, ...matchQuery }).limit(limit).skip(skip);
+const orders = await Order.find({ userId, ...matchQuery }).limit(limit).skip(skip).sort({ createdAt: -1 });
 const invoices = orders.filter((order) => order.invoiceUrl);
 
     const totalInvoices = invoices.length;

@@ -122,3 +122,26 @@ export const addToCart=async(productId,quantity)=>{
   }
   
 }
+
+export const deleteCart=async()=>{
+  try {
+    const response=await API.delete('/api/cart/clear')
+    if(response.data.success)
+    {
+        return {
+            success:true,
+            message:response.data.message
+        }
+    }
+    else
+    {
+        throw new Error(response.data.message)
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      message: error?.response?.data?.message || error.message,
+    };
+  }
+}

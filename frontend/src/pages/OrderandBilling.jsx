@@ -307,199 +307,7 @@ function OrderandBilling() {
       </div>
       {/* My Orders end */}
 
-      {/* Invoices and Billing */}
-      <div className="bg-white p-6 rounded-lg shadow-md w-full">
-        <h3 className="!text-sm md:!text-md font-semibold text-gray-800 mb-8">
-          My Invoices
-        </h3>
-
-        {/* Sort and Search Inputs */}
-        <div className="filter-search-wrapper">
-          <div className="filter-group">
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                label="Sort by date"
-                slotProps={{
-                  textField: {
-                    size: "small",
-                    sx: {
-                      fontSize: "14px",
-                      "@media (max-width:768px)": {
-                        fontSize: "13px",
-                        "& input": {
-                          fontSize: "13px",
-                        },
-                        "& label": {
-                          fontSize: "13px",
-                        },
-                      },
-                    },
-                  },
-                }}
-                value={date2}
-                onChange={(newValue) => setDate2(newValue)}
-              />
-            </LocalizationProvider>
-            <button
-              className="bg-blue-500 text-white px-4 py-2 rounded-md text-xs md:text-sm"
-              onClick={ApplyFilters2}
-            >
-              Apply Filters
-            </button>
-            {(date2 !== null || search2 !== "") && (
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded-md text-xs md:text-sm"
-                onClick={ResetFilters2}
-              >
-                Reset Filters
-              </button>
-            )}
-          </div>
-          <div className="search-bar">
-            <SearchBar
-              placeholder={"Search invoices by Order Number"}
-              searchTerm={search2}
-              setSearchTerm={setSearch2}
-              handleSearch={ApplyFilters2}
-            />
-          </div>
-        </div>
-        {/* Sort and Search Inputs end */}
-
-        <TableContainer
-          component={Paper}
-          sx={{
-            padding: "4px",
-            boxShadow: "none",
-            border: "none",
-            marginTop: "30px",
-          }}
-        >
-          <Table sx={{}} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                {[
-                  "Order ID",
-                  "Total Amount",
-                  "Delivered On",
-                  "Last Updated",
-                  "Action",
-                ].map((headCell) => (
-                  <TableCell
-                    key={headCell}
-                    align="left"
-                    sx={{
-                      boxShadow: "none",
-                      border: "none",
-                      padding: "12px 12px",
-                    }}
-                  >
-                    <div className="!text-xs md:!text-sm font-semibold text-gray-800">
-                      {headCell}
-                    </div>
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-
-            <TableBody>
-              {invoices &&
-                invoices.length > 0 &&
-                invoices.map((invoice) => (
-                  <TableRow
-                    key={invoice?._id}
-                    sx={{
-                      "&:last-child td, &:last-child th": { border: 0 },
-
-                      boxShadow: "none",
-                      border: "none",
-                    }}
-                  >
-                    <TableCell
-                      align="left"
-                      sx={{
-                        boxShadow: "none",
-                        border: "none",
-                        padding: "10px 12px",
-                      }}
-                    >
-                      <div className="text-xs md:text-sm font-medium text-gray-800">
-                        {invoice._id}
-                      </div>
-                    </TableCell>
-                    <TableCell
-                      align="left"
-                      sx={{
-                        boxShadow: "none",
-                        border: "none",
-                        padding: "10px 12px",
-                      }}
-                    >
-                      <div className="text-xs md:text-sm text-gray-600">
-                        ₹ {invoice?.totalPrice?.toFixed(2) || "N/A"}
-                      </div>
-                    </TableCell>
-                    <TableCell
-                      align="left"
-                      sx={{
-                        boxShadow: "none",
-                        border: "none",
-                        padding: "10px 12px",
-                      }}
-                    >
-                      <div className="text-xs md:text-sm text-gray-600">
-                        {new Date(invoice?.deliveredAt).toLocaleDateString() ||
-                          "N/A"}
-                      </div>
-                    </TableCell>
-                    <TableCell
-                      align="left"
-                      sx={{
-                        boxShadow: "none",
-                        border: "none",
-                        padding: "10px 12px",
-                      }}
-                    >
-                      <div className="text-xs md:text-sm text-gray-600">
-                        {new Date(invoice?.updatedAt).toLocaleDateString() ||
-                          "N/A"}
-                      </div>
-                    </TableCell>
-                    <TableCell
-                      align="left"
-                      sx={{
-                        boxShadow: "none",
-                        border: "none",
-                        padding: "10px 12px",
-                      }}
-                    >
-                      <a
-                        href={getDownloadUrl(invoice?.invoiceUrl)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs md:text-sm text-blue-600 hover:underline"
-                      >
-                        Download
-                      </a>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TablePagination
-                  count={totalInvoices}
-                  rowsPerPage={rowsPerPage}
-                  page={invoicepage}
-                  onPageChange={handleinvoiceChangePage}
-                  rowsPerPageOptions={[]}
-                  labelRowsPerPage={""}
-                />
-              </TableRow>
-            </TableFooter>
-          </Table>
-        </TableContainer>
-      </div>
+      
     </div>
   );
 }
@@ -549,11 +357,11 @@ function OrderTableComponent({ order }) {
           className="bg-gray-50 border border-gray-200 rounded-md shadow p-4 mb-4 flex flex-col gap-4 w-full"
         >
           {/* Header */}
-          <div className="flex justify-between items-center border-b border-gray-400 pb-2">
-            <div className="!text-sm font-semibold text-gray-800">
+          <div className="flex justify-between items-center border-b border-gray-400 pb-2 gap-1 flex-wrap">
+            <div className="!text-xs md:!text-sm font-semibold text-gray-800">
               Order No: {order?._id || ""}
             </div>
-            <div className="text-sm text-gray-500">
+            <div className="text-xs md:text-sm text-gray-500">
               {new Date(order.createdAt).toLocaleDateString() || ""}
             </div>
             {/* <div className="text-sm font-semibold text-green-600">₹{order.amount.toLocaleString()}</div> */}
@@ -568,7 +376,7 @@ function OrderTableComponent({ order }) {
                   <img
                     src={order?.image || ""}
                     alt="product"
-                    className="w-24 h-24 object-contain rounded border border-gray-300"
+                    className="w-18 h-18  md:w-24 md:h-24 object-contain rounded border border-gray-300"
                   />
                   <div className="flex-1 flex flex-col">
                     <div className="font-semibold text-xs md:text-sm mb-2">
@@ -625,13 +433,13 @@ function OrderTableComponent({ order }) {
           </div>
 
           {/* Footer */}
-          <div className="flex justify-between items-center mt-2 border-t border-gray-400 pt-3">
+          <div className="flex justify-between items-center mt-2 border-t border-gray-400 pt-3 flex-wrap md:gap-0 gap-2">
             <div className="text-xs md:text-sm font-semibold text-gray-800">
               Total Amount : ₹{order?.totalPrice?.toFixed(2) || ""}
             </div>
-            <div className="flex gap-4 items-center">
+            <div className="flex gap-4 items-center flex-wrap">
               {order?.deliveredAt && (
-                <div className="text-xs md:!text-sm text-gray-500">
+                <div className="text-xs md:!text-sm text-gray-500  w-[70vw] md:w-fit">
                   Item delivered on:{" "}
                   <span className="!text-xs md:!text-sm font-medium">
                     {new Date(order?.deliveredAt).toLocaleDateString()}
@@ -645,7 +453,7 @@ function OrderTableComponent({ order }) {
               >
                 Track Order
               </button>
-              <button className="border border-gray-400 px-3 py-1 rounded-full text-xs md:text-sm text-gray-700">
+              {order?.invoiceUrl ?<button className="border border-gray-400 px-3 py-1 rounded-full text-xs md:text-sm text-gray-700">
                 <a
                         href={getDownloadUrl(order?.invoiceUrl)}
                         target="_blank"
@@ -654,7 +462,14 @@ function OrderTableComponent({ order }) {
                       >
                         Download Invoice
                       </a>
+              </button>:<button 
+              disabled
+              className="border border-neutral-300 px-3 py-1 rounded-full text-xs md:text-sm text-neutral-300 bg-gray-100">
+                
+                        Download Invoice
+                      
               </button>
+              }
             </div>
           </div>
           {showTrack && (

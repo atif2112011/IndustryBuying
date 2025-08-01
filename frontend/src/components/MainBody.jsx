@@ -40,7 +40,7 @@ function MainBody() {
    fetchmenu()
   }, []);
   return (
-    <div className="relative flex flex-col md:flex-row  p-4 md:p-6 rounded-lg flex-1 gap-4 items-start">
+    <div className="relative flex flex-col md:flex-row  p-3 md:p-6 rounded-lg flex-1 gap-4 items-start">
       {/*Side Menu*/}
       {/* <div className="w-80 bg-white shadow-md rounded-lg p-4">
         Side Menu
@@ -83,7 +83,7 @@ function MainBody() {
 
       {/* Main Content - scrollable */}
       <div
-        className="flex-1 max-w-[100%] overflow-y-auto rounded-lg p-1 md:p-4 h-screen hide-scroll"
+        className="flex-1 max-w-[100%] overflow-y-auto rounded-lg md:p-4 h-screen hide-scroll"
         onClick={() => setShowSideMenu(false)}
       >
         <Outlet />

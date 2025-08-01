@@ -28,6 +28,7 @@ import AdminHome from "./pages/AdminHome.jsx";
 import SearchPage from "./pages/SearchResultPage.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import OrderSummary from "./pages/OrderSummary.jsx";
+import Invoices from "./pages/Invoices.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -60,6 +61,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <OrderandBilling />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/user/invoices"
+              element={
+                <ProtectedRoute>
+                  <Invoices />
                 </ProtectedRoute>
               }
             />

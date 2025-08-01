@@ -2,29 +2,31 @@ import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import { LogoutUser } from "../apis/auth";
 import { useLoader } from "../contexts/LoaderContext";
 import { useAlert } from "../contexts/AlertContext";
+import { useState } from "react";
 
 const ProfileMenuOptions = [
   {
     link: "/user",
-    name: "Account and Business",
+    name: "Account and Addresses",
     icon: "ri-account-box-line",
   },
   {
     link: "/user/order-and-billing",
-    name: "Order and Billings",
+    name: "My Orders",
     icon: "ri-archive-line",
   },
   {
-    link: "user/support",
-    name: "Support and Services",
-    icon: "ri-customer-service-2-line",
-  },
+    link: "/user/invoices",
+    name: "My Invoices",
+    icon: "ri-file-list-3-line",
+  }
 ];
 
 function ProfileSideMenu({ showSideMenu, setShowSideMenu }) {
   const { setLoading } = useLoader();
   const { setMessage, setShowSnackBar } = useAlert();
   const navigate = useNavigate();
+  const [selectedTab,setselectedTab]=useState("Account and Addresses");
   const handleLogoutUser = async () => {
     setLoading(true);
     const response = await LogoutUser();
@@ -38,6 +40,7 @@ function ProfileSideMenu({ showSideMenu, setShowSideMenu }) {
       setMessage(response.message);
     }
   };
+  
 
   return (
     <>
@@ -54,7 +57,7 @@ function ProfileSideMenu({ showSideMenu, setShowSideMenu }) {
           {ProfileMenuOptions.map((option, index) => (
             <div key={index} className="relative group">
               {/* Wrap NavLink and Submenu together */}
-              <div className="flex items-center gap-2 p-2 group-hover:bg-blue-100 rounded-md cursor-pointer">
+              <div className={`flex items-center gap-2 p-2 group-hover:bg-blue-100 ${selectedTab===option.name?" bg-blue-100 ":""} rounded-md cursor-pointer`}>
                 <i className={option.icon + " text-md md:text-lg"}></i>
                 <span className="!text-xs md:!text-sm">{option.name}</span>
               </div>
@@ -73,7 +76,7 @@ function ProfileSideMenu({ showSideMenu, setShowSideMenu }) {
                   </div> */}
 
               {/* Transparent overlay on top to keep NavLink clickable */}
-              <NavLink to={option.link} className="absolute inset-0 z-0" />
+              <NavLink onClick={() => setselectedTab(option.name)} to={option.link} className="absolute inset-0 z-0" />
             </div>
           ))}
 
