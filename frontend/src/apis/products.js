@@ -64,7 +64,15 @@ export const AddNewProductAPI = async (data) => {
       rating: data.rating,
       tags: data.tags,
       technicalAspects: data.technicalAspects,
+      finalPrice: data.finalPrice,
+      cod: data.cod,
+      partCod: data.partcod,
+      prepaid: data.prepaid,
+      return: data.return,
+
     };
+    if(!data.return) productDetails.returnTime=0;
+    else productDetails.returnTime=data.returnDays
 
     const formData = new FormData();
     formData.append("productDetails", JSON.stringify(productDetails));
@@ -109,7 +117,16 @@ export const UpdateProductAPI = async (data) => {
       rating: data.rating,
       tags: data.tags,
       technicalAspects: data.technicalAspects,
+      finalPrice: data.finalPrice,
+      cod: data.cod,
+      partCod: data.partcod,
+      prepaid: data.prepaid,
+      return: data.return,
+
     };
+    if(!data.return) productDetails.returnTime=0;
+    else productDetails.returnTime=data.returnDays
+    
 
     const formData = new FormData();
     formData.append("productDetails", JSON.stringify(productDetails));

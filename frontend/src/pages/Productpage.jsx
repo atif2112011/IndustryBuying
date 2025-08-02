@@ -13,7 +13,14 @@ import { useEffect, useRef, useState } from "react";
 import { Autoplay, Navigation, Pagination, Thumbs } from "swiper/modules";
 import DescriptionTabs from "../components/DescriptionTabs";
 import CardDisplay from "../components/CardDisplay";
-import { Box, IconButton, Typography, InputBase, Paper, Rating } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Typography,
+  InputBase,
+  Paper,
+  Rating,
+} from "@mui/material";
 import SnackBar from "../components/SnackBar";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAlert } from "../contexts/AlertContext";
@@ -106,12 +113,15 @@ function Productpage() {
   const navigate = useNavigate();
   const { setLoading } = useLoader();
   const { setMessage, setShowSnackBar } = useAlert();
-  const { user,setCart,setCartCount } = useAuth();
+  const { user, setCart, setCartCount } = useAuth();
+  const [deliveryType, setDeliveryType] = useState([]);
+  const [returnDays, setReturnDays] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       const response = await getProductDetails(productId);
+      
       setLoading(false);
       if (response.success) {
         setProduct(response.product);
@@ -121,6 +131,16 @@ function Productpage() {
           response.product.price -
             (response.product.price * response.product.discount) / 100
         );
+        if (response.product?.cod)
+          setDeliveryType((prevData) => [...prevData, "COD"]);
+        if (response.product?.partCod)
+          setDeliveryType((prevData) => [...prevData, "PARTCOD"]);
+        if (response.product?.prepaid)
+          setDeliveryType((prevData) => [...prevData, "PREPAID"]);
+        if (response.product?.return)
+          setDeliveryType((prevData) => [...prevData, "RETURN"]);
+
+        if (response.product?.returnTime) setReturnDays(response.product.returnTime);
       } else {
         setMessage(response.message);
         setShowSnackBar(true);
@@ -150,7 +170,7 @@ function Productpage() {
   };
 
   const handleIncrement = () => {
-    if(quantity==10){
+    if (quantity == 10) {
       return;
     }
     const newQty = quantity + 1;
@@ -158,39 +178,36 @@ function Productpage() {
     // calculatePrice(newQty);
   };
 
-
-  const handleAddToCart=async()=>{
+  const handleAddToCart = async () => {
     setLoading(true);
-    const response=await addToCart(product._id,quantity);
+    const response = await addToCart(product._id, quantity);
     setLoading(false);
-    if(response.success){
-        setMessage(response.message);
-        setShowSnackBar(true);
-        setCart(response.cart);
-        setCartCount(response.totalItems);
+    if (response.success) {
+      setMessage(response.message);
+      setShowSnackBar(true);
+      setCart(response.cart);
+      setCartCount(response.totalItems);
+    } else {
+      setMessage(response.message);
+      setShowSnackBar(true);
     }
-    else{
-        setMessage(response.message);
-        setShowSnackBar(true);
-    }
-  }
+  };
 
-  const handleBuyNow=async()=>{
+  const handleBuyNow = async () => {
     setLoading(true);
-    const response=await addToCart(product._id,quantity);
+    const response = await addToCart(product._id, quantity);
     setLoading(false);
-    if(response.success){
-        setMessage(response.message);
-        setShowSnackBar(true);
-        setCart(response.cart);
-        setCartCount(response.totalItems);
-        navigate("/order/cart");
+    if (response.success) {
+      setMessage(response.message);
+      setShowSnackBar(true);
+      setCart(response.cart);
+      setCartCount(response.totalItems);
+      navigate("/order/cart");
+    } else {
+      setMessage(response.message);
+      setShowSnackBar(true);
     }
-    else{
-        setMessage(response.message);
-        setShowSnackBar(true);
-    }
-  }
+  };
   // const calculatePrice = (qty) => {
   //   let total = qty * 1399;
   //   let finalPrice = parseFloat((total + (gst / 100) * total).toFixed(2));
@@ -267,23 +284,25 @@ function Productpage() {
 
             {/* Right: Product Info */}
             <div className="w-full flex flex-col gap-2">
-              <h3 className="!text-sm md:!text-lg">{product?.name?.toUpperCase() || ""}</h3>
-              
-              {product?.rating && (
-                  <Rating
-                    name="read-only"
-                    value={product.rating}
-                    readOnly
-                    size="small"
-                    className="p-0 mb-4 mt-[-0.2rem]"
-                  />
-                )}
+              <h3 className="!text-sm md:!text-lg">
+                {product?.name?.toUpperCase() || ""}
+              </h3>
 
-                {product.shortDescription && (
-                  <p className="!text-xs md:!text-sm text-gray-600 mb-4">
-                    {product.shortDescription}
-                  </p>
-                )}
+              {product?.rating && (
+                <Rating
+                  name="read-only"
+                  value={product.rating}
+                  readOnly
+                  size="small"
+                  className="p-0 mb-4 mt-[-0.2rem]"
+                />
+              )}
+
+              {product.shortDescription && (
+                <p className="!text-xs md:!text-sm text-gray-600 mb-4">
+                  {product.shortDescription}
+                </p>
+              )}
 
               {/* Offers */}
               <div className="bg-red-50 p-4 rounded-md border-none">
@@ -372,7 +391,7 @@ function Productpage() {
           </div>
           {/* Product Details end */}
         </div>
-        
+
         {/* Description Tab */}
         <div
           className="border rounded-md p-4 bg-white border-gray-300 shadow-md"
@@ -447,7 +466,9 @@ function Productpage() {
         {/* Price Display */}
         <div className="flex flex-col rounded-md gap-3 bg-white rounded-md p-4 shadow-md">
           <p className="!text-md md:!text-lg font-semibold">
-            ₹ {discountAmount * quantity + discountAmount * quantity * gst/100}{" "}
+            ₹{" "}
+            {discountAmount * quantity +
+              (discountAmount * quantity * gst) / 100}{" "}
             <span className="!text-xs md:!text-sm text-gray-800 font-normal ml-2">
               ( ₹ {discountAmount * quantity} + {product.gst}% GST )
             </span>
@@ -460,7 +481,7 @@ function Productpage() {
                 ₹{price}
               </span>
               <span className="!text-xs md:!text-sm text-gray-700 ml-2">
-                ₹{price-price*product.discount/100}
+                ₹{price - (price * product.discount) / 100}
               </span>
               <span className="!text-xs !text-green-600 ml-2 font-semibold ml-6 border border-green-500  rounded-sm md:p-1 px-[4px] py-[1px]">
                 {product?.discount || 0}% OFF
@@ -518,7 +539,10 @@ function Productpage() {
             setopenSnackBar={setopenSnackBar}
             message={"Product added to cart successfully !"}
           />
-          <button onClick={() => handleBuyNow()} className="bg-blue-900 !text-sm text-white w-1/2 p-2 rounded-sm shadow-md">
+          <button
+            onClick={() => handleBuyNow()}
+            className="bg-blue-900 !text-sm text-white w-1/2 p-2 rounded-sm shadow-md"
+          >
             BUY NOW
           </button>
         </div>
@@ -581,37 +605,65 @@ function Productpage() {
 
           <div className="flex flex-col gap-2 mt-2">
             <div className="flex flex-row items-center justify-start gap-6">
-              <button className="bg-green-600 !text-xs text-white w-1/2 p-2 rounded-sm shadow-lg">
+              <button
+                className={`${
+                  deliveryType.includes("PREPAID")
+                    ? "bg-green-600 text-white"
+                    : "bg-white text-black"
+                } !text-xs w-1/2 p-2 rounded-sm shadow-lg`}
+              >
                 PREPAID
               </button>
               <p className="!text-xs justify-center w-1/2 text-center">
-                Available
+                {deliveryType.includes("PREPAID")
+                  ? "Available"
+                  : "Not Available"}
               </p>
             </div>
             <div className="flex flex-row items-center justify-start gap-6">
-              <button className="bg-green-600 !text-xs text-white w-1/2 p-2 rounded-sm shadow-lg">
+              <button
+                className={`${
+                  deliveryType.includes("COD")
+                    ? "bg-green-600 text-white"
+                    : "bg-white text-black"
+                } !text-xs w-1/2 p-2 rounded-sm shadow-lg`}
+              >
                 COD
               </button>
               <p className="!text-xs justify-center w-1/2 text-center">
-                Available
+                {deliveryType.includes("COD") ? "Available" : "Not Available"}
               </p>
             </div>
 
             <div className="flex flex-row items-center justify-start gap-6">
-              <button className="bg-white !text-xs text-black w-1/2 p-2 rounded-sm shadow-lg">
+              <button
+                className={`${
+                  deliveryType.includes("PARTCOD")
+                    ? "bg-green-600 text-white"
+                    : "bg-white text-black"
+                } !text-xs w-1/2 p-2 rounded-sm shadow-lg`}
+              >
                 PART COD
               </button>
               <p className="!text-xs justify-center w-1/2 text-center">
-                Not Available
+                {deliveryType.includes("PARTCOD")
+                  ? "Available"
+                  : "Not Available"}
               </p>
             </div>
 
             <div className="flex flex-row items-center justify-start gap-6">
-              <button className="bg-green-600 !text-xs text-white w-1/2 p-2 rounded-sm shadow-lg">
+              <button
+                className={`${
+                  deliveryType.includes("RETURN")
+                    ? "bg-green-600 text-white"
+                    : "bg-white text-black"
+                } !text-xs w-1/2 p-2 rounded-sm shadow-lg`}
+              >
                 RETURN
               </button>
               <p className="!text-xs justify-center w-1/2 text-center">
-                7-Days
+                {deliveryType.includes("RETURN") ? `${returnDays} Days `: "Not Available"}
               </p>
             </div>
           </div>

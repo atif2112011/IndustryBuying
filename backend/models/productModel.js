@@ -30,7 +30,11 @@ const productSchema = new mongoose.Schema(
     discount: { type: Number, default: 0 },
     gst: { type: Number, default: 0 },
     finalPrice: { type: Number },
-
+    prepaid: { type: Boolean, default: false },
+    cod: { type: Boolean, default: false },
+    partCod: { type: Boolean, default: false },
+    returnTime: { type: Number, default: 7 },
+    return: { type: Boolean, default: false },
     stock: { type: Number, default: 0 },
     isAvailable: { type: Boolean, default: true },
 
@@ -45,13 +49,6 @@ const productSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Auto-calculate final price
-productSchema.pre("save", function (next) {
-  if (this.isModified("price") || this.isModified("discount")) {
-    const finalPriceCal = this.price - this.price * (this.discount / 100);
-    this.finalPrice = Number(finalPriceCal.toFixed(2));
-  }
-  next();
-});
+
 
 module.exports = mongoose.model("Product", productSchema);

@@ -13,6 +13,8 @@ import {
   TableHead,
   TableRow,
   Paper,
+  ToggleButtonGroup,
+  ToggleButton,
 } from "@mui/material";
 import "remixicon/fonts/remixicon.css";
 import { useAlert } from "../../contexts/AlertContext";
@@ -35,6 +37,15 @@ const AddNewProduct = ({ isOpen, onClose, onSave, menu }) => {
   const [tags, setTags] = useState("");
   const [technicalAspects, setTechnicalAspects] = useState([]);
   const { setMessage, setShowSnackBar } = useAlert();
+   const [deliveryType, setDeliveryType] = useState([]);
+  const [returnDays, setReturnDays] = useState(0);
+
+  const handleDeliveryChange = (event, newTypes) => {
+    setDeliveryType(newTypes);
+    if (!newTypes.includes('RETURN')) {
+      setReturnDays('');
+    }
+  };
 
   useEffect(() => {
     
@@ -73,7 +84,8 @@ const AddNewProduct = ({ isOpen, onClose, onSave, menu }) => {
       !brand ||
       !rating ||
       !tags ||
-      technicalAspects.length === 0
+      technicalAspects.length === 0 ||
+      (deliveryType.includes('RETURN') && returnDays === '')
     ) {
       
       setMessage("Please fill all the required fields");
@@ -256,9 +268,9 @@ const AddNewProduct = ({ isOpen, onClose, onSave, menu }) => {
         </div>
 
         <p className="!text-sm my-6 font-semibold">
-          Discounted Price:{" "}
+          Final Unit Price(including GST and discount):{" "}
           <span className="text-green-500 !text-sm">
-            ₹{discountedPrice.toFixed(2)}
+            ₹{calculateFinalPrice(price,gst,discount).toFixed(2)}
           </span>
         </p>
 
@@ -377,6 +389,106 @@ const AddNewProduct = ({ isOpen, onClose, onSave, menu }) => {
           </TableContainer>
         </div>
 
+
+         <div className="my-12">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="!text-md md:!text-lg !font-medium">
+              Delivery Details *
+            </h3>
+           
+          </div>
+          <ToggleButtonGroup
+        value={deliveryType}
+        onChange={handleDeliveryChange}
+        aria-label="delivery options"
+        size="small"
+        
+      >
+        <ToggleButton value="COD" aria-label="Cash on Delivery" sx={{
+              textTransform: "none",
+              fontSize: "0.75rem",
+              fontWeight: 500,
+              borderRadius: 2,
+               padding: '6px 40px',
+              border: "1px solid #ccc",
+              "&.Mui-selected": {
+                backgroundColor: "#dbfce7",
+                color: "green",
+                "&:hover": {
+                  backgroundColor: "#dbfce7"
+                }
+              }
+            }}>
+          COD
+        </ToggleButton>
+        <ToggleButton value="PARTCOD" aria-label="Partial COD" sx={{
+              textTransform: "none",
+              fontSize: "0.75rem",
+              fontWeight: 500,
+              borderRadius: 2,
+               padding: '6px 40px',
+              border: "1px solid #ccc",
+              "&.Mui-selected": {
+                backgroundColor: "#dbfce7",
+                color: "green",
+                "&:hover": {
+                  backgroundColor: "#dbfce7"
+                }
+              }
+            }}>
+          PARTCOD
+        </ToggleButton>
+        <ToggleButton value="PREPAID" aria-label="Prepaid" sx={{
+              textTransform: "none",
+              fontSize: "0.75rem",
+              fontWeight: 500,
+              borderRadius: 2,
+               padding: '6px 40px',
+              border: "1px solid #ccc",
+              "&.Mui-selected": {
+                backgroundColor: "#dbfce7",
+                color: "green",
+                "&:hover": {
+                  backgroundColor: "#dbfce7"
+                }
+              }
+            }}>
+          PREPAID
+        </ToggleButton>
+        <ToggleButton value="RETURN" aria-label="Return" sx={{
+              textTransform: "none",
+              fontSize: "0.75rem",
+              fontWeight: 500,
+              borderRadius: 2,
+               padding: '6px 40px',
+              border: "1px solid #ccc",
+              "&.Mui-selected": {
+                backgroundColor: "#dbfce7",
+                color: "green",
+                "&:hover": {
+                  backgroundColor: "#dbfce7"
+                }
+              }
+            }}>
+          RETURN
+        </ToggleButton>
+      </ToggleButtonGroup>
+
+      {deliveryType.includes('RETURN') && (
+        <div className="mt-4">
+          <TextField
+            label="Return Days"
+            variant="outlined"
+            size="small"
+            value={returnDays}
+            onChange={(e) => setReturnDays(e.target.value)}
+            type="number"
+            inputProps={{ min: 1 }}
+          />
+        </div>
+      )}
+        </div>
+
         <div className="flex justify-end gap-3">
           <Button onClick={onClose} variant="outlined" size="small">
             Cancel
@@ -400,6 +512,13 @@ const AddNewProduct = ({ isOpen, onClose, onSave, menu }) => {
                 rating,
                 tags: tags.split(",").map((t) => t.trim()),
                 technicalAspects,
+                finalPrice: calculateFinalPrice(price,gst,discount),
+                cod:deliveryType.includes('COD'),
+                partcod:deliveryType.includes('PARTCOD'),
+                prepaid:deliveryType.includes('PREPAID'),
+                return:deliveryType.includes('RETURN'),
+                returnDays
+                
               })
             }
             variant="contained"
@@ -415,3 +534,9 @@ const AddNewProduct = ({ isOpen, onClose, onSave, menu }) => {
 };
 
 export default AddNewProduct;
+
+
+function calculateFinalPrice(price,gst,discount) {
+  const finalPriceCal =( price - price * (discount / 100))+((price - price * (discount / 100))*gst/100);
+  return Number(finalPriceCal.toFixed(2));
+}

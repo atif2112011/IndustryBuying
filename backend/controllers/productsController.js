@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const { cloudinary } = require("../config/cloudinary");
 const Product = require("../models/productModel");
 
@@ -49,6 +50,7 @@ const getProducts = async (req, res, next) => {
       date, // 🆕 Expecting 'YYYY-MM-DD' from frontend
     } = req.query;
 
+
     page = parseInt(page);
     limit = parseInt(limit);
 
@@ -57,17 +59,20 @@ const getProducts = async (req, res, next) => {
     const query = {};
 
     // 🔍 Search by product name or description
-    if (search) {
+    
+    if(search){
+      if (mongoose.Types.ObjectId.isValid(search)) {
+      query._id = search;
+    } else {
       query.$or = [
         { name: { $regex: search, $options: "i" } },
         { brand: { $regex: search, $options: "i" } },
         { description: { $regex: search, $options: "i" } },
         { shortDescription: { $regex: search, $options: "i" } },
         { tags: { $regex: search, $options: "i" } },
-        
       ];
     }
-
+    }
     // 📦 Filter by category
     if (category) {
       query.category = category;
@@ -284,22 +289,21 @@ const searchProducts = async (req, res, next) => {
     const skip = (page - 1) * limit;
     const sort = req.query.sort || null;
 
-   
-
-      const searchTerm = req.query.q || "";
-
+    const searchTerm = req.query.q || "";
 
     const searchFilter =
-      searchTerm!=="" ? {
-  $or: [
-    { name: { $regex: searchTerm, $options: "i" } },
-    { description: { $regex: searchTerm, $options: "i" } },
-    { shortDescription: { $regex: searchTerm, $options: "i" } },
-    { brand: { $regex: searchTerm, $options: "i" } }
-  ]
-} : {};
+      searchTerm !== ""
+        ? {
+            $or: [
+              { name: { $regex: searchTerm, $options: "i" } },
+              { description: { $regex: searchTerm, $options: "i" } },
+              { shortDescription: { $regex: searchTerm, $options: "i" } },
+              { brand: { $regex: searchTerm, $options: "i" } },
+            ],
+          }
+        : {};
 
-  console.log("Search Filter:", searchFilter);
+    console.log("Search Filter:", searchFilter);
 
     const totalProducts = await Product.countDocuments(searchFilter);
     const totalPages = Math.ceil(totalProducts / limit);
@@ -340,7 +344,7 @@ const productDetails = async (req, res, next) => {
     if (!productInfo) throw new Error("product not found");
 
     return res
-      .json({ message: "product details", success: true, product:productInfo })
+      .json({ message: "product details", success: true, product: productInfo })
       .status(200);
   } catch (error) {
     next(error);
@@ -354,6 +358,7 @@ const addProduct = async (req, res, next) => {
     const role = "admin"; // hardcoding for now
 
     if (role !== "admin") throw "Not Have Acccess to Add Products";
+    console.log(req.body);
 
     const productDetails = JSON.parse(req.body.productDetails);
     // console.log('req.body',req.body.productDetails)
