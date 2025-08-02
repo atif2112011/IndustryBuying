@@ -179,6 +179,11 @@ function Productpage() {
   };
 
   const handleAddToCart = async () => {
+    if(!user){
+      setMessage("Please login to add to cart");
+      setShowSnackBar(true);
+      return
+    }
     setLoading(true);
     const response = await addToCart(product._id, quantity);
     setLoading(false);
@@ -194,6 +199,11 @@ function Productpage() {
   };
 
   const handleBuyNow = async () => {
+    if(!user){
+      setMessage("Please login to add to cart");
+      setShowSnackBar(true);
+      return
+    }
     setLoading(true);
     const response = await addToCart(product._id, quantity);
     setLoading(false);
