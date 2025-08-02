@@ -88,9 +88,9 @@ export default function DescriptionTabs({productData}) {
   {/* Feature List */}
   <div className=" p-2 py-3  md:p-4 text-sm space-y-3 text-gray-800 bg-gray-100 md:m-2 rounded-sm">
     {productData && productData.technicalAspects && productData.technicalAspects.map((item,index)=>(
-<div className="flex flex-row justify-between">
-      <span className="!text-xs md:!text-sm text-gray-700 w-1/2">{item.label}</span>
-      <span className="!text-xs md:!text-sm font-medium w-1/2">{item.value}</span>
+<div className="flex flex-row justify-between gap-6">
+      <span className="!text-xs md:!text-sm text-gray-700 w-3/4">{item.label}</span>
+      <span className="!text-xs md:!text-sm font-medium w-1/4">{item.value}</span>
     </div>
     ))}
     

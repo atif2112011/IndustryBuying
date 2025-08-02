@@ -363,11 +363,11 @@ function Productpage() {
                     {product &&
                       product.technicalAspects &&
                       product.technicalAspects.slice(0, 3).map((item, index) => (
-                        <div className="flex justify-between ">
-                          <span className=" !text-xs text-gray-700">
+                        <div className="flex justify-between gap-6">
+                          <span className=" !text-xs text-gray-700 w-3/4">
                             {item?.label || ""}
                           </span>
-                          <span className="!text-xs font-medium">
+                          <span className="!text-xs font-medium w-1/4">
                             {item?.value || ""}
                           </span>
                         </div>
