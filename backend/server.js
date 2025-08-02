@@ -16,10 +16,7 @@ const certificateRoutes = require("./routes/certificateRoutes")
 const mailRoutes = require("./routes/MailRoutes")
 
 const cookieParser = require("cookie-parser");
-const Category = require("./models/categoryModel");
-const Subcategory = require("./models/subcategoryModel");
-const Product = require("./models/productModel");
-const slugify = require("slugify");
+
 const path = require("path");
 const morgan = require("morgan");
 
@@ -72,17 +69,13 @@ app.get("/server", async (req, res) => {
 app.use(notFound);
 app.use(errorHandler);
 
-//SPA for Render
-// app.get('/*', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
-// });
-// console.log('Serving:', path.join(__dirname, '../frontend/dist/index.html'));
 
-if(process.env.NODE_ENV === 'production') {
-  app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
-});
-}
+
+// if(process.env.NODE_ENV === 'production') {
+//   app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
+// });
+// }
 
 //Server start
 app.listen(PORT, async() => {
