@@ -60,7 +60,11 @@ const getProducts = async (req, res, next) => {
     if (search) {
       query.$or = [
         { name: { $regex: search, $options: "i" } },
+        { brand: { $regex: search, $options: "i" } },
         { description: { $regex: search, $options: "i" } },
+        { shortDescription: { $regex: search, $options: "i" } },
+        { tags: { $regex: search, $options: "i" } },
+        
       ];
     }
 
@@ -211,6 +215,68 @@ const getBestSellers = async (req, res, next) => {
   }
 };
 
+// const searchProducts = async (req, res, next) => {
+//   try {
+//     const page = parseInt(req.query.page) || 1;
+//     const limit = parseInt(req.query.limit) || 12;
+//     const skip = (page - 1) * limit;
+//     const sort = req.query.sort || null;
+
+//     // const category = req.query.category;
+//     // const brand = req.query.brand;
+
+//     const rawKeyword = req.query.q || "";
+//     const keywords = rawKeyword
+//       .split(",")
+//       .map((kw) => kw.trim())
+//       .filter(Boolean); // removes empty strings
+
+//     const searchConditions = [];
+
+//     if (keywords.length > 0) {
+//       keywords.forEach((word) => {
+//         searchConditions.push(
+//           { name: { $regex: word, $options: "i" } },
+//           { brand: { $regex: word, $options: "i" } },
+//           { description: { $regex: word, $options: "i" } },
+//           { tags: { $regex: word, $options: "i" } }
+//         );
+//       });
+//     }
+
+//     // Final search filter
+//     const searchFilter =
+//       searchConditions.length > 0 ? { $or: searchConditions } : {};
+
+//     // // Add category and brand if present
+//     // if (category) searchFilter.category = category;
+//     // if (brand) searchFilter.brand = brand;
+
+//     const totalProducts = await Product.countDocuments(searchFilter);
+//     const totalPages = Math.ceil(totalProducts / limit);
+
+//     if (page > totalPages && totalProducts > 0) {
+//       throw new Error(`Page ${page} exceeds total pages (${totalPages})`);
+//     }
+
+//     let query = Product.find(searchFilter).skip(skip).limit(limit);
+
+//     if (sort) query = query.sort(sort);
+
+//     const products = await query;
+
+//     if (!products) throw new Error("Error in getting Products");
+
+//     res.status(200).json({
+//       products,
+//       totalProducts,
+//       totalPages,
+//       currentPage: page,
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 const searchProducts = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -218,35 +284,22 @@ const searchProducts = async (req, res, next) => {
     const skip = (page - 1) * limit;
     const sort = req.query.sort || null;
 
-    const category = req.query.category;
-    const brand = req.query.brand;
+   
 
-    const rawKeyword = req.query.q || "";
-    const keywords = rawKeyword
-      .split(",")
-      .map((kw) => kw.trim())
-      .filter(Boolean); // removes empty strings
+      const searchTerm = req.query.q || "";
 
-    const searchConditions = [];
 
-    if (keywords.length > 0) {
-      keywords.forEach((word) => {
-        searchConditions.push(
-          { name: { $regex: word, $options: "i" } },
-          { brand: { $regex: word, $options: "i" } },
-          { description: { $regex: word, $options: "i" } },
-          { tags: { $regex: word, $options: "i" } }
-        );
-      });
-    }
-
-    // Final search filter
     const searchFilter =
-      searchConditions.length > 0 ? { $or: searchConditions } : {};
+      searchTerm!=="" ? {
+  $or: [
+    { name: { $regex: searchTerm, $options: "i" } },
+    { description: { $regex: searchTerm, $options: "i" } },
+    { shortDescription: { $regex: searchTerm, $options: "i" } },
+    { brand: { $regex: searchTerm, $options: "i" } }
+  ]
+} : {};
 
-    // Add category and brand if present
-    if (category) searchFilter.category = category;
-    if (brand) searchFilter.brand = brand;
+  console.log("Search Filter:", searchFilter);
 
     const totalProducts = await Product.countDocuments(searchFilter);
     const totalPages = Math.ceil(totalProducts / limit);
