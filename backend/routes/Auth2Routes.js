@@ -6,24 +6,37 @@ const User = require("../models/userModel");
 const router = express.Router();
 
 // Redirect user to Google's OAuth 2.0 consent screen
+// router.get("/auth/google", (req, res) => {
+//   const protocol = req.protocol;
+//   const host = req.get('host'); // e.g., example.com or localhost:5000
+
+//   const baseUrl = `${protocol}://${host}`;
+
+//   const redirectUri = process.env.NODE_ENV === "production"
+//     ? `${baseUrl}/auth/google/callback`
+//     : process.env.GOOGLE_REDIRECT_URI;
+//     console.log('redirectUri',redirectUri)
+//   const redirectUrl =
+//     `https://accounts.google.com/o/oauth2/v2/auth?` +
+//     `client_id=${process.env.GOOGLE_CLIENT_ID}` +
+//     `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+//     `&response_type=code` +
+//     `&scope=openid%20email%20profile`;
+//   res.redirect(redirectUrl);
+// });
 router.get("/auth/google", (req, res) => {
-  const protocol = req.protocol;
-  const host = req.get('host'); // e.g., example.com or localhost:5000
+  const redirectUri = process.env.GOOGLE_REDIRECT_URI;
 
-  const baseUrl = `${protocol}://${host}`;
-
-  const redirectUri = process.env.NODE_ENV === "production"
-    ? `${baseUrl}/auth/google/callback`
-    : process.env.GOOGLE_REDIRECT_URI;
-    console.log('redirectUri',redirectUri)
   const redirectUrl =
     `https://accounts.google.com/o/oauth2/v2/auth?` +
     `client_id=${process.env.GOOGLE_CLIENT_ID}` +
     `&redirect_uri=${encodeURIComponent(redirectUri)}` +
     `&response_type=code` +
     `&scope=openid%20email%20profile`;
+
   res.redirect(redirectUrl);
 });
+
 
 // Handle Google redirect
 router.get("/auth/google/callback", async (req, res,next) => {
