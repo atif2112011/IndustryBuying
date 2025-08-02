@@ -299,7 +299,7 @@ function Productpage() {
               )}
 
               {product.shortDescription && (
-                <p className="!text-xs md:!text-sm text-gray-600 mb-4">
+                <p className="!text-xs md:!text-sm text-gray-600 mb-4 font-semibold">
                   {product.shortDescription}
                 </p>
               )}
