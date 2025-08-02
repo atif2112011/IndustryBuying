@@ -73,7 +73,7 @@ function Order() {
     setModalOpen(false);
   };
 
-  const handleChangePage = async(event, newPagce) => {
+  const handleChangePage = async(event, newPage) => {
     setorderpage(newPage);
     setLoading(true);
     const response=await FetchAllOrdersAdmin(newPage+1,rowsPerPage,search,status,date);

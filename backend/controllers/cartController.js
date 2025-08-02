@@ -37,19 +37,19 @@ const addToCart = async (req, res, next) => {
     const existingItem = cart.items.find(item => item.productId.toString() === productId);
     if (existingItem) {
       existingItem.quantity += quantity;
-      existingItem.price = product.price;
+      existingItem.price = product.price-(product.price * product.discount) / 100;
       existingItem.gstPercentage=product.gst;
-      existingItem.gst=product.price*existingItem.quantity*product.gst/100;
-      existingItem.subtotal = existingItem.quantity * existingItem.price + product.price*existingItem.quantity*product.gst/100;
+      existingItem.gst=existingItem.price*existingItem.quantity*product.gst/100;
+      existingItem.subtotal = existingItem.quantity * existingItem.price + existingItem.gst;
     } else {
       cart.items.push({
         productId,
         productName: product.name,
-        price: product.price,
+        price: product.price-(product.price * product.discount) / 100,
         quantity,
         gstPercentage:product.gst,
-        gst:product.price*quantity*product.gst/100,
-        subtotal: product.price * quantity + product.price*quantity*product.gst/100,
+        gst:(product.price-(product.price * product.discount) / 100)*quantity*product.gst/100,
+        subtotal: (product.price-(product.price * product.discount) / 100)*(quantity) + ((product.price-(product.price * product.discount) / 100)*quantity*product.gst/100),
         image: product.images[0] || '',
       });
     }
@@ -122,6 +122,7 @@ const removeCartItem = async (req, res, next) => {
     cart.items = cart.items.filter(item => item.productId.toString() !== productId);
     cart.totalItems = cart.items.reduce((acc, item) => acc + item.quantity, 0);
     cart.totalPrice = cart.items.reduce((acc, item) => acc + item.subtotal, 0);
+    cart.totalGst=cart.items.reduce((acc, item) => acc + item.gst, 0);
     await cart.save();
 
     res.status(200).json({

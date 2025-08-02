@@ -330,7 +330,7 @@ function Cartpage() {
                                 </h2>
                                 <div className="flex items-center gap-2 mt-2 md:mt-1">
                                   <span className="text-gray-700 font-medium !text-xs md:!text-sm">
-                                    ₹{parseFloat(item?.price.toFixed(2)) || 0}
+                                    ₹ {parseFloat(item?.price).toFixed(2) || 0}
                                   </span>
                                   {/* <span className="font-bold !text-xs md:!text-md">
                                     ₹{item?.discountedPrice || 0}
@@ -366,7 +366,7 @@ function Cartpage() {
                             </div>
                             <div className="md:text-right">
                               <div className="text-md md:text-lg font-bold">
-                                {parseFloat(item?.subtotal.toFixed(2)) || 0}
+                                {parseFloat(item?.subtotal).toFixed(2) || 0}
                               </div>
                               <button className="relative group !text-xs text-gray-500 underline">
                                 Price Details
@@ -378,10 +378,10 @@ function Cartpage() {
                                     <span className="!text-xs">
                                       ₹
                                       {parseFloat(
-                                        (item?.price * item?.quantity).toFixed(
+                                        (item?.price * item?.quantity)
+                                      ).toFixed(
                                           2
-                                        )
-                                      ) || 0}
+                                        ) || 0}
                                     </span>
                                   </div>
                                   <div className="flex justify-between text-gray-700 mb-2">
@@ -389,7 +389,7 @@ function Cartpage() {
                                       GST@ {item?.gstPercentage || 0}%
                                     </span>
                                     <span className="!text-xs">
-                                      +₹{parseFloat(item?.gst?.toFixed(2)) || 0}
+                                      +₹{parseFloat(item?.gst).toFixed(2) || 0}
                                     </span>
                                   </div>
                                   <hr className="my-2 text-gray-400" />
@@ -399,7 +399,7 @@ function Cartpage() {
                                     </span>
                                     <span className="!text-xs">
                                       ₹
-                                      {parseFloat(item?.subtotal.toFixed(2)) ||
+                                      {parseFloat(item?.subtotal).toFixed(2) ||
                                         0}
                                     </span>
                                   </div>
