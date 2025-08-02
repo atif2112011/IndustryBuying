@@ -244,7 +244,7 @@ function Productpage() {
                       <img
                         src={img}
                         alt={`Product ${index}`}
-                        className="w-full h-full rounded-md object-cover"
+                        className="w-full h-full rounded-md object-contain"
                       />
                     </SwiperSlide>
                   ))}
@@ -362,7 +362,7 @@ function Productpage() {
                   <div className=" p-2  md:p-4 text-sm space-y-3 text-gray-800 bg-gray-100 m-2">
                     {product &&
                       product.technicalAspects &&
-                      product.technicalAspects.map((item, index) => (
+                      product.technicalAspects.slice(0, 3).map((item, index) => (
                         <div className="flex justify-between ">
                           <span className=" !text-xs text-gray-700">
                             {item?.label || ""}
