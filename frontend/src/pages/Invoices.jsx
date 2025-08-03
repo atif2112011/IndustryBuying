@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { Box, FormControl, IconButton, InputLabel, MenuItem, Modal, Select } from "@mui/material";
 import { useEffect, useState } from "react";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -33,6 +33,15 @@ function Invoices() {
   const [totalInvoicePages, setTotalInvoicePages] = useState(0);
 
   const [rowsPerPage, setrowsPerPage] = useState(10);
+
+    // Image Modal
+    const [invoiceURL, setInvoiceURL] = useState(null);
+    const [open, setOpen] = useState(false);
+
+     const handleClose = () => {
+    setInvoiceURL(null);
+    setOpen(false);
+  };
 
   const handleinvoiceChangePage = (event, newPage) => {
     setorderpage(newPage);
@@ -261,7 +270,19 @@ function Invoices() {
                         border: "none",
                         padding: "10px 12px",
                       }}
+                      
                     >
+                    <div className="flex flex-row gap-4 items-center">
+                                            <p
+                      
+                      className="!text-xs md:!text-sm !text-blue-600 hover:underline cursor-pointer"
+                      onClick={() =>{
+                        setInvoiceURL(invoice?.invoiceUrl);
+                        setOpen(true);
+                      }}
+                    >
+                      View
+                    </p>
                       <a
                         href={getDownloadUrl(invoice?.invoiceUrl)}
                         target="_blank"
@@ -270,6 +291,7 @@ function Invoices() {
                       >
                         Download
                       </a>
+                    </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -336,9 +358,20 @@ function Invoices() {
                         "N/A"}
                     </div>
 
-                    <div className="text-xs text-gray-800 font-semibold">
-                      Action
+                    <div className="text-xs text-gray-800 font-semibold mb-1">
+                      Action  :
                     </div>
+                    <div className="flex flex-row gap-2 flex-wrap">
+                      <p
+                      
+                      className="!text-xs !text-blue-600 hover:underline"
+                      onClick={() =>{
+                        setInvoiceURL(invoice?.invoiceUrl);
+                        setOpen(true);
+                      }}
+                    >
+                      View
+                    </p>
                     <a
                       href={getDownloadUrl(invoice?.invoiceUrl)}
                       target="_blank"
@@ -347,6 +380,7 @@ function Invoices() {
                     >
                       Download
                     </a>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
@@ -367,6 +401,49 @@ function Invoices() {
           </Table>
         </TableContainer>
       </div>
+
+      {/*View Invoice Modal */}
+      <Modal open={open} onClose={handleClose}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            outline: "none",
+            maxWidth: "90vw",
+            maxHeight: "90vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "transparent",
+            overflow: "auto",
+          }}
+        >
+          <img
+            src={invoiceURL}
+            alt="Large preview"
+            style={{
+              maxWidth: "90vw",
+              maxHeight: "90vh",
+              borderRadius: "10px",
+              boxShadow: "0 0 20px rgba(0,0,0,0.5)",
+            }}
+          />
+
+          <IconButton
+            onClick={handleClose}
+            sx={{
+              position: "absolute",
+              top: 10,
+              right: 10,
+              color: "black",
+            }}
+          >
+            <i className="ri-close-line" style={{ fontSize: "24px" }} />
+          </IconButton>
+        </Box>
+      </Modal>
     </div>
   );
 }

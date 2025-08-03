@@ -1,14 +1,25 @@
-import { Button, FormControl, MenuItem, Select } from "@mui/material";
+import { Box, Button, FormControl, MenuItem, Modal, Select,IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 const EditOrderModal = ({ isOpen, onClose, orderData, onSave }) => {
   const [status, setStatus] = useState(null);
   const [invoice, setInvoice] = useState(null);
+  const [invoiceURL,setInvoiceURL] = useState(null);
+   // Image Gallery
+    const [open, setOpen] = useState(false);
+    const handleOpen = (index) => {
+      setOpen(true);
+    };
+  
+    const handleClose = () => setOpen(false);
 
   useEffect(() => {
     if (orderData) {
       setStatus(orderData.status);
       setInvoice(orderData.invoiceUrl);
+      if(orderData?.invoiceUrl){
+        setInvoiceURL(orderData.invoiceUrl);
+      }
     }
   }, [orderData]);
 
@@ -76,7 +87,7 @@ const EditOrderModal = ({ isOpen, onClose, orderData, onSave }) => {
             <span className="!text-xs md:!text-sm text-blue-950">Subtotal</span>
           </div>
           {orderData && orderData.items && orderData.items.length>0 && orderData.items.map((item, index) => (
-            <div key={index} className="grid grid-cols-4 px-2 py-1 border-t">
+            <div key={index} className="grid grid-cols-4 px-2 py-1 border-t space-x-1">
               <span className="!text-xs md:!text-sm text-gray-800">
                 {item.productName}
               </span>
@@ -84,10 +95,10 @@ const EditOrderModal = ({ isOpen, onClose, orderData, onSave }) => {
                 {item.quantity}
               </span>
               <span className="!text-xs md:!text-sm text-gray-800">
-                {item.price}
+                {(item.price).toFixed(2)}
               </span>
               <span className="!text-xs md:!text-sm text-gray-800">
-                {item.subtotal}
+                {(item.subtotal).toFixed(2)}
               </span>
             </div>
           ))}
@@ -123,14 +134,24 @@ const EditOrderModal = ({ isOpen, onClose, orderData, onSave }) => {
             />
           </div>
           {orderData && orderData.invoiceUrl && (
-            <div className="mb-4">
+            <div className="flex flex-row gap-2 flex-wrap mb-4">
+              <Button
+                variant="outlined"
+                size="small"
+                color="primary"
+                // onClick={() => window.open(orderData.invoiceUrl, "_blank")}
+                onClick={() => setOpen(true)}
+              >
+                View Uploaded Invoice
+              </Button>
               <Button
                 variant="outlined"
                 size="small"
                 color="primary"
                 onClick={() => window.open(orderData.invoiceUrl, "_blank")}
+                // onClick={() => setOpen(true)}
               >
-                View Uploaded Invoice
+                Download
               </Button>
             </div>
           )}
@@ -150,6 +171,52 @@ const EditOrderModal = ({ isOpen, onClose, orderData, onSave }) => {
           </Button>
         </div>
       </div>
+       <Modal open={open} onClose={handleClose}>
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  outline: "none",
+                  maxWidth: "90vw",
+                  maxHeight: "90vh",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "transparent",
+                  overflow: "auto"
+                }}
+              >
+                
+      
+                <img
+                  src={invoiceURL}
+                  alt="Large preview"
+                  style={{
+                    maxWidth: "90vw",
+                    maxHeight: "90vh",
+                    borderRadius: "10px",
+                    boxShadow: "0 0 20px rgba(0,0,0,0.5)"
+                  }}
+                />
+      
+                
+      
+                <IconButton
+                  onClick={handleClose}
+                  sx={{
+                    position: "absolute",
+                    top: 10,
+                    right: 10,
+                    color: "black"
+                    
+                  }}
+                >
+                  <i className="ri-close-line" style={{ fontSize: "24px" }} />
+                </IconButton>
+              </Box>
+            </Modal>
     </div>
   );
 };

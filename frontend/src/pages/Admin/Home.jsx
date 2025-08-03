@@ -121,7 +121,7 @@ export default function Home() {
                   <TableCell sx={{padding:"6px 12px"}}>
                     <span className={`!text-xs font-medium ${statusColors[order.status.toLowerCase()]} px-2 py-1 rounded-md`}>{order.status}</span>
                   </TableCell>
-                  <TableCell sx={{padding:"6px 12px"}}><span className="!text-xs md:!text-sm font-medium text-gray-800">{order.totalPrice}</span></TableCell>
+                  <TableCell sx={{padding:"6px 12px"}}><span className="!text-xs md:!text-sm font-medium text-gray-800">{(order.totalPrice).toFixed(2)}</span></TableCell>
                   <TableCell sx={{padding:"6px 12px"}}><span className="!text-xs md:!text-sm font-medium text-gray-800">{new Date(order.createdAt).getDay()}/{new Date(order.createdAt).getMonth()+1}/{new Date(order.createdAt).getFullYear()}</span></TableCell>
                 </TableRow>
               ))}
