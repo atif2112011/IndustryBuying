@@ -6,6 +6,8 @@ const otpGenerator = require("otp-generator");
 const OTP = require("../models/otpSchema");
 const { sendOtpEmail } = require("./mailController");
 const sendEmail = require("../utils/sendMail");
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 // const { Error } = require("mongoose");
 
 //Register a new user
@@ -343,6 +345,66 @@ const LogoutUser=(req,res,next)=>{
   }
 }
 
+
+
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+
+  if (!user) throw new Error("User not found")
+
+  // Generate token
+  const token = crypto.randomBytes(32).toString("hex");
+  user.forgotPasswordToken = token;
+  user.forgotPasswordExpires = Date.now() + 5*60*60; // 5 min
+  await user.save();
+
+  // Send Email
+  const resetUrl = `http://localhost:5173/reset-password/${token}`;
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.MAIL_USER, // your email
+      pass: process.env.MAIL_PASS, // app-specific password
+    },
+  });
+  await transporter.sendMail({
+    to: user.email,
+    subject: "Password Reset",
+    html: `<a href="${resetUrl}">Reset Password</a>`,
+  });
+
+  res.status(200).json({ success:true,message: "Reset link sent to email." });
+};
+
+const resetPassword = async (req, res) => {
+  const { token } = req.params;
+  const { password,confirmPassword } = req.body;
+
+  if(!password || !confirmPassword)
+    throw new Error("All fields necessary")
+  
+   
+  if(password!==confirmPassword)
+    throw new Error("Password Dont match! ")
+
+  const user = await User.findOne({
+    resetToken: token,
+    tokenExpires: { $gt: Date.now() }, // Not expired
+  });
+
+  if (!user) throw new Error ("Token is invalid or expired") 
+
+  
+  user.password = await bcrypt.hash(password, 10);
+  user.resetToken = undefined;
+  user.tokenExpires = undefined;
+
+  await user.save();
+  res.status(200).json({ success:true,message: "Password reset successful" });
+};
+
+
 module.exports = {
   registerUser,
   loginUser,
@@ -351,5 +413,7 @@ module.exports = {
   verifyOTP,
   verifyAuth,
   registerGoogleUser,
-  LogoutUser
+  LogoutUser,
+  forgotPassword,
+  resetPassword
 };

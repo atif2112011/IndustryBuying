@@ -50,6 +50,7 @@ app.use("/api/testimonials", testimonialRoutes);
 app.use("/api/brands", brandRoutes);
 app.use("/api/certificates", certificateRoutes);
 
+
 app.use("/", Auth2Routes);
 app.get("/server", async (req, res) => {
   try {
