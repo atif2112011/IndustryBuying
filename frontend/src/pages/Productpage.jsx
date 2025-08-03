@@ -20,6 +20,7 @@ import {
   InputBase,
   Paper,
   Rating,
+  Modal,
 } from "@mui/material";
 import SnackBar from "../components/SnackBar";
 import { useNavigate, useParams } from "react-router-dom";
@@ -116,6 +117,25 @@ function Productpage() {
   const { user, setCart, setCartCount } = useAuth();
   const [deliveryType, setDeliveryType] = useState([]);
   const [returnDays, setReturnDays] = useState(0);
+  const [images, setImages] = useState([]);
+
+  // Image Gallery
+  const [open, setOpen] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const handleOpen = (index) => {
+    setCurrentIndex(index);
+    setOpen(true);
+  };
+
+  const handleClose = () => setOpen(false);
+
+  const handleNext = () =>
+    setCurrentIndex((prev) => (prev + 1) % images.length);
+
+  const handlePrev = () =>
+    setCurrentIndex((prev) =>
+      prev === 0 ? images.length - 1 : prev - 1
+    );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -141,6 +161,9 @@ function Productpage() {
           setDeliveryType((prevData) => [...prevData, "RETURN"]);
 
         if (response.product?.returnTime) setReturnDays(response.product.returnTime);
+
+        if(response.product?.images)
+        setImages(response.product.images);
       } else {
         setMessage(response.message);
         setShowSnackBar(true);
@@ -179,6 +202,11 @@ function Productpage() {
   };
 
   const handleAddToCart = async () => {
+    if(!user){
+      setMessage("Please login to add to cart");
+      setShowSnackBar(true);
+      return
+    }
     setLoading(true);
     const response = await addToCart(product._id, quantity);
     setLoading(false);
@@ -194,6 +222,11 @@ function Productpage() {
   };
 
   const handleBuyNow = async () => {
+    if(!user){
+      setMessage("Please login to add to cart");
+      setShowSnackBar(true);
+      return
+    }
     setLoading(true);
     const response = await addToCart(product._id, quantity);
     setLoading(false);
@@ -244,11 +277,78 @@ function Productpage() {
                       <img
                         src={img}
                         alt={`Product ${index}`}
-                        className="w-full h-full rounded-md object-contain"
+                        className="w-full h-full rounded-md object-contain cursor-pointer"
+                        onClick={() => handleOpen(index)}
                       />
                     </SwiperSlide>
                   ))}
               </Swiper>
+
+              <Modal open={open} onClose={handleClose}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            outline: "none",
+            maxWidth: "90vw",
+            maxHeight: "90vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "transparent"
+          }}
+        >
+          <IconButton
+            onClick={handlePrev}
+            sx={{
+              position: "absolute",
+              left: 20,
+              color: "black"
+              
+            }}
+          >
+            <i className="ri-arrow-left-s-line" style={{ fontSize: "24px" }} />
+          </IconButton>
+
+          <img
+            src={images[currentIndex]}
+            alt="Large preview"
+            style={{
+              maxWidth: "90vw",
+              maxHeight: "90vh",
+              borderRadius: "10px",
+              boxShadow: "0 0 20px rgba(0,0,0,0.5)"
+            }}
+          />
+
+          <IconButton
+            onClick={handleNext}
+            sx={{
+              position: "absolute",
+              right: 20,
+              color: "black"
+              
+            }}
+          >
+            <i className="ri-arrow-right-s-line" style={{ fontSize: "24px" }} />
+          </IconButton>
+
+          <IconButton
+            onClick={handleClose}
+            sx={{
+              position: "absolute",
+              top: 10,
+              right: 10,
+              color: "black"
+              
+            }}
+          >
+            <i className="ri-close-line" style={{ fontSize: "24px" }} />
+          </IconButton>
+        </Box>
+      </Modal>
 
               {/* Thumbnails */}
               <Swiper
@@ -363,11 +463,11 @@ function Productpage() {
                     {product &&
                       product.technicalAspects &&
                       product.technicalAspects.slice(0, 3).map((item, index) => (
-                        <div className="flex justify-between ">
-                          <span className=" !text-xs text-gray-700">
+                        <div className="flex justify-between gap-6">
+                          <span className=" !text-xs text-gray-700 w-3/4">
                             {item?.label || ""}
                           </span>
-                          <span className="!text-xs font-medium">
+                          <span className="!text-xs font-medium w-1/4">
                             {item?.value || ""}
                           </span>
                         </div>
@@ -467,10 +567,10 @@ function Productpage() {
         <div className="flex flex-col rounded-md gap-3 bg-white rounded-md p-4 shadow-md">
           <p className="!text-md md:!text-lg font-semibold">
             ₹{" "}
-            {discountAmount * quantity +
-              (discountAmount * quantity * gst) / 100}{" "}
+            {(discountAmount * quantity +
+              (discountAmount * quantity * gst) / 100).toFixed(2)}{" "}
             <span className="!text-xs md:!text-sm text-gray-800 font-normal ml-2">
-              ( ₹ {discountAmount * quantity} + {product.gst}% GST )
+              ( ₹ {(discountAmount * quantity).toFixed(2)} + {product.gst}% GST )
             </span>
           </p>
 
@@ -478,10 +578,10 @@ function Productpage() {
             <p className="!text-xs md:!text-sm !text-gray-700">
               UNIT MRP :{" "}
               <span className="!text-xs md:!text-sm text-gray-500 text-decoration-line: line-through">
-                ₹{price}
+                ₹{price.toFixed(2)}
               </span>
               <span className="!text-xs md:!text-sm text-gray-700 ml-2">
-                ₹{price - (price * product.discount) / 100}
+                ₹{(price - (price * product.discount) / 100).toFixed(2)}
               </span>
               <span className="!text-xs !text-green-600 ml-2 font-semibold ml-6 border border-green-500  rounded-sm md:p-1 px-[4px] py-[1px]">
                 {product?.discount || 0}% OFF

@@ -280,7 +280,7 @@ function Order() {
                   </TableCell>
                   <TableCell sx={{ padding: "6px 12px" }}>
                     <div className="text-xs md:text-sm text-gray-800">
-                      {order.totalPrice}
+                      {(order.totalPrice).toFixed(2)}
                     </div>
                   </TableCell>
                   <TableCell sx={{ padding: "6px 12px" }}>

@@ -59,17 +59,30 @@ app.get("/server", async (req, res) => {
   }
 });
 
-// if (process.env.NODE_ENV === "production") {
-//   // Serve static files from frontend build
-//   app.get("*", (req, res) => {
-//     res.sendFile(path.join(__dirname, "../frontend/dist", "index.html"));
-//   });
-// }
-
+if(process.env.NODE_ENV === 'production') {
+  app.use((req, res, next) => {
+  // Check if it's a GET request and not an API call
+  if (req.method === 'GET' && !req.path.startsWith('/api')) {
+    res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
+  } else {
+    next(); // Pass to the next handler (likely a 404 error)
+  }
+});
+}
 
 //Not Found Middleware, place at the end
 app.use(notFound);
 app.use(errorHandler);
+
+
+
+// if(process.env.NODE_ENV === 'production') {
+//   app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
+// });
+// }
+
+
 
 //Server start
 app.listen(PORT, async () => {

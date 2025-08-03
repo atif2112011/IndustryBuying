@@ -1,4 +1,12 @@
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+  Box,
+  FormControl,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Modal,
+  Select,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -49,10 +57,19 @@ function OrderandBilling() {
   const [totalInvoices, setTotalInvoices] = useState(0);
   const [totalInvoicePages, setTotalInvoicePages] = useState(0);
 
+  // Image Modal
+  const [invoiceURL, setInvoiceURL] = useState(null);
+  const [open, setOpen] = useState(false);
+
   const [orderpage, setorderpage] = useState(0);
   const [rowsPerPage, setrowsPerPage] = useState(5);
   const [totalOrders, setTotalOrders] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+
+  const handleClose = () => {
+    setInvoiceURL(null);
+    setOpen(false);
+  };
 
   const handleChangePage = async (event, newPage) => {
     setorderpage(newPage);
@@ -286,7 +303,13 @@ function OrderandBilling() {
               <TableBody>
                 {orders &&
                   orders.length > 0 &&
-                  orders.map((order) => <OrderTableComponent order={order} />)}
+                  orders.map((order) => (
+                    <OrderTableComponent
+                      order={order}
+                      setInvoiceURL={setInvoiceURL}
+                      setOpen={setOpen}
+                    />
+                  ))}
               </TableBody>
               <TableFooter>
                 <TableRow>
@@ -307,14 +330,55 @@ function OrderandBilling() {
       </div>
       {/* My Orders end */}
 
-      
+      {/*View Invoice Modal */}
+      <Modal open={open} onClose={handleClose}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            outline: "none",
+            maxWidth: "90vw",
+            maxHeight: "90vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "transparent",
+            overflow: "auto",
+          }}
+        >
+          <img
+            src={invoiceURL}
+            alt="Large preview"
+            style={{
+              maxWidth: "90vw",
+              maxHeight: "90vh",
+              borderRadius: "10px",
+              boxShadow: "0 0 20px rgba(0,0,0,0.5)",
+            }}
+          />
+
+          <IconButton
+            onClick={handleClose}
+            sx={{
+              position: "absolute",
+              top: 10,
+              right: 10,
+              color: "black",
+            }}
+          >
+            <i className="ri-close-line" style={{ fontSize: "24px" }} />
+          </IconButton>
+        </Box>
+      </Modal>
     </div>
   );
 }
 
 export default OrderandBilling;
 
-function OrderTableComponent({ order }) {
+function OrderTableComponent({ order, setInvoiceURL, setOpen }) {
   const [showTrack, setshowTrack] = useState(false);
   const [currentStep, setcurrentStep] = useState(4);
   const steps = {
@@ -453,23 +517,43 @@ function OrderTableComponent({ order }) {
               >
                 Track Order
               </button>
-              {order?.invoiceUrl ?<button className="border border-gray-400 px-3 py-1 rounded-full text-xs md:text-sm text-gray-700">
-                <a
-                        href={getDownloadUrl(order?.invoiceUrl)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs md:text-sm text-gray-700 hover:underline"
-                      >
-                        Download Invoice
-                      </a>
-              </button>:<button 
-              disabled
-              className="border border-neutral-300 px-3 py-1 rounded-full text-xs md:text-sm text-neutral-300 bg-gray-100">
-                
-                        Download Invoice
-                      
-              </button>
-              }
+              {order?.invoiceUrl ? (
+                <button
+                  className="border border-gray-400 px-3 py-1 rounded-full text-xs md:text-sm text-gray-700"
+                  onClick={() => {
+                    setInvoiceURL(order?.invoiceUrl);
+                    setOpen(true);
+                  }}
+                >
+                  View Invoice
+                </button>
+              ) : (
+                <button
+                  disabled
+                  className="border border-neutral-300 px-3 py-1 rounded-full text-xs md:text-sm text-neutral-300 bg-gray-100"
+                >
+                  View Invoice
+                </button>
+              )}
+              {order?.invoiceUrl ? (
+                <button className="border border-gray-400 px-3 py-1 rounded-full text-xs md:text-sm text-gray-700">
+                  <a
+                    href={getDownloadUrl(order?.invoiceUrl)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs md:text-sm text-gray-700 hover:underline"
+                  >
+                    Download Invoice
+                  </a>
+                </button>
+              ) : (
+                <button
+                  disabled
+                  className="border border-neutral-300 px-3 py-1 rounded-full text-xs md:text-sm text-neutral-300 bg-gray-100"
+                >
+                  Download Invoice
+                </button>
+              )}
             </div>
           </div>
           {showTrack && (
