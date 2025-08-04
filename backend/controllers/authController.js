@@ -347,8 +347,9 @@ const LogoutUser=(req,res,next)=>{
 
 
 
-const forgotPassword = async (req, res) => {
-  const { email } = req.body;
+const forgotPassword = async (req, res,next) => {
+try {
+    const { email } = req.body;
   const user = await User.findOne({ email });
 
   if (!user) throw new Error("User not found")
@@ -356,52 +357,91 @@ const forgotPassword = async (req, res) => {
   // Generate token
   const token = crypto.randomBytes(32).toString("hex");
   user.forgotPasswordToken = token;
-  user.forgotPasswordExpires = Date.now() + 5*60*60; // 5 min
+  user.forgotPasswordExpires = Date.now() + 5*60*1000; // 5 min
   await user.save();
 
   // Send Email
-  const resetUrl = `http://localhost:5173/reset-password/${token}`;
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.MAIL_USER, // your email
-      pass: process.env.MAIL_PASS, // app-specific password
-    },
-  });
-  await transporter.sendMail({
+  const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${token}`;
+
+  console.log(`Reset Link: ${resetUrl}`)
+  await sendEmail({
     to: user.email,
-    subject: "Password Reset",
-    html: `<a href="${resetUrl}">Reset Password</a>`,
+    subject: "Password Reset Request",
+    html: `You are receiving this email because you (or someone else) have requested the reset of a password. Please click on the following link, or paste this into your browser to complete the process within five minutes: <br><br> <a href="${resetUrl}">${resetUrl}</a>`,
   });
 
   res.status(200).json({ success:true,message: "Reset link sent to email." });
+} catch (error) {
+
+        next(error);
+}
 };
 
-const resetPassword = async (req, res) => {
-  const { token } = req.params;
-  const { password,confirmPassword } = req.body;
+const resetPassword = async (req, res,next) => {
+  try {
+    const { token } = req.params;
+  const { password } = req.body;
 
-  if(!password || !confirmPassword)
-    throw new Error("All fields necessary")
-  
-   
-  if(password!==confirmPassword)
-    throw new Error("Password Dont match! ")
+
 
   const user = await User.findOne({
-    resetToken: token,
-    tokenExpires: { $gt: Date.now() }, // Not expired
+    forgotPasswordToken: token,
   });
+  if (!user) throw new Error ("Invalid Token") 
 
-  if (!user) throw new Error ("Token is invalid or expired") 
+   const expiryTime = user.forgotPasswordExpires.getTime();
+    const currentTime = Date.now();
+
+    const isExpired = currentTime > expiryTime;
+
+    // --- Clearer Debugging ---
+    // console.log(`Current Time (ms) : ${currentTime}`);
+    // console.log(`Expiry Time (ms)  : ${expiryTime}`);
+    // console.log(`Is Expired? (current > expiry) : ${isExpired}`);
+    // -------------------------
+  if(isExpired)
+    throw new Error("Token Expired ! Try Again")
+
+  
+
 
   
   user.password = await bcrypt.hash(password, 10);
-  user.resetToken = undefined;
-  user.tokenExpires = undefined;
+  user.forgotPasswordExpires = undefined;
+  user.forgotPasswordToken = undefined;
 
   await user.save();
   res.status(200).json({ success:true,message: "Password reset successful" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+const changePassword = async (req, res,next) => {
+  try {
+    
+    const {userId}= req.user;
+    if(!userId) throw new Error("User Not Found")
+
+    const { oldpassword, newpassword } = req.body;
+    
+    const user = await User.findById(userId);
+    if (!user) throw new Error ("User Not Found")
+
+    const isMatch = await bcrypt.compare(oldpassword, user.password);
+    if(!isMatch) throw new Error("Invalid Password! Enter Correct Password")
+
+    user.password = await bcrypt.hash(newpassword, 10);
+    await user.save();
+
+ 
+
+  
+  res.status(200).json({ success:true,message: "Password change successful" });
+  } catch (error) {
+    next(error);
+  }
 };
 
 
@@ -415,5 +455,6 @@ module.exports = {
   registerGoogleUser,
   LogoutUser,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  changePassword
 };

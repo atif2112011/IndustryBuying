@@ -235,3 +235,85 @@ export const loginUser=async({email,password})=>{
     }
   }
  }
+
+
+export const ForgotPassword=async({email})=>{
+
+  try {
+    const response=await API.post("/api/auth/forgot-password",{
+      
+      email:email,
+    
+    })
+    // console.log('response',response)
+    if(response.data.success)
+      return {
+        success:true,
+        message:response.data.message
+      }
+    else
+    throw new Error(response.data.message)
+    
+  } catch (error) {
+    console.error(error)
+    return {
+      success:false,
+      message:error?.response?.data?.message ||error.message
+    }
+  }
+} 
+
+export const ResetPassword=async({password,token})=>{
+
+  try {
+    const response=await API.post(`/api/auth/reset-password/${token}`,{
+      
+      password:password,
+    
+    })
+    // console.log('response',response)
+    if(response.data.success)
+      return {
+        success:true,
+        message:response.data.message
+      }
+    else
+    throw new Error(response.data.message)
+    
+  } catch (error) {
+    console.error(error)
+    return {
+      success:false,
+      message:error?.response?.data?.message ||error.message
+    }
+  }
+} 
+
+
+export const ChangePassword=async({oldpassword,newpassword})=>{
+
+  try {
+    const response=await API.post("/api/auth/reset-password",{
+      
+      oldpassword,
+      newpassword
+    
+    })
+    // console.log('response',response)
+    if(response.data.success)
+      return {
+        success:true,
+        message:response.data.message
+      }
+    else
+    throw new Error(response.data.message)
+    
+  } catch (error) {
+    console.error(error)
+    return {
+      success:false,
+      message:error?.response?.data?.message ||error.message
+    }
+  }
+} 
+

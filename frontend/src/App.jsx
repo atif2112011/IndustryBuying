@@ -29,6 +29,7 @@ import SearchPage from "./pages/SearchResultPage.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import OrderSummary from "./pages/OrderSummary.jsx";
 import Invoices from "./pages/Invoices.jsx";
+import ForgotPassword from "./pages/ForgotPassword.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -132,6 +133,7 @@ function App() {
 
         <Route path="/user/login" element={<Login />}></Route>
         <Route path="/user/register" element={<Register />}></Route>
+        <Route path="/reset-password/:token" element={<ForgotPassword />}></Route>
 
         <Route path="/admin" element={<AdminHome />}></Route>
       </Routes>
