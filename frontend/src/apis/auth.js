@@ -293,7 +293,7 @@ export const ResetPassword=async({password,token})=>{
 export const ChangePassword=async({oldpassword,newpassword})=>{
 
   try {
-    const response=await API.post("/api/auth/reset-password",{
+    const response=await API.post("/api/auth/change-password",{
       
       oldpassword,
       newpassword
