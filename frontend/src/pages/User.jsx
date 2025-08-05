@@ -5,6 +5,8 @@ import { useAuth } from "../contexts/AuthContext";
 import { useLoader } from "../contexts/LoaderContext";
 import { useAlert } from "../contexts/AlertContext";
 import { UpdateUser } from "../apis/user";
+import ChangePasswordModal from "../components/ChangePasswordModal";
+import { ChangePassword } from "../apis/auth";
 
 function User() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,13 +18,10 @@ function User() {
   const { setLoading } = useLoader();
   const { setMessage, setShowSnackBar } = useAlert();
 
-  // const [user, setUser] = useState({
-  //   name: "user",
-  //   email: "ratradelinks2020@gmail.com",
-  //   phone: "1234567890",
-  //   gstin: "",
-  //   emailVerified: true,
-  // });
+  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] =
+    useState(false);
+
+  
 
   const [company, setCompany] = useState({
     name: "company name",
@@ -189,6 +188,20 @@ function User() {
     } // Here you can also call API to update user
   };
 
+  const handleChangePassword = async(data) => {
+    setLoading(true);
+    const response = await ChangePassword({oldpassword:data.oldpassword,newpassword:data.newpassword});
+    setLoading(false);
+    if (response.success) {
+      setMessage("Password Updated Successfully");
+      setShowSnackBar(true);
+      setIsChangePasswordModalOpen(false);
+    } else {
+      setMessage(response.message);
+      setShowSnackBar(true);
+    }
+  }
+
   return (
     <div className="flex flex-col gap-4">
       {/* Personal Information */}
@@ -250,15 +263,25 @@ function User() {
           </div>
         </div>
 
-        {/* Edit Button */}
+        <div className="flex flex-row gap-4 items-center flex-wrap">
+          {/* Edit Button */}
         <button
           className="border border-orange-500 text-orange-500 p-1 px-4 md:px-4 md:py-1 rounded-sm !text-xs md:!text-sm hover:bg-orange-50"
           onClick={() => {
             setIsModalOpen(true);
           }}
         >
-          Edit
+          Edit Profile 
         </button>
+        <button
+          className="border border-orange-500 text-orange-500 p-1 px-4 md:px-4 md:py-1 rounded-sm !text-xs md:!text-sm hover:bg-orange-50"
+          onClick={() => {
+            setIsChangePasswordModalOpen(true);
+          }}
+        >
+          Change Password
+        </button>
+        </div>
       </div>
 
       <EditUserModal
@@ -339,6 +362,12 @@ function User() {
         onClose={() => setisCreateAddressModalOpen(false)}
         initialData={editingAddress}
         onSave={handleCreateAddress}
+      />
+
+      <ChangePasswordModal
+        isOpen={isChangePasswordModalOpen}
+        onClose={() => setIsChangePasswordModalOpen(false)}
+        onSave={handleChangePassword}
       />
 
       {/* Addresses */}

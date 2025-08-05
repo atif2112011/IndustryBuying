@@ -354,6 +354,8 @@ try {
 
   if (!user) throw new Error("User not found")
 
+    if(user.googleId) throw new Error("Google Account Found! Log In Using Google");
+
   // Generate token
   const token = crypto.randomBytes(32).toString("hex");
   user.forgotPasswordToken = token;

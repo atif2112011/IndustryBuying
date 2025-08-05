@@ -38,7 +38,7 @@ function ProtectedRoute({ children }) {
    
            } else {
              setLoading(false);
-             setMessage("Session Expired!! Login Again");
+             setMessage("Login to continue");
              setShowSnackBar(true);
              navigate("/user/login");
             throw new Error(response?.message || response);
