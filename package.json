@@ -10,7 +10,6 @@
     "start-frontend": "cd frontend && npm run dev",
     "install-all": "npm --prefix frontend install && npm --prefix backend install",
     "build": "npm run build --prefix frontend"
-    
   },
   "keywords": [],
   "author": "",
