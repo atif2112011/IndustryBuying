@@ -10,7 +10,7 @@
     "start-frontend": "cd frontend && npm run dev",
     "install-all": "npm --prefix frontend install && npm --prefix backend install",
     "build": "npm run build --prefix frontend",
-    "expose": "cloudflared tunnel --url http://localhost:5000"
+    "expose": "cloudflared tunnel run mytunnel"
 
     
   },
