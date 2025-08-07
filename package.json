@@ -10,7 +10,8 @@
     "start-frontend": "cd frontend && npm run dev",
     "install-all": "npm --prefix frontend install && npm --prefix backend install",
     "build": "npm run build --prefix frontend",
-    "expose": "cloudflared tunnel run mytunnel"
+    "expose": "cloudflared tunnel run mytunnel",
+    "pm2" : "cd backend && pm2 start server.js --name ratl --watch"
 
     
   },
