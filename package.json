@@ -11,7 +11,9 @@
     "install-all": "npm --prefix frontend install && npm --prefix backend install",
     "build": "npm run build --prefix frontend",
     "expose": "cloudflared tunnel run mytunnel",
-    "pm2" : "cd backend && pm2 start server.js --name ratl --watch"
+    "pm2" : "cd backend && pm2 start server.js --name ratl --watch",
+    "start-server": "pm2 start \"cloudflared tunnel run mytunnel\" --name cloudflare-tunnel && pm2 start backend/server.js --name ratl --watch && pm2 save",
+  "stop-server": "pm2 stop cloudflare-tunnel && pm2 stop ratl && pm2 delete all && pm2 save"
 
     
   },
