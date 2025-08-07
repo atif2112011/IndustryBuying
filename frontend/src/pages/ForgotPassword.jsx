@@ -50,6 +50,20 @@ function ForgotPassword() {
       setShowSnackBar(true);
       return
     }
+
+    if(forgotPasswordEmail=="" || forgotPasswordEmail==null)
+    {
+      setMessage("New Password Cannot be Empty !");
+      setShowSnackBar(true);
+      return
+    }
+
+    if(forgotPasswordEmail.length<6)
+    {
+      setMessage("Password Should be at least 6 characters long !");
+      setShowSnackBar(true);
+      return
+    }
     setLoading(true);
     const response=await ResetPassword({password:forgotPasswordEmail,token:token});
     setLoading(false);

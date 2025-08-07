@@ -30,6 +30,10 @@ export default function ChangePasswordModal({ isOpen, onClose, onSave }) {
         errs.confirmpassword = 'Passwords do not match';
         }
 
+        if(formData.newpassword.length<6){
+          errs.newpassword = 'Password must be at least 6 characters long';
+        }
+
         
 
         setErrors(errs);
