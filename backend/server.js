@@ -19,11 +19,13 @@ const cookieParser = require("cookie-parser");
 
 const path = require("path");
 const morgan = require("morgan");
+const compression = require("compression");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 //Middlewares
+app.use(compression());
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());

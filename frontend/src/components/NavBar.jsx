@@ -99,8 +99,8 @@ function NavBar() {
         {/* Logo + Cart + Hamburger on Mobile */}
         <div className="flex flex-row w-full md:w-auto justify-between items-center md:pl-5 md:pt-1" onClick={() => navigate("/")}>
           <div className="flex items-center md:gap-3 gap-2 cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out">
-            <img src={logo} alt="Logo" className="md:h-10 h-6" />
-            <img src={logoText} alt="Logo-text" className="md:h-8 h-6 " />
+            <img src={logo} loading="lazy" alt="Logo" className="md:h-10 h-6" />
+            <img src={logoText} loading="lazy" alt="Logo-text" className="md:h-8 h-6 " />
             {/* <h3
               className="!text-xl md:!text-3xl !font-[700] !tracking-wider !cursor-pointer !text-blue-950 text-shadow hover:!text-blue-600 transition-colors duration-200 logo-font"
               onClick={() => navigate("/")}

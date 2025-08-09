@@ -49,7 +49,7 @@ useEffect(()=>{
       >
         {brands.map((brand, index) => (
           <SwiperSlide key={index} className="flex items-center justify-center">
-            <img src={brand.img.secure_url} alt={`brand-${brand.name}`} className="h-24 object-contain w-full max-w-[100px]" />
+            <img loading="lazy" src={brand.img.secure_url} alt={`brand-${brand.name}`} className="h-24 object-contain w-full max-w-[100px]" />
           </SwiperSlide>
         ))}
       </Swiper>}
