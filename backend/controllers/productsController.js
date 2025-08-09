@@ -50,7 +50,6 @@ const getProducts = async (req, res, next) => {
       date, // 🆕 Expecting 'YYYY-MM-DD' from frontend
     } = req.query;
 
-
     page = parseInt(page);
     limit = parseInt(limit);
 
@@ -59,19 +58,19 @@ const getProducts = async (req, res, next) => {
     const query = {};
 
     // 🔍 Search by product name or description
-    
-    if(search){
+
+    if (search) {
       if (mongoose.Types.ObjectId.isValid(search)) {
-      query._id = search;
-    } else {
-      query.$or = [
-        { name: { $regex: search, $options: "i" } },
-        { brand: { $regex: search, $options: "i" } },
-        { description: { $regex: search, $options: "i" } },
-        { shortDescription: { $regex: search, $options: "i" } },
-        { tags: { $regex: search, $options: "i" } },
-      ];
-    }
+        query._id = search;
+      } else {
+        query.$or = [
+          { name: { $regex: search, $options: "i" } },
+          { brand: { $regex: search, $options: "i" } },
+          { description: { $regex: search, $options: "i" } },
+          { shortDescription: { $regex: search, $options: "i" } },
+          { tags: { $regex: search, $options: "i" } },
+        ];
+      }
     }
     // 📦 Filter by category
     if (category) {
@@ -387,7 +386,12 @@ const addProduct = async (req, res, next) => {
             {
               resource_type: "image",
               folder: "products",
-              public_id: file.originalname.split(".")[0], // optional: use file name
+              public_id: file.originalname.split(".")[0],
+              transformation: [
+                  { width: 1024, height: 1024, crop: "limit" }, // Resize if larger
+                  { quality: "auto" }, // Smart compression
+                  { fetch_format: "auto" }, // Use WebP/AVIF if supported
+                ] // optional: use file name
             },
             (error, result) => {
               if (error) reject(error);
@@ -516,6 +520,11 @@ const updateProductAdmin = async (req, res, next) => {
                 resource_type: "image",
                 folder: "products",
                 public_id: file.originalname.split(".")[0],
+                transformation: [
+                  { width: 1024, height: 1024, crop: "limit" }, // Resize if larger
+                  { quality: "auto" }, // Smart compression
+                  { fetch_format: "auto" }, // Use WebP/AVIF if supported
+                ],
               },
               (error, result) => {
                 if (error) reject(error);

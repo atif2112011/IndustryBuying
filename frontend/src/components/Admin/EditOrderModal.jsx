@@ -148,7 +148,7 @@ const EditOrderModal = ({ isOpen, onClose, orderData, onSave }) => {
                 variant="outlined"
                 size="small"
                 color="primary"
-                onClick={() => window.open(orderData.invoiceUrl, "_blank")}
+                onClick={() => window.open(getDownloadUrl(orderData.invoiceUrl), "_blank")}
                 // onClick={() => setOpen(true)}
               >
                 Download
@@ -236,3 +236,14 @@ function formatAddress(address = {}) {
 }
 
 export default EditOrderModal;
+
+
+const getDownloadUrl = (url) => {
+  if (!url) return "#";
+
+  const parts = url.split("/upload/");
+  if (parts.length !== 2) return url;
+
+  // Force download + JPEG conversion
+  return `${parts[0]}/upload/fl_attachment,f_jpg/${parts[1].replace(/\.[^.]+$/, '.jpg')}`;
+};

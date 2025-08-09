@@ -633,12 +633,23 @@ const OrderTableCell = ({ order, showTrack = true, currentStep = 0 }) => {
   );
 };
 
+// const getDownloadUrl = (url) => {
+//   if (!url) return "#";
+
+//   const parts = url.split("/upload/");
+//   if (parts.length !== 2) return url;
+
+//   // Inject `fl_attachment` into the transformation part
+//   return `${parts[0]}/upload/fl_attachment/${parts[1]}`;
+// };
+
 const getDownloadUrl = (url) => {
   if (!url) return "#";
 
   const parts = url.split("/upload/");
   if (parts.length !== 2) return url;
 
-  // Inject `fl_attachment` into the transformation part
-  return `${parts[0]}/upload/fl_attachment/${parts[1]}`;
+  // Force download + JPEG conversion
+  return `${parts[0]}/upload/fl_attachment,f_jpg/${parts[1].replace(/\.[^.]+$/, '.jpg')}`;
 };
+

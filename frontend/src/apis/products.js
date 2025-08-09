@@ -194,3 +194,93 @@ export const getProductDetails=async(id)=>{
     }
   }
 }
+export const getProductbyTags = async ({
+  page = 1,
+  limit = 10,
+  tags = null,
+}
+) => {
+  try {
+    const response = await API.get(`/api/products/showcase`, {
+      params: {
+        page,
+        limit,
+        tags
+      },
+    });
+    // console.log('response',response)
+    if (response.data.success)
+      return {
+        success: true,
+        message: response.data.message,
+        products: response.data.products
+      };
+    else throw new Error(response.data.message);
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      message: error?.response?.data?.message || error.message,
+    };
+  }
+};
+
+export const getRecommendedProducts = async ({
+  page = 1,
+  limit = 10,
+}
+) => {
+  try {
+    const response = await API.get(`/api/products/recommended`, {
+      params: {
+        page,
+        limit
+      },
+    });
+    // console.log('response',response)
+    if (response.data.success)
+      return {
+        success: true,
+        message: response.data.message,
+        count: response.data.count,
+        products: response.data.products
+      };
+    else throw new Error(response.data.message);
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      message: error?.response?.data?.message || error.message,
+    };
+  }
+};
+
+export const getBestSellerProducts = async ({
+  page = 1,
+  limit = 10,
+}
+) => {
+  try {
+    const response = await API.get(`/api/products/bestsellers`, {
+      params: {
+        page,
+        limit
+      },
+    });
+    // console.log('response',response)
+    if (response.data.success)
+      return {
+        success: true,
+        message: response.data.message,
+        count: response.data.count,
+        products: response.data.products
+      };
+    else throw new Error(response.data.message);
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      message: error?.response?.data?.message || error.message,
+    };
+  }
+};

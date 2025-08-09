@@ -24,6 +24,15 @@ import "swiper/css/navigation";
 // import required modules for Swiper
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import TestimonialCarousel from "../components/Testimonials";
+import { useEffect, useState } from "react";
+import { useLoader } from "../contexts/LoaderContext";
+import { useAlert } from "../contexts/AlertContext";
+import {
+  getBestSellerProducts,
+  getProductbyTags,
+  getRecommendedProducts,
+} from "../apis/products";
+
 
 const dummydata2 = [
   {
@@ -127,6 +136,44 @@ const dummydata1 = [
 ];
 
 function LandingPage() {
+  const [dealoftheday, setDealoftheday] = useState([]);
+  const [bestsellers, setBestsellers] = useState([]);
+  const [recommended, setRecommended] = useState([]);
+  const { setLoading } = useLoader();
+  const { setMessage, setShowSnackBar } = useAlert();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const resp1 = await getBestSellerProducts({page:1,limit: 10});
+      setLoading(false);
+      if (resp1.success) {
+        setBestsellers(resp1.products);
+      } else {
+        setMessage(resp1.message);
+        setShowSnackBar(true);
+      }
+      setLoading(true);
+      const resp2 = await getRecommendedProducts({page:1,limit: 10});
+      setLoading(false);
+      if (resp2.success) {
+        setRecommended(resp2.products);
+      } else {
+        setMessage(resp2.message);
+        setShowSnackBar(true);
+      }
+      setLoading(true);
+      const resp3 = await getProductbyTags({page:1,limit: 10,tags: "dealoftheday"});
+      setLoading(false);
+      if (resp3.success) {
+        setDealoftheday(resp3.products);
+      } else {
+        setMessage(resp3.message);
+        setShowSnackBar(true);
+      }
+    };
+    fetchData();
+  },[]);
   return (
     <div className="flex flex-col items-center">
       <Swiper
@@ -164,8 +211,8 @@ function LandingPage() {
       {/* {Ads end} */}
 
       {/* {Deal of the Day} */}
-      <CardDisplay title="DEAL OF THE DAY" data={dummydata1} />
-      {/* {Deal of the Day end} */}
+      {dealoftheday && dealoftheday.length > 0 && <CardDisplay title="DEAL OF THE DAY" data={dealoftheday} />
+      }{/* {Deal of the Day end} */}
 
       {/* {Ads Display} */}
       <div className="hidden md:flex flex-row items-center justify-center w-full px-4 py-4 gap-4">
@@ -174,85 +221,83 @@ function LandingPage() {
         <img src={img8} alt="img8" className=" w-1/3 " />
       </div>
 
-        <div className="w-full md:hidden px-2">
-      <Swiper
-        spaceBetween={30}
-        centeredSlides={true}
-        autoplay={{
-          delay: 4000,
-          disableOnInteraction: false,
-        }}
-        
-        navigation={false}
-        modules={[Autoplay, Pagination, Navigation]}
-        className="md:!hidden mySwiper w-full my-4"
-      >
-        <SwiperSlide>
-          <img src={img6} />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src={img7} />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src={img8} />
-        </SwiperSlide>
-      </Swiper>
-      {/* {Ads Display end} */}
-
-      {/* {Popular Picks} */}
-      <CardDisplay title="POPULAR PICKS" data={dummydata2} />
-      {/* {Popular Picks end} */}
-
-      {/* {Pocket Friendly Price Display} */}
-
-      <h3 className="w-full poppins-semibold mt-6">POCKET FRIENDLY PRICES</h3>
-
-      <div className="hidden md:flex flex-row items-center justify-center w-full px-4 py-4 gap-4">
-        <img src={price1} alt="price1" className=" w-1/4 " />
-        <img src={price2} alt="price2" className=" w-1/4" />
-        <img src={price3} alt="price3" className=" w-1/4 " />
-        <img src={price4} alt="price4" className=" w-1/4 " />
-      </div>
-      
-        <div className="w-full md:hidden">
+      <div className="w-full md:hidden px-2">
         <Swiper
-        spaceBetween={20}
-        slidesPerView={2}
-        centeredSlides={false}
-        autoplay={{
-          delay: 4000,
-          disableOnInteraction: false,
-        }}
-        
-        navigation={false}
-        modules={[Autoplay, Pagination, Navigation]}
-        className="md:!hidden mySwiper w-full my-4"
-      >
-        <SwiperSlide>
-          <img src={price1} className="w-full" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src={price2} className="w-full" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src={price3} className="w-full" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src={price4} className="w-full" />
-        </SwiperSlide>
-      </Swiper>
-      </div>
+          spaceBetween={30}
+          centeredSlides={true}
+          autoplay={{
+            delay: 4000,
+            disableOnInteraction: false,
+          }}
+          navigation={false}
+          modules={[Autoplay, Pagination, Navigation]}
+          className="md:!hidden mySwiper w-full my-4"
+        >
+          <SwiperSlide>
+            <img src={img6} />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img src={img7} />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img src={img8} />
+          </SwiperSlide>
+        </Swiper>
+        {/* {Ads Display end} */}
+
+        {/* {Popular Picks} */}
+        <CardDisplay title="POPULAR PICKS" data={dummydata2} />
+        {/* {Popular Picks end} */}
+
+        {/* {Pocket Friendly Price Display} */}
+
+        <h3 className="w-full poppins-semibold mt-6">POCKET FRIENDLY PRICES</h3>
+
+        <div className="hidden md:flex flex-row items-center justify-center w-full px-4 py-4 gap-4">
+          <img src={price1} alt="price1" className=" w-1/4 " />
+          <img src={price2} alt="price2" className=" w-1/4" />
+          <img src={price3} alt="price3" className=" w-1/4 " />
+          <img src={price4} alt="price4" className=" w-1/4 " />
         </div>
-      
+
+        <div className="w-full md:hidden">
+          <Swiper
+            spaceBetween={20}
+            slidesPerView={2}
+            centeredSlides={false}
+            autoplay={{
+              delay: 4000,
+              disableOnInteraction: false,
+            }}
+            navigation={false}
+            modules={[Autoplay, Pagination, Navigation]}
+            className="md:!hidden mySwiper w-full my-4"
+          >
+            <SwiperSlide>
+              <img src={price1} className="w-full" />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src={price2} className="w-full" />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src={price3} className="w-full" />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src={price4} className="w-full" />
+            </SwiperSlide>
+          </Swiper>
+        </div>
+      </div>
+
       {/* {Pocket Friendly Price Display end} */}
 
       {/* {Recommended for you} */}
-      <CardDisplay title="RECOMMENDED FOR YOU" data={dummydata2} />
-      {/* {Recommended for you end} */}
+      {recommended && recommended.length > 0 && <CardDisplay title="RECOMMENDED FOR YOU" data={recommended} />
+      }{/* {Recommended for you end} */}
 
       {/* {BEST SELLERS} */}
-      <CardDisplay title="BEST SELLERS" data={dummydata1} />
-      {/* {BEST SELLERS end} */}
+      {bestsellers && bestsellers.length > 0 && <CardDisplay title="BEST SELLERS" data={bestsellers} />
+      }{/* {BEST SELLERS end} */}
 
       {/* {Trusted Brands} */}
 

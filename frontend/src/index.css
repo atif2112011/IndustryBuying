@@ -3,6 +3,19 @@
 @import 'tailwindcss';
 @import 'remixicon/fonts/remixicon.css';
 
+/* Include Bright DEMO */
+@font-face {
+  font-family: 'Brooklyn';
+  src:
+       url('/fonts/brooklyn-brooklyn-regular-400.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.logo-font{
+  font-family: 'Brooklyn', sans-serif;
+}
+
 
 /* Global Styles */
 html, body {

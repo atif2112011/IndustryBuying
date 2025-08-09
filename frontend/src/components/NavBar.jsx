@@ -24,7 +24,7 @@ function NavBar() {
    useEffect(()=>{
     const fetchCart=async()=>{
       const response=await getCart();
-      console.log(`response of getCart`,response);
+      // console.log(`response of getCart`,response);
       if(response.success)
       {
         setCart(response.cart);
@@ -57,7 +57,7 @@ function NavBar() {
             setLoading(false);
             setMessage("Welcome"+" "+getUserResponse.user.name);
             setShowSnackBar(true);
-            console.log("User Retrieved", getUserResponse?.user);
+            // console.log("User Retrieved", getUserResponse?.user);
           }
           else
           {
@@ -96,15 +96,15 @@ function NavBar() {
       {/* Navbar */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-4 py-2 px-4 md:px-6 bg-white shadow-md relative transition-all duration-300 ease-in-out">
         {/* Logo + Cart + Hamburger on Mobile */}
-        <div className="flex flex-row w-full md:w-auto justify-between items-center">
-          <div className="flex items-center gap-2">
-            <img src={logo} alt="Logo" height={28} width={28} />
+        <div className="flex flex-row w-full md:w-auto justify-between items-center md:px-14">
+          <div className="flex items-center gap-2 pt-2">
+            {/* <img src={logo} alt="Logo" height={28} width={28} /> */}
             <h3
-              className="!text-xl !font-semibold !tracking-wide !cursor-pointer hover:!text-blue-700 transition-colors duration-200"
+              className="!text-xl md:!text-3xl !font-[700] !tracking-wider !cursor-pointer !text-[#1447e6] hover:!text-blue-600 transition-colors duration-200 logo-font"
               onClick={() => navigate("/")}
             >
-              Industry Buying
-            </h3>
+              MedAgg.com
+            </h3> 
           </div>
 
           {/* Cart + Hamburger for mobile */}
