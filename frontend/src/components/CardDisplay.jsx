@@ -126,50 +126,40 @@ function CardDisplay({ title, data }) {
                 }
                 className="h-[80px] md:h-32 w-full object-contain cursor-pointer m-1"
               />
-              <div className="flex flex-col gap-0 mt-2">
-                <div className="mt-2 font-semibold text-[0.75rem] md:text-sm">
-                  {product?.name || "Null"}
-                </div>
-                <div className="text-[0.65rem] md:text-xs text-blue-600 ">
-                  By {product?.brand || "Null"}
-                </div>
-                <div className="text-[0.70rem] md:text-sm poppins-semibold text-black">
-                  {product?.discount == 0 ? (
-                    <span className=" !text-[0.80rem] md:!text-sm mr-1 md:mr-2 ">
-                      ₹{product.price}
-                    </span>
-                  ) : (
-                    <span className=" !text-[0.80rem] md:!text-sm line-through mr-1 md:mr-2 ">
-                      ₹{product.price}
-                    </span>
-                  )}
-                  {product?.discount > 0 && (
-                    <span className="!text-[0.80rem] md:!text-sm mr-1 md:mr-2 font-normal">
-                      ₹
-                      {calculateDiscountedPrice(
-                        product.price,
-                        product.discount
-                      )}
-                    </span>
-                  )}
-                  {product?.discount > 0 && (
-                    <span className="!text-[0.6rem] md:!text-xs !text-green-600 !font-medium ml-4 md:ml-2">
-                      {product.discount}% off
-                    </span>
-                  )}
-                </div>
-                {product?.rating && (
-                  <Rating
-                    name="read-only"
-                    value={product.rating}
-                    readOnly
-                    size="small"
-                    className="p-0 m-0"
-                  />
-                )}
-              </div>
+              <div className="flex flex-col gap-0">
+                            <div className="mt-2 font-semibold text-[0.7rem] md:text-sm">
+                              {product.name}
+                            </div>
+                            <div className="text-[0.65rem] md:text-xs text-blue-600 mt-1">
+                              By {product.brand.toUpperCase()}
+                            </div>
+                            <div className="text-[0.70rem] md:text-lg poppins-semibold mt-2 text-black">
+                              {(product?.discount==0) ? (
+                                <span className=" !text-[0.80rem] md:!text-sm mr-1 md:mr-2 ">
+                                  ₹{product.price}
+                                </span>
+                              ) : <span className=" !text-[0.80rem] md:!text-sm line-through mr-1 md:mr-2 ">
+                                  ₹{product.price}
+                                </span>}
+                              {product?.discount>0 && <span className="!text-[0.80rem] md:!text-sm mr-1 md:mr-2 font-normal">₹{calculateDiscountedPrice(product.price, product.discount)}</span>} 
+                              {product?.discount>0 && (
+                                <span className="!text-[0.6rem] md:!text-xs !text-green-600 !font-medium ml-4 md:ml-2">
+                                  {product.discount}% off
+                                </span>
+                              )}
+                            </div>
+                            {product.rating && (
+                              <Rating
+                                name="read-only"
+                                value={product.rating}
+                                readOnly
+                                size="small"
+                                className="p-0 m-0"
+                              />
+                            )}
+                          </div>
 
-              <div className="hidden md:flex gap-4 mt-3 justify-between">
+              <div className="hidden md:flex gap-4 mt-3">
                 <button
                   onClick={() => handleAddtoCart(product)}
                   className="border border-orange-500 text-orange-500 text-[0.6rem] md:text-sm px-3 py-1 rounded hover:bg-orange-50"
