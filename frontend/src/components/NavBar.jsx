@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import SearchBar from "./SearchBar";
-import logo from "../assets/react.svg";
+import logo from "../assets/images/logo/logo.png"
+import logoText from "../assets/images/logo/logo-text.png"
 import { Outlet, useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import { VerifyUser } from "../apis/auth";
@@ -96,15 +97,16 @@ function NavBar() {
       {/* Navbar */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-4 py-2 px-4 md:px-6 bg-white shadow-md relative transition-all duration-300 ease-in-out">
         {/* Logo + Cart + Hamburger on Mobile */}
-        <div className="flex flex-row w-full md:w-auto justify-between items-center md:px-14">
-          <div className="flex items-center gap-2 pt-2">
-            {/* <img src={logo} alt="Logo" height={28} width={28} /> */}
-            <h3
-              className="!text-xl md:!text-3xl !font-[700] !tracking-wider !cursor-pointer !text-[#1447e6] hover:!text-blue-600 transition-colors duration-200 logo-font"
+        <div className="flex flex-row w-full md:w-auto justify-between items-center md:px-7">
+          <div className="flex items-center gap-3">
+            <img src={logo} alt="Logo" className="h-10" />
+            <img src={logoText} alt="Logo-text" className="h-8" />
+            {/* <h3
+              className="!text-xl md:!text-3xl !font-[700] !tracking-wider !cursor-pointer !text-blue-950 text-shadow hover:!text-blue-600 transition-colors duration-200 logo-font"
               onClick={() => navigate("/")}
             >
-              MedAgg.com
-            </h3> 
+              MedAgg
+            </h3>  */}
           </div>
 
           {/* Cart + Hamburger for mobile */}

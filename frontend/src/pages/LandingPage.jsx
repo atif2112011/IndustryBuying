@@ -1,17 +1,15 @@
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import img1 from "../assets/images/carousel/img1.png";
-import img2 from "../assets/images/carousel/img2.png";
-import img3 from "../assets/images/carousel/img3.png";
-import img4 from "../assets/images/landingpage/img4.png";
-import img5 from "../assets/images/landingpage/img5.png";
-import img6 from "../assets/images/landingpage/img6.png";
-import img7 from "../assets/images/landingpage/img7.png";
-import img8 from "../assets/images/landingpage/img8.png";
-import price1 from "../assets/images/landingpage/price1.png";
-import price2 from "../assets/images/landingpage/price2.png";
-import price3 from "../assets/images/landingpage/price3.png";
-import price4 from "../assets/images/landingpage/price4.png";
+import img1 from "../assets/images/carousel/Gemini_Generated_Image_n5zdu8n5zdu8n5zd.webp";
+import img2 from "../assets/images/carousel/Gemini_Generated_Image_5zonw75zonw75zon.webp";
+import img0 from "../assets/images/carousel/Gemini_Generated_Image_b3rmnnb3rmnnb3rm.webp";
+import img3 from "../assets/images/carousel/Gemini_Generated_Image_dncu63dncu63dncu.webp";
+import img4 from "../assets/images/carousel/Gemini_Generated_Image_o4do9mo4do9mo4do.webp";
+import img5 from "../assets/images/carousel/Gemini_Generated_Image_2avf0r2avf0r2avf.webp";
+import img6 from "../assets/images/carousel/Gemini_Generated_Image_nwremvnwremvnwre.webp";
+import img7 from "../assets/images/carousel/Gemini_Generated_Image_n5zdu8n5zdu8n5zd.webp";
+import img8 from "../assets/images/carousel/Gemini_Generated_Image_nhp17gnhp17gnhp1.webp";
+
 import CardDisplay from "../components/CardDisplay";
 import BrandCarousel from "../components/BrandCarousel";
 
@@ -191,22 +189,20 @@ function LandingPage() {
         className="mySwiper w-full mb-4"
       >
         <SwiperSlide>
-          <img src={img1} />
+          <img src={img0} className="h-90 w-full object-cover" />
         </SwiperSlide>
         <SwiperSlide>
-          <img src={img2} />
+          <img src={img3} className="h-90 w-full object-cover object-[0%_60%]" />
         </SwiperSlide>
         <SwiperSlide>
-          <img src={img3} />
+          <img src={img2} className="h-90 w-full object-cover object-[0%_70%]" />
         </SwiperSlide>
-        <SwiperSlide>
-          <img src={img1} />
-        </SwiperSlide>
+        
       </Swiper>
       {/* {Ads} */}
       <div className="flex flex-row items-center justify-between w-full md:p-0">
-        <img src={img4} alt="img4" className="rounded-md w-49/100 " />
-        <img src={img5} alt="img5" className="rounded-md w-49/100" />
+        <img src={img4} alt="img4" className="rounded-md w-49/100 h-60 object-cover object-[0%_20%]" />
+        <img src={img5} alt="img5" className="rounded-md w-49/100 h-60 object-cover object-[0%_50%]" />
       </div>
       {/* {Ads end} */}
 
@@ -216,9 +212,9 @@ function LandingPage() {
 
       {/* {Ads Display} */}
       <div className="hidden md:flex flex-row items-center justify-center w-full px-4 py-4 gap-4">
-        <img src={img6} alt="img6" className=" w-1/3 " />
-        <img src={img7} alt="img7" className=" w-1/3" />
-        <img src={img8} alt="img8" className=" w-1/3 " />
+        <img src={img6} alt="img6" className=" w-1/3 h-60 object-cover" />
+        <img src={img7} alt="img7" className=" w-1/3 h-60 object-cover" />
+        <img src={img8} alt="img8" className=" w-1/3 h-60 object-cover" />
       </div>
 
       <div className="w-full md:hidden px-2">
@@ -245,48 +241,13 @@ function LandingPage() {
         </Swiper>
         {/* {Ads Display end} */}
 
-        {/* {Popular Picks} */}
-        <CardDisplay title="POPULAR PICKS" data={dummydata2} />
-        {/* {Popular Picks end} */}
+        
 
-        {/* {Pocket Friendly Price Display} */}
+       
 
-        <h3 className="w-full poppins-semibold mt-6">POCKET FRIENDLY PRICES</h3>
+      
 
-        <div className="hidden md:flex flex-row items-center justify-center w-full px-4 py-4 gap-4">
-          <img src={price1} alt="price1" className=" w-1/4 " />
-          <img src={price2} alt="price2" className=" w-1/4" />
-          <img src={price3} alt="price3" className=" w-1/4 " />
-          <img src={price4} alt="price4" className=" w-1/4 " />
-        </div>
-
-        <div className="w-full md:hidden">
-          <Swiper
-            spaceBetween={20}
-            slidesPerView={2}
-            centeredSlides={false}
-            autoplay={{
-              delay: 4000,
-              disableOnInteraction: false,
-            }}
-            navigation={false}
-            modules={[Autoplay, Pagination, Navigation]}
-            className="md:!hidden mySwiper w-full my-4"
-          >
-            <SwiperSlide>
-              <img src={price1} className="w-full" />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src={price2} className="w-full" />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src={price3} className="w-full" />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src={price4} className="w-full" />
-            </SwiperSlide>
-          </Swiper>
-        </div>
+        
       </div>
 
       {/* {Pocket Friendly Price Display end} */}
