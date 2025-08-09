@@ -104,7 +104,8 @@ const scroll = (dir) => {
                  <img
               src={product && product.images && product.images.length > 0 ? product.images[0]: product2}
               alt={product?.name || "Null"}
-              className="h-[80px] md:h-32 w-full object-contain"
+              onClick={() => navigate(`/categories/${product.category.slug}/${product.subCategory.slug}/${product._id}`)}
+              className="h-[80px] md:h-32 w-full object-contain cursor-pointer"
             />
             <div className='flex flex-col gap-0'>
                  <div className="mt-2 font-semibold text-[0.7rem] md:text-sm">{product?.name || "Null"}</div>

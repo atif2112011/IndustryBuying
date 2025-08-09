@@ -142,7 +142,9 @@ const getShowcaseProducts = async (req, res, next) => {
 
     const query = Product.find({ tags: { $in: tag } })
       .skip(skip)
-      .limit(limit);
+      .limit(limit)
+      .populate("category")
+      .populate("subCategory");
 
     if (sort != null) query.sort(sort);
 
@@ -175,7 +177,9 @@ const getRecommended = async (req, res, next) => {
       tags: { $in: ["recommended"] },
     })
       .limit(limit)
-      .skip(skip);
+      .skip(skip)
+      .populate("category")
+      .populate("subCategory");
     // limit to 12 recommendations
 
     if (!products) throw new Error("No Products recommended available ");
@@ -202,7 +206,9 @@ const getBestSellers = async (req, res, next) => {
       tags: { $in: ["bestsellers", "bestseller"] },
     })
       .limit(limit)
-      .skip(skip);
+      .skip(skip)
+      .populate("category")
+      .populate("subCategory");
 
     // limit to 12 recommendations
 
