@@ -133,7 +133,7 @@ function CardDisplay({ title, data }) {
                             <div className="text-[0.65rem] md:text-xs text-blue-600 mt-1">
                               By {product.brand.toUpperCase()}
                             </div>
-                            <div className="text-[0.70rem] md:text-lg poppins-semibold mt-2 text-black">
+                            <div className="text-[0.70rem] md:text-lg poppins-medium mt-2 text-black">
                               {(product?.discount==0) ? (
                                 <span className=" !text-[0.80rem] md:!text-sm mr-1 md:mr-2 ">
                                   ₹{product.price}
