@@ -60,9 +60,8 @@ const userSchema = new mongoose.Schema(
     },
     gstin: {
       type: String,
-      required:false,
-      unique:false,
-      
+      required: false,
+      unique: false,
     },
     address: [
       {
@@ -125,17 +124,24 @@ const userSchema = new mongoose.Schema(
         },
         gstin: {
           type: String,
-          required:false,
-          unique:false,
-          
-          
+          required: false,
+          unique: false,
         },
       },
     ],
-    isBlock:{
-      type:Boolean,
-      default:false
-    }
+    isBlock: {
+      type: Boolean,
+      default: false,
+    }, 
+    
+    // For Forgot Password Flow
+    forgotPasswordToken: {
+      type: String,
+    },
+
+    forgotPasswordExpires: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );

@@ -2,24 +2,23 @@ const express = require("express");
 require("dotenv").config();
 const cors = require("cors");
 const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
-const {connectDB } = require("./config/db");
+const { connectDB } = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
-const productRoutes = require("./routes/productRoutes")
+const productRoutes = require("./routes/productRoutes");
 const Auth2Routes = require("./routes/Auth2Routes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const orderRoutes = require("./routes/orderRoutes");
-const testimonialRoutes = require("./routes/testimonialRoute")
-const brandRoutes = require("./routes/brandsRoutes")
-const certificateRoutes = require("./routes/certificateRoutes")
-const mailRoutes = require("./routes/MailRoutes")
+const testimonialRoutes = require("./routes/testimonialRoute");
+const brandRoutes = require("./routes/brandsRoutes");
+const certificateRoutes = require("./routes/certificateRoutes");
+const mailRoutes = require("./routes/MailRoutes");
 
 const cookieParser = require("cookie-parser");
 
 const path = require("path");
 const morgan = require("morgan");
-
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -30,37 +29,35 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: 'http://localhost:5173', // <-- Your frontend origin
-  credentials: true    ,            
+    origin: "http://localhost:5173", // <-- Your frontend origin
+    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"], // Allow specific methods
     allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
   })
 );
 
-
-
 // routes
-// Serve static files from frontend build
-app.use(express.static(path.join(__dirname, '../frontend/dist')));
+app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-app.use("/api/mail",mailRoutes)
-app.use("/api/auth",authRoutes);
-app.use("/api/user",userRoutes);
-app.use("/api/products",productRoutes)
-app.use("/api/categories",categoryRoutes)
-app.use("/api/cart",cartRoutes)
-app.use("/api/orders",orderRoutes)
-app.use("/api/testimonials",testimonialRoutes)
-app.use("/api/brands",brandRoutes)
-app.use("/api/certificates",certificateRoutes)
+app.use("/api/mail", mailRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/categories", categoryRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/testimonials", testimonialRoutes);
+app.use("/api/brands", brandRoutes);
+app.use("/api/certificates", certificateRoutes);
 
-app.use("/",Auth2Routes);
+
+app.use("/", Auth2Routes);
 app.get("/server", async (req, res) => {
-    try {
-        res.send("Server is running");
-    } catch (error) {
-        next(error);
-    }
+  try {
+    res.send("Server is running");
+  } catch (error) {
+    next(error);
+  }
 });
 
 if(process.env.NODE_ENV === 'production') {
@@ -89,15 +86,8 @@ app.use(errorHandler);
 
 
 //Server start
-app.listen(PORT, async() => {
-    await connectDB();
-    
+app.listen(PORT, async () => {
+  await connectDB();
 
   console.log(`Server is running on port ${PORT}`);
 });
-
-
-
-
-
-
