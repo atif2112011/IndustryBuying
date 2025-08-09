@@ -96,7 +96,7 @@ const scroll = (dir) => {
             data && data.map((product,idx)=>(
                  <div
             key={idx}
-            className="w-46/100 md:w-64 flex flex-col flex-shrink-0 justify-evenly rounded-lg p-2 md:p-4 shadow-md bg-white mb-2"
+            className="w-46/100 md:w-64 flex flex-col flex-shrink-0 justify-evenly rounded-lg p-2 md:p-4 shadow-md bg-white mb-2 hover:shadow-lg"
           >
             <div className="text-[0.5rem] md:text-xs bg-red-100 text-red-600 px-2 py-1 rounded mb-2 w-fit">
               🚚 Ships within 48 hrs
@@ -105,12 +105,12 @@ const scroll = (dir) => {
               src={product && product.images && product.images.length > 0 ? product.images[0]: product2}
               alt={product?.name || "Null"}
               onClick={() => navigate(`/categories/${product.category.slug}/${product.subCategory.slug}/${product._id}`)}
-              className="h-[80px] md:h-32 w-full object-contain cursor-pointer"
+              className="h-[80px] md:h-32 w-full object-contain cursor-pointer m-1"
             />
-            <div className='flex flex-col gap-0'>
-                 <div className="mt-2 font-semibold text-[0.7rem] md:text-sm">{product?.name || "Null"}</div>
-            <div className="text-[0.65rem] md:text-xs text-blue-600 mt-1">By {product?.brand || "Null"}</div>
-            <div className="text-[0.70rem] md:text-lg poppins-semibold mt-2 text-black">
+            <div className='flex flex-col gap-0 mt-2'>
+                 <div className="mt-2 font-semibold text-[0.75rem] md:text-sm">{product?.name || "Null"}</div>
+            <div className="text-[0.65rem] md:text-xs text-blue-600 ">By {product?.brand || "Null"}</div>
+            <div className="text-[0.70rem] md:text-sm poppins-semibold text-black">
                 {(product?.discount==0) ? (
                   <span className=" !text-[0.80rem] md:!text-sm mr-1 md:mr-2 ">
                     ₹{product.price}
@@ -129,7 +129,7 @@ const scroll = (dir) => {
 
             </div>
             
-               <div className="hidden md:flex gap-4 mt-3">
+               <div className="hidden md:flex gap-4 mt-3 justify-between">
               <button onClick={() => handleAddtoCart(product)} className="border border-orange-500 text-orange-500 text-[0.6rem] md:text-sm px-3 py-1 rounded hover:bg-orange-50">
                 Add to Cart
               </button>
