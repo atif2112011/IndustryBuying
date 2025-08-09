@@ -189,20 +189,20 @@ function LandingPage() {
         className="mySwiper w-full mb-4"
       >
         <SwiperSlide>
-          <img src={img0} className="h-90 w-full object-cover" />
+          <img src={img0} className="md:h-90 h-30 w-full object-cover" />
         </SwiperSlide>
         <SwiperSlide>
-          <img src={img3} className="h-90 w-full object-cover object-[0%_60%]" />
+          <img src={img3} className="md:h-90 h-30 w-full object-cover object-[0%_60%]" />
         </SwiperSlide>
         <SwiperSlide>
-          <img src={img2} className="h-90 w-full object-cover object-[0%_70%]" />
+          <img src={img2} className="md:h-90 h-30 w-full object-cover object-[0%_70%]" />
         </SwiperSlide>
         
       </Swiper>
       {/* {Ads} */}
       <div className="flex flex-row items-center justify-between w-full md:p-0">
-        <img src={img4} alt="img4" className="rounded-md w-49/100 h-60 object-cover object-[0%_20%]" />
-        <img src={img5} alt="img5" className="rounded-md w-49/100 h-60 object-cover object-[0%_50%]" />
+        <img src={img4} alt="img4" className="rounded-md w-49/100 md:h-60 h-20 object-cover object-[0%_20%]" />
+        <img src={img5} alt="img5" className="rounded-md w-49/100 md:h-60 h-20 object-cover object-[0%_50%]" />
       </div>
       {/* {Ads end} */}
 
@@ -230,13 +230,13 @@ function LandingPage() {
           className="md:!hidden mySwiper w-full my-4"
         >
           <SwiperSlide>
-            <img src={img6} />
+            <img src={img6} className="h-45 w-full object-cover object-center" />
           </SwiperSlide>
           <SwiperSlide>
-            <img src={img7} />
+            <img src={img7} className="h-45 w-full object-cover object-center"/>
           </SwiperSlide>
           <SwiperSlide>
-            <img src={img8} />
+            <img src={img8} className="h-45 w-full object-cover object-center"/>
           </SwiperSlide>
         </Swiper>
         {/* {Ads Display end} */}
