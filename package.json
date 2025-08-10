@@ -17,8 +17,5 @@
   "type": "commonjs",
   "devDependencies": {
     "concurrently": "^9.2.0"
-  },
-  "dependencies": {
-    "compression": "^1.8.1"
   }
 }
