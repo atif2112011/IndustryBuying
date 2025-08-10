@@ -200,7 +200,7 @@ function LandingPage() {
         
       </Swiper>
       {/* {Ads} */}
-      <div className="flex flex-row items-center justify-between w-full md:p-0">
+      <div className="flex md:flex-row items-center justify-between w-full md:p-0">
         <img loading="lazy" src={img4} alt="img4" className="rounded-md w-49/100 md:h-60 h-20 object-cover object-[0%_20%]" />
         <img loading="lazy" src={img5} alt="img5" className="rounded-md w-49/100 md:h-60 h-20 object-cover object-[0%_50%]" />
       </div>
@@ -212,12 +212,12 @@ function LandingPage() {
 
       {/* {Ads Display} */}
       <div className="hidden md:flex flex-row items-center justify-center w-full px-4 py-4 gap-4">
-        <img loading="lazy" src={img6} alt="img6" className=" w-1/3 h-60 object-cover" />
-        <img loading="lazy" src={img7} alt="img7" className=" w-1/3 h-60 object-cover" />
-        <img loading="lazy" src={img8} alt="img8" className=" w-1/3 h-60 object-cover" />
+        <img loading="lazy" src={img6} alt="img6" className=" w-1/3 h-60 object-cover rounded-md" />
+        <img loading="lazy" src={img7} alt="img7" className=" w-1/3 h-60 object-cover rounded-md" />
+        <img loading="lazy" src={img8} alt="img8" className=" w-1/3 h-60 object-cover rounded-md" />
       </div>
 
-      <div className="w-full md:hidden px-2">
+      <div className="w-full md:hidden ">
         <Swiper
           spaceBetween={30}
           centeredSlides={true}
@@ -230,13 +230,13 @@ function LandingPage() {
           className="md:!hidden mySwiper w-full my-4"
         >
           <SwiperSlide>
-            <img loading="lazy" src={img6} className="h-45 w-full object-cover object-center" />
+            <img loading="lazy" src={img6} className="h-45 w-full object-cover object-center rounded-md" />
           </SwiperSlide>
           <SwiperSlide>
-            <img loading="lazy" src={img7} className="h-45 w-full object-cover object-center"/>
+            <img loading="lazy" src={img7} className="h-45 w-full object-cover object-center rounded-md "/>
           </SwiperSlide>
           <SwiperSlide>
-            <img loading="lazy" src={img8} className="h-45 w-full object-cover object-center"/>
+            <img loading="lazy" src={img8} className="h-45 w-full object-cover object-center rounded-md"/>
           </SwiperSlide>
         </Swiper>
         {/* {Ads Display end} */}

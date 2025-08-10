@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import SearchBar from "./SearchBar";
-import logo from "../assets/images/logo/logo.png"
-import logoText from "../assets/images/logo/logo-text.png"
+import logo from "../assets/images/logo/logo.png";
+import logoText from "../assets/images/logo/logo-text.png";
 import { Outlet, useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import { VerifyUser } from "../apis/auth";
@@ -15,81 +15,63 @@ import { getCart } from "../apis/cart";
 function NavBar() {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-   const { setShowSnackBar, setMessage } = useAlert();
-   const {setLoading}=useLoader();
-   const { user, setUser,cart,setCart,cartCount,setCartCount }=useAuth();
-   const [searchTerm, setSearchTerm] = useState("");
- 
-  
+  const { setShowSnackBar, setMessage } = useAlert();
+  const { setLoading } = useLoader();
+  const { user, setUser, cart, setCart, cartCount, setCartCount } = useAuth();
+  const [searchTerm, setSearchTerm] = useState("");
 
-   useEffect(()=>{
-    const fetchCart=async()=>{
-      const response=await getCart();
+  useEffect(() => {
+    const fetchCart = async () => {
+      const response = await getCart();
       // console.log(`response of getCart`,response);
-      if(response.success)
-      {
+      if (response.success) {
         setCart(response.cart);
         setCartCount(response.totalItems);
       }
-
-    }
-    if(user!==null)
-    {
-      console.log("User in fetchCart",user);
+    };
+    if (user !== null) {
+      console.log("User in fetchCart", user);
       fetchCart();
     }
-     
-   },[user])
- 
+  }, [user]);
 
-
-  useEffect(()=>{
+  useEffect(() => {
     //Check user is logged in or not
     const checkUser = async () => {
       try {
         setLoading(true);
         const response = await VerifyUser();
         if (response?.success) {
-          
-          const getUserResponse=await getUser(response.userId);
-          if(getUserResponse?.success)
-          {
+          const getUserResponse = await getUser(response.userId);
+          if (getUserResponse?.success) {
             setUser(getUserResponse.user);
             setLoading(false);
-            setMessage("Welcome"+" "+getUserResponse.user.name);
+            setMessage("Welcome" + " " + getUserResponse.user.name);
             setShowSnackBar(true);
             // console.log("User Retrieved", getUserResponse?.user);
-          }
-          else
-          {
+          } else {
             setLoading(false);
             throw new Error(getUserResponse?.message || getUserResponse);
           }
-
-
-        } 
+        }
       } catch (error) {
         setLoading(false);
-        
+
         console.error(error?.message || error);
       }
     };
     checkUser();
     setLoading(false);
-   
-  },[])
+  }, []);
 
   const handleSearch = () => {
-    if(searchTerm===""){
+    if (searchTerm === "") {
       setMessage("Search term cant be empty !");
       setShowSnackBar(true);
-    }
-    else if(searchTerm.length<3){
+    } else if (searchTerm.length < 3) {
       setMessage("Search term must be at least 3 characters long !");
       setShowSnackBar(true);
-    }
-    else
-    navigate(`/search/?q=${searchTerm}`);
+    } else navigate(`/search/?q=${searchTerm}`);
   };
 
   return (
@@ -97,10 +79,18 @@ function NavBar() {
       {/* Navbar */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-4 py-2 px-4 md:px-8 bg-white shadow-md relative transition-all duration-300 ease-in-out">
         {/* Logo + Cart + Hamburger on Mobile */}
-        <div className="flex flex-row w-full md:w-auto justify-between items-center md:pl-5 md:pt-1" onClick={() => navigate("/")}>
-          <div className="flex items-center md:gap-3 gap-2 cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out">
+        <div
+          className="flex flex-row w-full md:w-auto justify-between items-center md:pl-5 md:pt-1"
+          
+        >
+          <div className="flex items-center md:gap-3 gap-2 cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out" onClick={() => navigate("/") }>
             <img src={logo} loading="lazy" alt="Logo" className="md:h-10 h-6" />
-            <img src={logoText} loading="lazy" alt="Logo-text" className="md:h-8 h-6 " />
+            <img
+              src={logoText}
+              loading="lazy"
+              alt="Logo-text"
+              className="md:h-8 h-6 "
+            />
             {/* <h3
               className="!text-xl md:!text-3xl !font-[700] !tracking-wider !cursor-pointer !text-blue-950 text-shadow hover:!text-blue-600 transition-colors duration-200 logo-font"
               onClick={() => navigate("/")}
@@ -111,6 +101,14 @@ function NavBar() {
 
           {/* Cart + Hamburger for mobile */}
           <div className="flex items-center gap-4 md:hidden">
+            {!user && (
+              <button
+                className="bg-blue-700 !text-xs text-white px-4 py-1.5 rounded-sm shadow hover:bg-blue-800"
+                onClick={() => navigate("/user/login")}
+              >
+                Login
+              </button>
+            )}
             <button onClick={() => navigate("/order/cart")}>
               <i className="ri-shopping-cart-2-line text-xl"></i>
             </button>
@@ -127,7 +125,12 @@ function NavBar() {
 
         {/* Search Bar */}
         <div className="w-full md:w-[28rem] mt-2 md:mt-0 !font-medium">
-          <SearchBar placeholder="Search by ProductID, Name or Description" searchTerm={searchTerm} setSearchTerm={setSearchTerm} handleSearch={handleSearch}/>
+          <SearchBar
+            placeholder="Search by ProductID, Name or Description"
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            handleSearch={handleSearch}
+          />
         </div>
 
         {/* Navigation Menu */}
@@ -162,25 +165,35 @@ function NavBar() {
             <p className="!text-sm !font-medium">Help Center</p>
           </button>
 
-          {!user && <button
-            className="bg-blue-700 !text-sm text-white px-6 py-2 rounded-sm shadow hover:bg-blue-800"
-            onClick={() => navigate("/user/login")}
-          >
-            Login
-          </button>}
-          {user && <button
-            className="bg-blue-700 !text-sm text-white px-6 py-2 rounded-sm shadow hover:bg-blue-800"
-            onClick={() => {navigate("/user") ,setMobileMenuOpen(false)}}
-          >
-            Profile
-          </button>}
+          {!user && (
+            <button
+              className="bg-blue-700 !text-sm text-white px-6 py-2 rounded-sm shadow hover:bg-blue-800"
+              onClick={() => navigate("/user/login")}
+            >
+              Login
+            </button>
+          )}
+          {user && (
+            <button
+              className="bg-blue-700 !text-sm text-white px-6 py-2 rounded-sm shadow hover:bg-blue-800"
+              onClick={() => {
+                navigate("/user"), setMobileMenuOpen(false);
+              }}
+            >
+              Profile
+            </button>
+          )}
 
-          {user && user.role=="admin" && <button
-            className="bg-blue-700 !text-sm text-white px-6 py-2 rounded-sm shadow hover:bg-blue-800"
-            onClick={() => {navigate("/admin") ,setMobileMenuOpen(false)}}
-          >
-            Admin Panel
-          </button>}
+          {user && user.role == "admin" && (
+            <button
+              className="bg-blue-700 !text-sm text-white px-6 py-2 rounded-sm shadow hover:bg-blue-800"
+              onClick={() => {
+                navigate("/admin"), setMobileMenuOpen(false);
+              }}
+            >
+              Admin Panel
+            </button>
+          )}
 
           {/* Cart button for desktop only */}
           <button

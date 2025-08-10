@@ -71,7 +71,7 @@ function CardDisplay({ title, data }) {
   return (
     <div className="flex flex-col w-full">
       <div className="flex flex-row items-center justify-between w-full px-2 py-6 ">
-        <h3 className="poppins-semibold !text-md md:!text-lg">
+        <h3 className="poppins-semibold !text-sm md:!text-lg">
           {title || "Null"}
         </h3>
         <div className="hidden md:flex flex-row gap-2">
