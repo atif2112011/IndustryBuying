@@ -8,6 +8,7 @@ import "swiper/css/thumbs";
 import product1 from "../assets/images/productImages/product1.jpg";
 import product2 from "../assets/images/productImages/product2.jpg";
 import product3 from "../assets/images/productImages/product3.jpg";
+
 import needHelp from "../assets/images/bannerimages/need-help-purchase.png";
 import { useEffect, useRef, useState } from "react";
 import { Autoplay, Navigation, Pagination, Thumbs } from "swiper/modules";

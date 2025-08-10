@@ -153,22 +153,23 @@ const CategoryShowcase = ({categoryData}) => {
   return (
     <div className='py-4'>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
   {categoryData && categoryData.map((item) => (
-    <div key={item.name} className="bg-white rounded-lg p-2 md:p-4 shadow-sm max-w-64">
-      <img
+    <div key={item.name} className="bg-white rounded-lg p-3 md:p-4 shadow-sm max-w-64 flex flex-col justify-between min-h-[200px] md:min-h-[300px]">
+      <div>
+        <img
         src={item?.products[0]?.images[0] || sampleproduct}
         alt={item.name}
         className="h-[80px] md:h-32 w-full object-contain cursor-pointer"
         onClick={() => navigate(`/categories/${params.categoryId}/${item.slug}`)}
       />
 
-      <p className="my-2 !font-semibold !text-[0.75rem] md:!text-sm">
+      <p className="my-2 !font-semibold !text-[0.7rem] md:!text-sm">
         {item.name}
       </p>
 
       {(item.products && item.products.length > 0) ? (
-        <ul className="text-[0.5rem] md:!text-xs text-blue-900 space-y-1 cursor-pointer font-semibold">
+        <ul className="text-[0.5rem] md:!text-xs text-blue-900 md:space-y-1 cursor-pointer font-semibold">
           {item.products.map((product) => (
             <li
               key={product._id}
@@ -184,6 +185,7 @@ const CategoryShowcase = ({categoryData}) => {
           No products found
         </div>
       )}
+      </div>
      
 
       <a

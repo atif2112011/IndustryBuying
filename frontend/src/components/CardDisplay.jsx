@@ -130,20 +130,20 @@ function CardDisplay({ title, data }) {
                             <div className="mt-2 font-semibold text-[0.7rem] md:text-sm">
                               {product.name}
                             </div>
-                            <div className="text-[0.65rem] md:text-xs text-blue-600 mt-1">
+                            <div className="text-[0.65rem] md:text-xs text-blue-600 md:mt-1">
                               By {product.brand.toUpperCase()}
                             </div>
-                            <div className="text-[0.70rem] md:text-lg poppins-medium mt-2 text-black">
+                            <div className="text-[0.70rem] md:text-lg poppins-medium md:mt-2 text-black">
                               {(product?.discount==0) ? (
-                                <span className=" !text-[0.80rem] md:!text-sm mr-1 md:mr-2 ">
+                                <span className=" !text-[0.65rem] md:!text-sm mr-1 md:mr-2 ">
                                   ₹{product.price}
                                 </span>
-                              ) : <span className=" !text-[0.80rem] md:!text-sm line-through mr-1 md:mr-2 ">
+                              ) : <span className=" !text-[0.65rem] md:!text-sm line-through mr-1 md:mr-2 ">
                                   ₹{product.price}
                                 </span>}
-                              {product?.discount>0 && <span className="!text-[0.80rem] md:!text-sm mr-1 md:mr-2 font-normal">₹{calculateDiscountedPrice(product.price, product.discount)}</span>} 
+                              {product?.discount>0 && <span className="!text-[0.65rem] md:!text-sm mr-1 md:mr-2 font-normal">₹{calculateDiscountedPrice(product.price, product.discount)}</span>} 
                               {product?.discount>0 && (
-                                <span className="!text-[0.6rem] md:!text-xs !text-green-600 !font-medium ml-4 md:ml-2">
+                                <span className="!text-[0.6rem] md:!text-xs !text-green-600 !font-medium ml-1 md:ml-2">
                                   {product.discount}% off
                                 </span>
                               )}

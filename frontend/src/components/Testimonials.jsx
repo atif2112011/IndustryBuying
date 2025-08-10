@@ -26,8 +26,8 @@ const TestimonialCarousel = () => {
     return (
     <div className="w-full py-6">
       <div className="text-center mb-4">
-        <h2 className="!text-blue-950 !text-md md:!text-lg !font-semibold">TESTIMONIALS</h2>
-        <p className="!text-sm !text-gray-600">What our clients say about us</p>
+        <h2 className="!text-blue-950 !text-sm md:!text-lg !font-semibold">TESTIMONIALS</h2>
+        <p className="!text-xs md:!text-sm !text-gray-600">What our clients say about us</p>
       </div>
 
       <Swiper

@@ -1,5 +1,5 @@
 import SearchLogo from "../assets/icons/search-line.svg"
-import { useAlert } from "../contexts/AlertContext";
+import { useAlert } from "../contexts/AlertContext"
 function SearchBar({ searchTerm, setSearchTerm,placeholder,handleSearch }) {
   const {setMessage,setShowSnackBar}=useAlert();
   

@@ -31,7 +31,7 @@ useEffect(()=>{
 
   return (
     <div className="w-full py-6">
-      <h3 className="!text-md md:!text-lg !font-semibold mb-4">TRUSTED BRANDS</h3>
+      <h3 className="!text-sm md:!text-lg !font-semibold mb-4">TRUSTED BRANDS</h3>
       {brands && brands.length>0 && <Swiper
         modules={[Pagination, Autoplay]}
         autoplay={{ delay: 2500, disableOnInteraction: false }}
