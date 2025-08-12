@@ -5,7 +5,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import sampleImage from "../assets/images/productImages/product2.jpg";
+import sampleImage from "../assets/images/productImages/product2.webp";
 import { TableFooter, TablePagination } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import CardDisplay from "../components/CardDisplay";

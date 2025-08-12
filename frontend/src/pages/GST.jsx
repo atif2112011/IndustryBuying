@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import gst4 from '../assets/images/gst/gst4.png'
+import gst4 from '../assets/images/gst/gst4.webp'
 
 
 function GST(){

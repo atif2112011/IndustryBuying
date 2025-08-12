@@ -173,7 +173,7 @@ function LandingPage() {
     fetchData();
   },[]);
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center ">
       <Swiper
         spaceBetween={30}
         centeredSlides={true}

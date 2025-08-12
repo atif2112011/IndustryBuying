@@ -4,7 +4,7 @@ import rightarrow from "../assets/icons/arrow-right-line.svg";
 import image from "../assets/images/sampleproduct.jpg";
 import { Rating } from "@mui/material";
 import product1 from "../assets/images/productImages/product1.jpg";
-import product2 from "../assets/images/productImages/product2.jpg";
+import product2 from "../assets/images/productImages/product2.webp";
 import product3 from "../assets/images/productImages/product3.jpg";
 import { addToCart } from "../apis/cart";
 import { useAuth } from "../contexts/AuthContext";

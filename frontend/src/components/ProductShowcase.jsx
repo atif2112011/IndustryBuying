@@ -1,5 +1,5 @@
 import { Pagination, Rating } from "@mui/material";
-import product2 from "../assets/images/productImages/product2.jpg"; // Adjust the path as necessary
+import product2 from "../assets/images/productImages/product2.webp"; // Adjust the path as necessary
 import { useNavigate, useParams } from "react-router-dom";
 import { useLoader } from "../contexts/LoaderContext";
 import { getProductsBySubCategory } from "../apis/category";

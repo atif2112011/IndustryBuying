@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import login1 from "../assets/images/loginpage/login2.jpg";
+import login1 from "../assets/images/loginpage/login2.webp";
 import { useState } from "react";
 import { ForgotPassword, loginUser } from "../apis/auth";
 import { useAlert } from "../contexts/AlertContext";

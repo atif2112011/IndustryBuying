@@ -1,6 +1,6 @@
 // ProductShowcaseElectrical.js
 import React, { useEffect, useState } from 'react';
-import sampleproduct from '../assets/images/productImages/product2.jpg'; // Adjust the path as necessary
+import sampleproduct from '../assets/images/productImages/product2.webp'; // Adjust the path as necessary
 import {
   Grid,
   Card,
