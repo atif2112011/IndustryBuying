@@ -248,6 +248,10 @@ function Productpage() {
   //   setproductPrice(finalPrice);
   // };
 
+  useEffect(() => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}, []);
+
   return (
     <div className="flex flex-col md:flex-row gap-4 h-screen ">
       <div className=" flex flex-col gap-4 md:w-3/4 md:overflow-y-auto hide-scroll">

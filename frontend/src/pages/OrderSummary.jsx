@@ -30,6 +30,10 @@ function OrderSummary({orderData}) {
     return `${info.name}\n${info.flat}, ${info.area}\n${info.landmark}\n${info.city}, ${info.state} - ${info.pincode}\nPhone: ${info.phone}\nAlt: ${info.alternatePhone}`;
   };
 
+  useEffect(() => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}, []);
+
 
   return (
     <div className="flex flex-col p-2 mt-2 md:m-0 md:p-6 gap-2 md:h-screen overflow-y-auto ">

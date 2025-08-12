@@ -271,6 +271,10 @@ function Cartpage() {
     setLoading(false);
   }, []);
 
+  useEffect(() => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}, []);
+
   return (
     <div className="flex flex-col md:flex-row p-2 mt-2 md:m-0 md:p-6 gap-2 md:h-screen">
       {/* Left Div */}

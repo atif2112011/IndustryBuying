@@ -1,5 +1,5 @@
 // TestimonialCarousel.jsx
-import threem from '../assets/images/brands/3m.png';
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css/pagination";

@@ -25,6 +25,16 @@ function SideMenu({ showSideMenu, setShowSideMenu, menu }) {
   const [brands, setBrands] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+
+
+  const categoryIcons = [
+  "ri-first-aid-kit-line",   // Medical kit / equipment
+  "ri-stethoscope-line",     // Diagnosis tools
+  "ri-hospital-line",        // Hospital / medical environment
+  "ri-capsule-line",         // Medicines / pharmaceuticals
+  "ri-truck-line"            // Delivery / shipping
+];
+
   
 
   // useEffect(() => {
@@ -91,13 +101,15 @@ function SideMenu({ showSideMenu, setShowSideMenu, menu }) {
                         navigate(`/categories/${option.slug}`);
                         setShowSideMenu(false);
                       }}
-                      className="flex items-center gap-2 p-2 group-hover:bg-blue-100 rounded-md cursor-pointer relative z-10"
+                      className="flex items-center gap-4 p-2 group-hover:bg-blue-100 rounded-md cursor-pointer relative z-10"
                     >
-                      <img
+                      {/* <img
                         src={icon1}
                         alt={option.name}
                         className="md:h-[22px] md:w-[22px] h-[18px] w-[18px]"
-                      />
+                      /> */}
+                     
+                      <i className={`${categoryIcons[index % categoryIcons.length]} text-[14px] md:text-[19px]` }></i>
                       <span className="!text-xs md:!text-sm">
                         {option.name}
                       </span>
@@ -181,6 +193,15 @@ function FiltersnCategory({
   const totalPages = Math.ceil(menu.length / itemsPerPage);
   const {productFilters,setProductFilters}=useAuth();
 
+  const categoryIcons = [
+  "ri-first-aid-kit-line",   // Medical kit / equipment
+  "ri-stethoscope-line",     // Diagnosis tools
+  "ri-hospital-line",        // Hospital / medical environment
+  "ri-capsule-line",         // Medicines / pharmaceuticals
+  "ri-truck-line"            // Delivery / shipping
+];
+
+
   return (
     <div className='"md:w-80 flex flex-col md:bg-transparent bg-white shadow-lg md:shadow-none rounded-md md:rounded-none p-3 md:p-0 gap-3 md:gap-4 overflow-y-auto md:overflow-y-visible h-full'>
       <Accordion className="w-full bg-white rounded-md">
@@ -208,13 +229,9 @@ function FiltersnCategory({
                       navigate(`/categories/${option.slug}`);
                       setShowSideMenu(false);
                     }}
-                    className="flex items-center gap-2 p-2 group-hover:bg-blue-100 rounded-md cursor-pointer relative z-10"
+                    className="flex items-center gap-4 p-2 group-hover:bg-blue-100 rounded-md cursor-pointer relative z-10"
                   >
-                    <img
-                      src={icon1}
-                      alt={option.name}
-                      className="md:h-[22px] md:w-[22px] h-[18px] w-[18px]"
-                    />
+                    <i className={`${categoryIcons[index % categoryIcons.length]} text-[14px] md:text-[19px]` }></i>
                     <span className="!text-xs md:!text-sm">{option.name}</span>
                   </div>
 

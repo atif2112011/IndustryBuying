@@ -4,12 +4,6 @@ import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css/pagination";
 import "swiper/css";
 
-import duracell from '../assets/images/brands/duracell.png';
-import aristo from '../assets/images/brands/aristo.png';
-import bosch from '../assets/images/brands/bosch.png';
-import threem from '../assets/images/brands/3m.png';
-import uno from '../assets/images/brands/uno.png';
-import safari from '../assets/images/brands/safari.png';
 import { getBrandIcons } from "../apis/content";
 
 

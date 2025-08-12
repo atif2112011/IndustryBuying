@@ -47,6 +47,10 @@ const { setLoading } = useLoader();
     }
   }, []);
 
+  useEffect(() => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}, []);
+
 
   const handleCOD=async()=>{
     
